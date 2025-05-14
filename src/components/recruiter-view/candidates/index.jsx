@@ -5,7 +5,8 @@ import { SearchIcon } from "../../../utils/icon";
 import CandidateSelection from "../job-openings/candidates-selection";
 import { Link } from "react-router-dom";
 
-const Index = () => {
+const Index = ({ applicants }) => {
+
   return (
     <Fragment>
       <div className="hidden lg:flex flex-col gap-[51px]">
@@ -35,7 +36,11 @@ const Index = () => {
               <SearchIcon className="h-[18px] w-[18px]" />
             </div>
           </div>
-          <CandidateSelection show={false} button={false} />
+          <CandidateSelection
+            show={false}
+            button={false}
+            applicants={applicants}
+          />
         </div>
       </div>
       <div className="w-full p-[24px] lg:hidden inline-flex flex-col justify-start items-start gap-6">
@@ -65,7 +70,11 @@ const Index = () => {
               <SearchIcon className="h-[18px] w-[18px]" />
             </div>
           </div>
-          <CandidateSelection show={false} button={false} />
+          <CandidateSelection
+            show={false}
+            button={false}
+            applicants={applicants}
+          />
         </div>
       </div>
     </Fragment>

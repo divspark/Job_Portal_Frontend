@@ -1,14 +1,14 @@
 import React from "react";
 import Navbar from "../../components/recruiter-view/navbar";
-import SignUpComponent from "../../components/recruiter-view/sign-up";
+import LogInComponent from "../../components/recruiter-view/log-in";
 
-const SignUp = () => {
+const Login = () => {
   return (
     <div className="flex flex-col w-full">
       <Navbar />
-      <SignUpComponent />
+      <LogInComponent />
     </div>
   );
 };
 
-export default SignUp;
+export default Login;

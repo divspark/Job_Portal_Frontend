@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import HeroProfile from "../common/hero-profile";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -36,7 +37,8 @@ const Index = () => {
                   Ut enim ad minim veniam, quis nostrud exercitation ullamco
                   laboris nisi ut.
                 </div>
-                <div
+                <Link
+                  to="/recruiter/profile-setup/sectoral-details"
                   data-color="Default"
                   data-icon-left="False"
                   data-icon-right="False"
@@ -46,7 +48,7 @@ const Index = () => {
                   <div className="text-center justify-start text-white text-xs font-semibold leading-tight">
                     Proceed to Complete
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </div>
@@ -375,7 +377,8 @@ const Index = () => {
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut.
           </div>
-          <div
+          <Link
+            to="/recruiter/profile-setup/sectoral-details"
             data-color="Default"
             data-icon-left="False"
             data-icon-right="False"
@@ -385,7 +388,7 @@ const Index = () => {
             <div className="text-center justify-start text-white text-xs font-semibold leading-tight">
               Proceed to Complete
             </div>
-          </div>
+          </Link>
         </div>
         <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4 overflow-hidden">
           <div className="self-stretch inline-flex justify-start items-start">

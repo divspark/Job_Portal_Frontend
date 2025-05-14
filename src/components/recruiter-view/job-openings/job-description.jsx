@@ -5,7 +5,7 @@ const JobDescription = ({ setOpen1, setOpen }) => {
   return (
     <Fragment>
       {/* desktop-view */}
-      <div className="hidden p-6 w-full bg-white outline outline-offset-[-1px] outline-neutral-400 lg:inline-flex flex-col justify-start items-center overflow-hidden">
+      <div className="hidden p-6 w-full bg-white outline outline-offset-[-1px] outline-neutral-400 lg:inline-flex flex-col justify-start items-center overflow-hidden min-h-screen">
         <div className="self-stretch flex-1 flex flex-col justify-start items-start gap-8">
           <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-offset-[-1px] outline-zinc-300 inline-flex justify-start items-start gap-6">
             <img

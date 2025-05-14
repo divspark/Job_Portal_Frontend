@@ -12,8 +12,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../../ui/button";
+import { convertMonthsToYearsAndMonths } from "../../../utils/objectUtils";
 
-const CandidateSelection = ({ setOpen2, show, button }) => {
+const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
+  console.log(applicants);
   const data = [
     {
       name: "Heeral Nant",
@@ -107,7 +109,11 @@ const CandidateSelection = ({ setOpen2, show, button }) => {
   return (
     <Fragment>
       {" "}
-      <div className="hidden w-full min-h-screen p-6 bg-white outline outline-offset-[-1px] outline-neutral-400 lg:inline-flex flex-col justify-start items-start gap-9 overflow-hidden">
+      <div
+        className={`hidden w-full ${
+          button ? "min-h-screen" : ""
+        } p-6 bg-white outline outline-offset-[-1px] outline-neutral-400 lg:inline-flex flex-col justify-start items-start gap-9 overflow-hidden`}
+      >
         {show && (
           <div className="justify-start text-neutral-900 text-2xl font-medium leading-9">
             Select Candidates
@@ -187,41 +193,41 @@ const CandidateSelection = ({ setOpen2, show, button }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((item) => (
-                <TableRow key={item.name}>
+              {applicants?.data.map((item, i) => (
+                <TableRow key={i}>
                   <TableCell className="px-[16px] py-[12px] flex gap-[10px]">
-                    <Button
+                    <div
                       onClick={() => setOpen2(true)}
-                      className="cursor-pointer w-[36px] h-[36px] flex items-center justify-center"
+                      className="relative cursor-pointer w-[36px] h-[36px] "
                     >
                       <img
-                        src=""
-                        alt=""
-                        className="h-full w-full rounded-[50px]"
+                        src={item.profilePicture}
+                        alt={item.name}
+                        className="h-full w-full rounded-[50px] object-cover"
                       />
-                    </Button>
+                    </div>
                     <div className="flex flex-col">
                       <div class="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
                         {item.name}
                       </div>
                       <div className="self-stretch justify-start text-[#6E6E71] text-[12px] font-normal leading-none">
-                        {item.role}
+                        {item.areaOfExpertise}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.appliedfor}
+                      {item.roleLookingFor}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.skills}
+                      {item.skills.join(", ")}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.experience}
+                      {convertMonthsToYearsAndMonths(item.totalExperience)}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
@@ -293,41 +299,41 @@ const CandidateSelection = ({ setOpen2, show, button }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data.map((item) => (
+              {applicants?.data.map((item) => (
                 <TableRow key={item.name}>
                   <TableCell className="px-[16px] py-[12px] flex gap-[10px]">
-                    <Button
+                    <div
                       onClick={() => setOpen2(true)}
                       className="cursor-pointer w-[36px] h-[36px] flex items-center justify-center"
                     >
                       <img
-                        src=""
-                        alt=""
-                        className="h-full w-full rounded-[50px]"
+                        src={item.profilePicture}
+                        alt={item.name}
+                        className="h-full w-full rounded-[50px] object-cover"
                       />
-                    </Button>
+                    </div>
                     <div className="flex flex-col">
                       <div class="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
                         {item.name}
                       </div>
                       <div className="self-stretch justify-start text-[#6E6E71] text-[12px] font-normal leading-none">
-                        {item.role}
+                        {item.areaOfExpertise}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.appliedfor}
+                      {item.roleLookingFor}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.skills}
+                      {item.skills.join(", ")}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.experience}
+                      {convertMonthsToYearsAndMonths(item.totalExperience)}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">

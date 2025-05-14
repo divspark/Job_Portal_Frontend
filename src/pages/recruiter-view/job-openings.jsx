@@ -4,11 +4,13 @@ import JobDescription from "../../components/recruiter-view/job-openings/job-des
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import CandidateSelection from "../../components/recruiter-view/job-openings/candidates-selection";
 import CandidateProfile from "../../components/recruiter-view/job-openings/candidate-profile";
+import { useGetAllApplicant } from "../../hooks/useApplicant";
 
 const JobOpenings = () => {
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const { data: applicants, isLoading, isError, error } = useGetAllApplicant();
   return (
     <Fragment>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -37,7 +39,12 @@ const JobOpenings = () => {
             overflow-y-auto"
         >
           <div className="w-full h-full">
-            <CandidateSelection show={true} setOpen2={setOpen2} button={true} />
+            <CandidateSelection
+              applicants={applicants}
+              show={true}
+              setOpen2={setOpen2}
+              button={true}
+            />
           </div>
         </SheetContent>
       </Sheet>

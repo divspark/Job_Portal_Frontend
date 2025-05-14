@@ -1,4 +1,4 @@
-export const KycVerification = [
+export const KycVerificationDetails = [
   {
     name: "cancelChequeUpload",
     label: "",
@@ -7,7 +7,7 @@ export const KycVerification = [
     type: "file",
   },
   {
-    name: "panCardNumber",
+    name: "panDetails.number",
     label: "PAN Card Details",
     placeholder: "PAN Card Number",
     componentType: "input",
@@ -21,7 +21,7 @@ export const KycVerification = [
     type: "file",
   },
   {
-    name: "aadharCardNumber",
+    name: "aadharDetails.number",
     label: "Aadhar Card Details",
     placeholder: "Aadhar Card Number",
     componentType: "input",
@@ -35,24 +35,31 @@ export const KycVerification = [
     type: "file",
   },
   {
-    name: "accountNumber",
-    label: "Account Number",
+    name: "bankDetails.accountNumber",
+    label: "Bank Details",
     placeholder: "Account Number",
     componentType: "input",
     type: "number",
   },
   {
+    name: "bankDetails.accountHolderName",
+    label: "",
+    placeholder: "Account's Holder Name",
+    componentType: "input",
+    type: "text",
+  },
+  {
     row: [
       {
-        name: "branchName",
-        label: "Branch Name",
+        name: "bankDetails.bankName",
+        label: "",
         placeholder: "Branch Name",
         componentType: "input",
         type: "text",
       },
       {
-        name: "ifscCode",
-        label: "IFSC Code",
+        name: "bankDetails.ifscCode",
+        label: "",
         placeholder: "IFSC Code",
         componentType: "input",
         type: "text",
@@ -63,55 +70,95 @@ export const KycVerification = [
 
 export const basicInformation = [
   {
-    name: "name",
-    label: "Candidate Name",
-    placeholder: "e.g. Jason Wild",
-    componentType: "input",
-    type: "text",
+    row: [
+      {
+        name: "firstName",
+        label: "First Name",
+        placeholder: "e.g. Jason Wild",
+        componentType: "input",
+        type: "text",
+        width: "2/3",
+      },
+      {
+        name: "lastName",
+        label: "Last Name",
+        placeholder: "e.g. Jason Wild",
+        componentType: "input",
+        type: "text",
+        width: "2/3",
+      },
+      {
+        name: "profileImage",
+        label: "",
+        placeholder: "Profile Picture",
+        componentType: "file",
+        type: "file",
+        width: "1/3",
+      },
+    ],
   },
+
   {
-    name: "",
-    label: "",
-    placeholder: "Profile Picture",
-    componentType: "file",
-    type: "file",
-  },
-  {
-    name: "",
+    name: "phone.number",
     label: "Contact Information",
     placeholder: "Ex. XXXXX XXXXX",
-    componentType: "input",
+    componentType: "phone",
     type: "number",
+    width: "full",
   },
   {
-    name: "",
-    label: "Address",
+    name: "currentAddress.address",
+    label: "Current Address",
     placeholder: "Enter Primary Address",
     componentType: "textarea",
     type: "text",
+    width: "full",
   },
   {
     row: [
       {
-        name: "",
+        name: "currentAddress.city",
         label: "",
         placeholder: "Enter City",
         componentType: "input",
         type: "text",
+        width: "1/3",
       },
       {
-        name: "",
-        label: "",
-        placeholder: "Enter State",
-        componentType: "input",
-        type: "text",
-      },
-      {
-        name: "",
+        name: "currentAddress.pincode",
         label: "",
         placeholder: "Enter Pincode",
         componentType: "input",
         type: "number",
+        width: "1/3",
+      },
+    ],
+  },
+  {
+    name: "permanentAddress.address",
+    label: "Permanent Address",
+    placeholder: "Enter Primary Address",
+    componentType: "textarea",
+    type: "text",
+    width: "full",
+  },
+  {
+    row: [
+      {
+        name: "permanentAddress.city",
+        label: "",
+        placeholder: "Enter City",
+        componentType: "input",
+        type: "text",
+        width: "1/3",
+      },
+      {
+        name: "permanentAddress.pincode",
+        label: "",
+        placeholder: "Enter Pincode",
+        componentType: "input",
+        type: "number",
+        width: "1/3",
       },
     ],
   },
@@ -119,20 +166,20 @@ export const basicInformation = [
 export const recruiterSignUp = [
   {
     name: "email",
-    label: "E-mail",
+    label: "Recruiter E-mail",
     placeholder: "Enter your e-mail",
     componentType: "input",
     type: "email",
   },
   {
     name: "password",
-    label: "Password",
+    label: "Enter Password",
     placeholder: "********",
     componentType: "input",
     type: "password",
   },
   {
-    name: "password",
+    name: "confirmPassword",
     label: "Confirm Password",
     placeholder: "********",
     componentType: "input",
@@ -591,5 +638,398 @@ export const clubFields = [
     name: "endYear",
     placeholder: "Select Date",
     componentType: "calendar",
+  },
+];
+export const LoginFields = [
+  {
+    name: "email",
+    placeholder: "johnsondoe@nomail.com",
+    componentType: "input",
+    label: "Email",
+    type: "text",
+  },
+  {
+    name: "password",
+    placeholder: "********",
+    componentType: "input",
+    label: "Password",
+    type: "password",
+  },
+];
+
+export const sectoralFieldsForm = [
+  {
+    name: "sectorSpecialization",
+    label: "Sectoral Specialization ( Select any Three )",
+    componentType: "multi-select",
+    max: 3,
+    options: [
+      { id: "automotive", label: "Automotive" },
+      { id: "banking", label: "Banking & Financial Services" },
+      { id: "bpo", label: "BPO / KPO / ITES" },
+      { id: "chemicals", label: "Chemicals & Petrochemicals" },
+      { id: "consumer", label: "Consumer Durables" },
+      { id: "ecommerce", label: "E-commerce & Internet" },
+      { id: "edutech", label: "EduTech" },
+      { id: "engineering", label: "Engineering & Manufacturing" },
+      { id: "fmcg", label: "FMCG / F&B" },
+      { id: "healthcare", label: "Healthcare & Hospitals" },
+      { id: "hospitality", label: "Hospitality & Travel" },
+      { id: "it", label: "IT & Software" },
+      { id: "logistics", label: "Logistics & Supply Chain" },
+      { id: "media", label: "Media & Journalism" },
+      { id: "ngo", label: "NGO / Social Work" },
+      { id: "oil", label: "Oil & Gas / Energy" },
+      { id: "pharma", label: "Pharma & Life Sciences" },
+      { id: "realestate", label: "Real Estate & Construction" },
+      { id: "retail", label: "Retail" },
+      { id: "sports", label: "Sports / Fitness / Wellness" },
+      { id: "telecom", label: "Telecommunication" },
+      { id: "textiles", label: "Textiles / Apparel" },
+      { id: "transportation", label: "Transportation / Shipping" },
+      { id: "other", label: "Other (please specify)" },
+    ],
+  },
+
+  {
+    name: "totalExperience",
+    label: "Total Years of Experience in Recruitment",
+    componentType: "input",
+    type: "number",
+    placeholder: "e.g. 5",
+  },
+
+  {
+    name: "experienceLevel",
+    label: "You have expertise in (Select any two)",
+    componentType: "multi-select",
+    max: 2,
+    options: [
+      { id: "frontline", label: "Frontline Hirings" },
+      { id: "midlevel", label: "Mid Level Hirings" },
+      { id: "senior", label: "Senior Level Hirings" },
+    ],
+  },
+  {
+    name: "lastOrganization.name",
+    label: "Last Organization Name",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "lastOrganization.position",
+    label: "Designation in Last Organization",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "relievingLetter",
+    label: "Relieving Letter",
+    componentType: "file",
+    placeholder: "Upload relieving letter",
+  },
+
+  {
+    name: "linkedinProfile",
+    label: "LinkedIn Profile URL",
+    componentType: "input",
+    type: "url",
+  },
+];
+export const sectoralFieldsForm2 = [
+  {
+    name: "latestQualification",
+    label: "Latest Qualification Proof Document",
+    componentType: "file",
+    placeholder: "Upload supporting document",
+  },
+
+  {
+    name: "joinReason",
+    label: "Why do you want to join? (Max 30 words)",
+    componentType: "textarea",
+    placeholder: "Write your reason...",
+  },
+
+  {
+    name: "monthlyClosures",
+    label: "Average Monthly Closures in Last Assignment",
+    componentType: "input",
+    type: "number",
+  },
+
+  {
+    name: "jobSource",
+    label: "How did you come to know about this job?",
+    componentType: "select",
+    options: [
+      { id: "social", label: "Social Media" },
+      { id: "friends", label: "Friends" },
+      { id: "jobPortal", label: "Job Portal" },
+      { id: "colleagues", label: "Colleagues" },
+    ],
+  },
+
+  {
+    name: "fatherName",
+    label: "Father's Name",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "motherName",
+    label: "Mother's Name",
+    componentType: "input",
+    type: "text",
+  },
+
+  {
+    name: "medicalProblem",
+    label: "Any Medical Problem?",
+    componentType: "select",
+    options: [
+      { id: "no", label: "No" },
+      { id: "yes", label: "Yes" },
+    ],
+  },
+];
+export const referenceFields = [
+  {
+    row: [
+      {
+        watkins: false,
+        name: "name",
+        label: "Reference",
+        placeholder: "Enter Name",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "contactNo",
+        label: "",
+        placeholder: "Contact No.",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "organization",
+        label: "",
+        placeholder: "Organisation",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "designation",
+        label: "",
+        placeholder: "Designation",
+        componentType: "input",
+        type: "text",
+      },
+    ],
+  },
+];
+
+export const candiadateCreationformControls = [
+  {
+    row: [
+      {
+        name: "name",
+        label: "Candidate Name",
+        componentType: "input",
+        type: "text",
+        placeholder: "e.g. Jason Wild",
+      },
+      {
+        name: "profilePicture",
+        label: "Profile Picture",
+        componentType: "file",
+        placeholder: "Upload image",
+      },
+    ],
+  },
+
+  {
+    name: "phone",
+    label: "Phone Number",
+    componentType: "phone",
+    placeholder: "Ex. XXXXX XXXXX",
+  },
+  {
+    name: "email",
+    label: "E-mail ID",
+    componentType: "input",
+    type: "email",
+    placeholder: "Enter email",
+  },
+
+  {
+    name: "currentAddress.address",
+    label: "Current Address",
+    placeholder: "Enter Primary Address",
+    componentType: "textarea",
+    type: "text",
+    width: "full",
+  },
+  {
+    row: [
+      {
+        name: "currentAddress.city",
+        label: "",
+        placeholder: "Enter City",
+        componentType: "input",
+        type: "text",
+        width: "1/3",
+      },
+      {
+        name: "currentAddress.pincode",
+        label: "",
+        placeholder: "Enter Pincode",
+        componentType: "input",
+        type: "number",
+        width: "1/3",
+      },
+    ],
+  },
+  {
+    name: "permanentAddress.address",
+    label: "Permanent Address",
+    placeholder: "Enter Primary Address",
+    componentType: "textarea",
+    type: "text",
+    width: "full",
+  },
+  {
+    row: [
+      {
+        name: "permanentAddress.city",
+        label: "",
+        placeholder: "Enter City",
+        componentType: "input",
+        type: "text",
+        width: "1/3",
+      },
+      {
+        name: "permanentAddress.pincode",
+        label: "",
+        placeholder: "Enter Pincode",
+        componentType: "input",
+        type: "number",
+        width: "1/3",
+      },
+    ],
+  },
+  {
+    name: "gender",
+    label: "Gender",
+    componentType: "select",
+    placeholder: "Select gender",
+    options: [
+      { id: "male", label: "Male" },
+      { id: "female", label: "Female" },
+    ],
+  },
+];
+export const highestQualification = [
+  {
+    name: "degree",
+    label: "Highest Qualification",
+    placeholder: "e.g B.Tech",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    row: [
+      {
+        name: "startDate",
+        label: "Starting Year",
+        componentType: "calendar",
+      },
+      {
+        name: "endDate",
+        label: "Ending Year",
+        componentType: "calendar",
+      },
+    ],
+  },
+];
+
+export const releventCandidateProfessionalDetails = [
+  {
+    name: "experienceLevel",
+    label: "Experience Level",
+    componentType: "select",
+    placeholder: "Frontline, Mid-Level, Expert",
+    options: [
+      { id: "frontline", label: "Frontline" },
+      { id: "midlevel", label: "Mid-Level" },
+      { id: "expert", label: "Expert" },
+    ],
+  },
+  {
+    name: "currentSector",
+    label: "Current Sector",
+    componentType: "select",
+    placeholder: "IT or Non-IT",
+    options: [
+      { id: "it", label: "IT" },
+      { id: "non-it", label: "Non-IT" },
+    ],
+  },
+  {
+    label: "Total Experience",
+    row: [
+      {
+        name: "experience.years",
+        label: "Years",
+        componentType: "select",
+        options: Array.from({ length: 31 }, (_, i) => ({
+          id: i.toString(),
+          label: `${i} Year${i === 1 ? "" : "s"}`,
+        })),
+      },
+      {
+        name: "experience.months",
+        label: "Months",
+        componentType: "select",
+        options: Array.from({ length: 12 }, (_, i) => ({
+          id: i.toString(),
+          label: `${i} Month${i === 1 ? "" : "s"}`,
+        })),
+      },
+    ],
+  },
+  {
+    name: "lastPosition",
+    label: "Work Experience",
+    componentType: "input",
+    type: "text",
+    placeholder: "Position in Last Organization",
+  },
+  {
+    name: "currentPosition",
+    label: "Current Organisation",
+    componentType: "input",
+    type: "text",
+    placeholder: "Position in Last Organization",
+  },
+];
+export const releventCandidateSalary = [
+  {
+    row: [
+      {
+        name: "currentSalary",
+        label: "Annual Current Salary / CTC",
+        placeholder: "e.g., 7.5 Lakhs",
+        componentType: "input",
+        type: "number",
+      },
+      {
+        name: "expectedSalary",
+        label: "Expected Salary / CTC",
+        placeholder: "e.g., 9 Lakhs",
+        componentType: "input",
+        type: "number",
+      },
+    ],
   },
 ];
