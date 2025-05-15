@@ -18,6 +18,13 @@ import CheckAuth from "./components/common/checkAuth";
 import CandidateReleventDetails from "./pages/recruiter-view/candidate-releventDetails";
 
 function App() {
+  const token =
+    localStorage.getItem("token") || sessionStorage.getItem("token");
+  if (token) {
+    useAuthStore.getState().setToken(token, !!localStorage.getItem("token"));
+    useAuthStore.getState().setIsAuthenticated(true);
+  }
+
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <ScrollToTop />

@@ -376,7 +376,7 @@ export default function CommonForm({ formControls, formData, setFormData, i }) {
             );
           } else {
             return (
-              <div i={controlItem.name} className="flex flex-col gap-[8px]">
+              <div key={controlItem.name} className="flex flex-col gap-[8px]">
                 {controlItem.label && (
                   <Label className="text-xxs text-[#20102B] font-medium">
                     {controlItem.label}

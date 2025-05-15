@@ -27,8 +27,8 @@ const Index = ({ setOpen }) => {
                 <SearchIcon className="h-[18px] w-[18px]" />
               </div>
             </div>
-            {[1, 2, 3, 45, 5].map(() => (
-              <JobCard setOpen={setOpen} />
+            {[1, 2, 3, 45, 5].map((j, i) => (
+              <JobCard key={i} setOpen={setOpen} />
             ))}
           </div>
         </div>

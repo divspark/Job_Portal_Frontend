@@ -9,10 +9,10 @@ export const useLogin = () => {
   const { setUser, setToken, setIsAuthenticated } = useAuthStore();
   return useMutation({
     mutationFn: login,
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       toast.success(data.data.message);
       setUser(data.data.data);
-      setToken(data.data.data.token);
+      setToken(data.data.data.token, variables.rememberme);
       setIsAuthenticated(true);
       navigate("/recruiter/dashboard");
     },

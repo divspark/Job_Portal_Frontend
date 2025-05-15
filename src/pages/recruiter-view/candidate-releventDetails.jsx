@@ -24,7 +24,6 @@ const CandidateReleventDetails = () => {
     e.preventDefault();
     mutate(formData);
   };
-  console.log(formData);
   return (
     <div className="self-stretch lg:px-36 lg:py-20 p-[20px] inline-flex flex-col justify-start items-end lg:gap-10 gap-[15px]">
       <div className="w-full inline-flex justify-start items-start gap-8">

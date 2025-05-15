@@ -1,111 +1,17 @@
 import React, { Fragment } from "react";
 import { Input } from "../../ui/input";
-import { Bag, BlackBag, FilterIcon, SearchIcon } from "../../../utils/icon";
+import { BlackBag, FilterIcon, SearchIcon } from "../../../utils/icon";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "../../ui/button";
 import { convertMonthsToYearsAndMonths } from "../../../utils/objectUtils";
 
 const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
-  console.log(applicants);
-  const data = [
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-    {
-      name: "Heeral Nant",
-      role: "Lead Product Designer",
-      appliedfor: "UX Designer",
-      skills: "Figma, UX Research",
-      experience: "3 Years",
-      lastUpdate: "2 Days ago",
-    },
-  ];
   return (
     <Fragment>
       {" "}
@@ -207,7 +113,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <div class="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
+                      <div className="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
                         {item.name}
                       </div>
                       <div className="self-stretch justify-start text-[#6E6E71] text-[12px] font-normal leading-none">
@@ -299,8 +205,8 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {applicants?.data.map((item) => (
-                <TableRow key={item.name}>
+              {applicants?.data.map((item, index) => (
+                <TableRow key={index}>
                   <TableCell className="px-[16px] py-[12px] flex gap-[10px]">
                     <div
                       onClick={() => setOpen2(true)}
@@ -313,7 +219,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                       />
                     </div>
                     <div className="flex flex-col">
-                      <div class="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
+                      <div className="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
                         {item.name}
                       </div>
                       <div className="self-stretch justify-start text-[#6E6E71] text-[12px] font-normal leading-none">

@@ -11,6 +11,7 @@ const Index = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    rememberme: false,
   });
   const { mutate, isPending, isError, error } = useLogin();
   const handleSubmit = (e) => {
@@ -40,6 +41,13 @@ const Index = () => {
               <div className="flex items-center gap-[6px]">
                 <div className="flex items-center justify-center">
                   <Checkbox
+                    checked={formData.rememberme}
+                    onCheckedChange={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        rememberme: !prev.rememberme,
+                      }))
+                    }
                     id="terms"
                     className="cursor-pointer w-[20px] h-[20px]"
                   />
