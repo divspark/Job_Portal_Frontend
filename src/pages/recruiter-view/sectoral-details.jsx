@@ -37,7 +37,6 @@ const SectoralDetails = () => {
     };
     mutate(payload);
   };
-  console.log(formData);
   return (
     <div className="w-full self-stretch lg:px-36 lg:py-24 p-[20px] inline-flex flex-col justify-start items-start lg:gap-7 gap-[18px]">
       <div className="w-full flex justify-start items-start gap-7">

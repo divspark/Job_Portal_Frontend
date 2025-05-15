@@ -3,12 +3,10 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import PhoneInput from "react-phone-input-2";
-import { Badge } from "@/components/ui/badge";
 import "react-phone-input-2/lib/style.css";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -23,18 +21,11 @@ import {
 import { getNestedValue, setNestedValue } from "../../utils/objectUtils";
 import MultiSelectField from "./MultiSelectField";
 import { highestQualification, referenceFields } from "../../config";
-import { isSameDay } from "date-fns";
 
-export default function CommonForm({
-  formControls,
-  formData,
-  setFormData,
-  i,
-  item,
-}) {
+export default function CommonForm({ formControls, formData, setFormData, i }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [otherSelections, setOtherSelections] = useState({});
   function renderInputsByComponentType(getControlItem, i, formType = null) {
-    console.log(formType);
     let nameWithIndex = getControlItem.name;
     if (formType === "references" && i >= 0) {
       nameWithIndex = `references.${i}.${getControlItem.name}`;
@@ -49,7 +40,13 @@ export default function CommonForm({
       value,
       onChange: (event) =>
         setFormData((prev) =>
-          setNestedValue(prev, nameWithIndex, event.target.value)
+          setNestedValue(
+            prev,
+            nameWithIndex,
+            getControlItem.type === "number"
+              ? Number(event.target.value)
+              : event.target.value
+          )
         ),
       className:
         "flex placeholder:translate-y-[1px] items-center justify-center text-black text-xxs focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]",
@@ -105,36 +102,57 @@ export default function CommonForm({
         }
 
       case "select":
-        const isOtherSelected = value === "other";
-        const otherValue = formData?.[`${getControlItem.name}_other`] || "";
-
         const isMedicalProblemField = getControlItem.name === "medicalProblem";
         const medicalDetailsValue = formData?.medicalDetails || "";
+
+        const isOtherEnabled = getControlItem.showOtherInput; // decide if "Other" should show input field
+        const selectedValue = formData?.[getControlItem.name] ?? "";
+
+        const shouldShowOtherInput =
+          otherSelections?.[getControlItem.name] ?? false;
 
         return (
           <div className="flex flex-col gap-2">
             <Select
               onValueChange={(val) => {
                 setFormData((prev) => {
-                  const updated = setNestedValue(
-                    prev,
-                    getControlItem.name,
-                    val
-                  );
-                  // Reset related fields if needed
-                  if (
-                    getControlItem.name === "medicalProblem" &&
-                    val !== "yes"
-                  ) {
-                    updated.medicalDetails = ""; // Clear problem description
+                  const updated = { ...prev };
+
+                  if (isOtherEnabled && val === "other") {
+                    // "Other" is selected — keep the field empty or use existing value
+                    if (getControlItem.inlineOther) {
+                      updated[getControlItem.name] = ""; // override same field (like jobSource)
+                    } else {
+                      updated[getControlItem.name] = "other";
+                    }
+                  } else {
+                    updated[getControlItem.name] = getControlItem.forceNumber
+                      ? Number(val)
+                      : val;
+
+                    if (!getControlItem.inlineOther) {
+                      delete updated[`${getControlItem.name}_other`]; // clean up other field
+                    }
                   }
-                  if (val !== "other") {
-                    updated[`${getControlItem.name}_other`] = "";
+
+                  // Medical field case
+                  if (isMedicalProblemField && val !== "yes") {
+                    updated.medicalDetails = "";
                   }
-                  return { ...updated };
+
+                  return updated;
                 });
+
+                setOtherSelections((prev) => ({
+                  ...prev,
+                  [getControlItem.name]: val === "other",
+                }));
               }}
-              value={value}
+              value={
+                isOtherEnabled && shouldShowOtherInput
+                  ? "other"
+                  : selectedValue.toString() || ""
+              }
             >
               <SelectTrigger className="w-full flex placeholder:translate-y-[1px] items-center text-black text-xxs focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[20px] px-[16px] placeholder:text-[#9B959F]">
                 <SelectValue placeholder={getControlItem.label} />
@@ -150,33 +168,42 @@ export default function CommonForm({
                       {optionItem.label}
                     </SelectItem>
                   ))}
-                <SelectItem
-                  value="other"
-                  className="cursor-pointer hover:bg-gray-300"
-                >
-                  Other (please specify)
-                </SelectItem>
+
+                {isOtherEnabled && (
+                  <SelectItem
+                    value="other"
+                    className="cursor-pointer hover:bg-gray-300"
+                  >
+                    Other (please specify)
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
 
-            {/* Show text input if "Other" is selected */}
-            {isOtherSelected && (
+            {/* Show "Other" input if selected */}
+            {isOtherEnabled && shouldShowOtherInput && (
               <Input
                 type="text"
                 placeholder="Please specify"
-                value={otherValue}
+                value={
+                  getControlItem.inlineOther
+                    ? formData?.[getControlItem.name] || ""
+                    : formData?.[`${getControlItem.name}_other`] || ""
+                }
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    [`${getControlItem.name}`]: e.target.value,
+                    [getControlItem.inlineOther
+                      ? getControlItem.name
+                      : `${getControlItem.name}_other`]: e.target.value,
                   }))
                 }
                 className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-xxs focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
               />
             )}
 
-            {/* Show medical details input ONLY when medicalProblem is "yes" */}
-            {isMedicalProblemField && value === "yes" && (
+            {/* Medical Problem Details */}
+            {isMedicalProblemField && selectedValue === "yes" && (
               <Input
                 type="text"
                 placeholder="Specify the medical problem"

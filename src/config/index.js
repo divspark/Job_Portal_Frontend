@@ -743,6 +743,9 @@ export const sectoralFieldsForm2 = [
       { id: "jobPortal", label: "Job Portal" },
       { id: "colleagues", label: "Colleagues" },
     ],
+    allowOther: true,
+    showOtherInput: true,
+    inlineOther: true,
   },
 
   {
@@ -902,6 +905,9 @@ export const candiadateCreationformControls = [
       { id: "male", label: "Male" },
       { id: "female", label: "Female" },
     ],
+    allowOther: true,
+    showOtherInput: true,
+    inlineOther: true,
   },
 ];
 export const highestQualification = [
@@ -941,7 +947,7 @@ export const releventCandidateProfessionalDetails = [
     ],
   },
   {
-    name: "currentSector",
+    name: "currentIndustry",
     label: "Current Sector",
     componentType: "select",
     placeholder: "IT or Non-IT",
@@ -954,22 +960,24 @@ export const releventCandidateProfessionalDetails = [
     label: "Total Experience",
     row: [
       {
-        name: "experience.years",
+        name: "totalExperience",
         label: "Years",
         componentType: "select",
         options: Array.from({ length: 31 }, (_, i) => ({
           id: i.toString(),
           label: `${i} Year${i === 1 ? "" : "s"}`,
         })),
+        forceNumber: true,
       },
       {
-        name: "experience.months",
+        name: "totalExperienceInMonth",
         label: "Months",
         componentType: "select",
         options: Array.from({ length: 12 }, (_, i) => ({
           id: i.toString(),
           label: `${i} Month${i === 1 ? "" : "s"}`,
         })),
+        forceNumber: true,
       },
     ],
   },
