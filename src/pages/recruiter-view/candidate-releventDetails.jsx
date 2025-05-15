@@ -7,27 +7,6 @@ import {
 
 const CandidateReleventDetails = () => {
   const [formData, setFormData] = useState({
-    name: "John Doe",
-    profilePicture: "https://example.com/profile.jpg",
-
-    phone: {
-      number: "9876543210",
-      countryCode: "+91",
-    },
-    email: "johndoe@example.com",
-    currentAddress: {
-      address: "123 Main Street",
-      city: "Mumbai",
-      pincode: "400001",
-    },
-    permanentAddress: {
-      address: "456 Another Street",
-      city: "Pune",
-      pincode: "411001",
-    },
-    gender: "male",
-    currentWorkingStatus: "working",
-    resume: "https://example.com/resume.pdf",
     noticePeriod: 30,
     totalExperience: 8,
     currentSalary: 1200000,

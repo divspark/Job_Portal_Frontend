@@ -40,7 +40,7 @@ export const useGetUserProfile = ({ enabled = true } = {}) => {
   return useQuery({
     queryKey: ["user-profile", token],
     queryFn: ({ signal }) => getUserDetails({ signal }),
-    enabled: enabled && !!token && !user,
+    enabled: enabled && !!token,
     select: (data) => {
       const newUser = data.data;
       setUser(newUser);

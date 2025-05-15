@@ -4,6 +4,7 @@ import { Loader2 } from "lucide-react";
 import CommonForm from "../../components/common/form";
 import { sectoralFieldsForm } from "../../config";
 import { useSectoralDetails } from "../../hooks/useProfile";
+import { useSectorOptions } from "../../hooks/useSectoralOption";
 
 const SectoralDetails = () => {
   const [formData, setFormData] = useState({
@@ -19,11 +20,24 @@ const SectoralDetails = () => {
     relievingLetter: "https://example.com/relieving-letter.pdf",
     linkedinProfile: "",
   });
+  const { data: sectorOptions = [], isLoading, error } = useSectorOptions();
+  const updatedFields = sectoralFieldsForm.map((field) =>
+    field.name === "sectorSpecialization"
+      ? { ...field, options: sectorOptions }
+      : field
+  );
   const { mutate, isPending } = useSectoralDetails();
   const onSubmit = (e) => {
     e.preventDefault();
-    mutate(formData);
+    const payload = {
+      ...formData,
+      sectorSpecialization: formData.sectorSpecialization.map(
+        (option) => option.id
+      ),
+    };
+    mutate(payload);
   };
+  console.log(formData);
   return (
     <div className="w-full self-stretch lg:px-36 lg:py-24 p-[20px] inline-flex flex-col justify-start items-start lg:gap-7 gap-[18px]">
       <div className="w-full flex justify-start items-start gap-7">
@@ -48,7 +62,7 @@ const SectoralDetails = () => {
       >
         <div className="w-full">
           <CommonForm
-            formControls={sectoralFieldsForm}
+            formControls={updatedFields}
             formData={formData}
             setFormData={setFormData}
           />

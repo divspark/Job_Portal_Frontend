@@ -75,8 +75,7 @@ const Layout = () => {
             </div>
             <div className="flex flex-col gap-[6px] items-center justify-center z-10 ">
               <div className="text-[#fff] text-xs font-medium">
-                {user?.firstName}{" "}
-                {user?.lastName}
+                {user?.name}
               </div>
               <div className="text-[#A2A2A2] text-xxs font-medium text-center">
                 Continue your journey and achieve Your Target
@@ -130,15 +129,17 @@ const Layout = () => {
           </div>
           <div className="z-1 inline-flex flex-col justify-start items-center gap-1.5">
             <div className="self-stretch text-center justify-start text-white text-base font-medium capitalize">
-            {user?.firstName}{" "}
-            {user?.lastName}
+              {user?.name}
             </div>
             <div className="self-stretch text-center justify-start text-neutral-400 text-sm font-medium capitalize">
               continue your journey and <br />
               achieve Your Target
             </div>
           </div>
-          <div onClick={logOut} className="z-1 inline-flex flex-col justify-center items-end gap-2.5">
+          <div
+            onClick={logOut}
+            className="z-1 inline-flex flex-col justify-center items-end gap-2.5"
+          >
             <div className="w-9 h-9 p-3 rounded-[50px] outline  outline-offset-[-1px] outline-white inline-flex justify-center items-center gap-2.5">
               <div className="w-4 h-4 relative">
                 <Dash className="h-[16px] w-[16px]" />
