@@ -3,6 +3,7 @@ import CommonForm from "../../components/common/form";
 import {
   releventCandidateProfessionalDetails,
   releventCandidateSalary,
+  workingExperience,
 } from "../../config";
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
@@ -11,13 +12,24 @@ import { useCreateApplicant } from "../../hooks/useApplicant";
 
 const CandidateReleventDetails = () => {
   const [formData, setFormData] = useState({
-    noticePeriod: 30,
-    totalExperience: 8,
-    currentSalary: 1200000,
-    expectedSalary: 1500000,
-    roleLookingFor: "Senior Backend Engineer",
-    areaOfExpertise: "Backend Development",
-    functionalArea: "Engineering",
+    noticePeriod: 0,
+    totalExperience: 0,
+    totalExperienceInMonth: 0,
+    currentSalary: 0,
+    expectedSalary: 0,
+    roleLookingFor: "",
+    areaOfExpertise: "",
+    functionalArea: "",
+    password: "qwe",
+    experienceDetails: [
+      {
+        companyName: "",
+        employmentType: "",
+        startDate: "",
+        endDate: "",
+        currentlyWorking: false,
+      },
+    ],
   });
   const { mutate, isPending } = useCreateApplicant();
   const onSubmit = (e) => {
@@ -33,7 +45,10 @@ const CandidateReleventDetails = () => {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col justify-start items-start gap-10">
+      <form
+        onSubmit={onSubmit}
+        className="w-full flex flex-col justify-start items-start gap-10"
+      >
         <div className="self-stretch flex flex-col justify-start items-start gap-10">
           <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
             <div className="self-stretch inline-flex justify-start items-start gap-60">
@@ -41,19 +56,27 @@ const CandidateReleventDetails = () => {
                 Professional Details
               </div>
             </div>
-            <div className="w-full">
+            <div className="w-full flex flex-col gap-[18px]">
               <CommonForm
                 formControls={releventCandidateProfessionalDetails}
                 formData={formData}
                 setFormData={setFormData}
               />
+              <div className="w-full">
+                {formData.experienceDetails.map((item, index) => (
+                  <CommonForm
+                    formControls={workingExperience}
+                    formData={formData}
+                    setFormData={setFormData}
+                    key={index}
+                    i={index}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-        <form
-          onSubmit={onSubmit}
-          className="w-full self-stretch flex flex-col justify-start items-start gap-10"
-        >
+        <div className="w-full self-stretch flex flex-col justify-start items-start gap-10">
           <div className="w-full self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
             <div className="self-stretch inline-flex justify-start items-start gap-60">
               <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
@@ -183,8 +206,8 @@ const CandidateReleventDetails = () => {
               </div>
             </Button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 };

@@ -34,6 +34,7 @@ const SectoralDetails = () => {
       sectorSpecialization: formData.sectorSpecialization.map(
         (option) => option.id
       ),
+      experienceLevel: formData.experienceLevel.map((ex) => ex.id),
     };
     mutate(payload);
   };

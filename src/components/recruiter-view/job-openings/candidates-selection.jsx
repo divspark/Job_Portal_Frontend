@@ -10,8 +10,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { convertMonthsToYearsAndMonths } from "../../../utils/objectUtils";
+import useJobSeekerProfileStore from "../../../stores/useJobSeekerProfileStore";
 
 const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
+  const { setJobSeekerProfile } = useJobSeekerProfileStore();
+  const handleOpen = (i) => {
+    setOpen2(true);
+    setJobSeekerProfile(i);
+  };
   return (
     <Fragment>
       {" "}
@@ -103,7 +109,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                 <TableRow key={i}>
                   <TableCell className="px-[16px] py-[12px] flex gap-[10px]">
                     <div
-                      onClick={() => setOpen2(true)}
+                      onClick={() => handleOpen(item)}
                       className="relative cursor-pointer w-[36px] h-[36px] "
                     >
                       <img

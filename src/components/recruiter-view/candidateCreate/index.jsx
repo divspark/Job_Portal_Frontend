@@ -23,6 +23,7 @@ const Index = () => {
       city: "",
       pincode: "",
     },
+    password: "qwe",
     permanentAddress: {
       address: "",
       city: "",
@@ -32,8 +33,8 @@ const Index = () => {
     education: [
       {
         degree: "",
-        institution: "IIT Bombay",
-        studyType: "full-time",
+        institution: "",
+        studyType: "",
         startDate: "",
         endDate: "",
       },
@@ -66,7 +67,7 @@ const Index = () => {
                 Basic Information
               </div>
             </div>
-            <div className="self-stretch h-0 outline outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
+            <div className="self-stretch h-0 outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
             <div className="w-full">
               <CommonForm
                 formControls={candiadateCreationformControls}
@@ -142,7 +143,7 @@ const Index = () => {
                   onClick={() =>
                     setFormData((prev) => ({
                       ...prev,
-                      currentWorkingStatus: "not working",
+                      currentWorkingStatus: "notworking",
                     }))
                   }
                   className={`min-w-[100px] flex-1 px-4 py-2.5 bg-white rounded outline-2 outline-offset-[-1px] ${

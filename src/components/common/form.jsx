@@ -20,7 +20,11 @@ import {
 } from "@/components/ui/popover";
 import { getNestedValue, setNestedValue } from "../../utils/objectUtils";
 import MultiSelectField from "./MultiSelectField";
-import { highestQualification, referenceFields } from "../../config";
+import {
+  highestQualification,
+  referenceFields,
+  workingExperience,
+} from "../../config";
 
 export default function CommonForm({ formControls, formData, setFormData, i }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,6 +35,8 @@ export default function CommonForm({ formControls, formData, setFormData, i }) {
       nameWithIndex = `references.${i}.${getControlItem.name}`;
     } else if (formType === "highestQualification" && i >= 0) {
       nameWithIndex = `education.${i}.${getControlItem.name}`;
+    } else if (formType === "isWorkingExperience" && i >= 0) {
+      nameWithIndex = `experienceDetails.${i}.${getControlItem.name}`;
     }
     const value = getNestedValue(formData, nameWithIndex) || "";
     const commonInputProps = {
@@ -346,10 +352,13 @@ export default function CommonForm({ formControls, formData, setFormData, i }) {
         {formControls.map((controlItem, index) => {
           const isReferenceForm = formControls === referenceFields;
           const isQualificationForm = formControls === highestQualification;
+          const isWorkingExperience = formControls === workingExperience;
           const formType = isReferenceForm
             ? "references"
             : isQualificationForm
             ? "highestQualification"
+            : isWorkingExperience
+            ? "isWorkingExperience"
             : null;
           if (controlItem.row) {
             return (

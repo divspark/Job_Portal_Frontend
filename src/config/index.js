@@ -981,20 +981,6 @@ export const releventCandidateProfessionalDetails = [
       },
     ],
   },
-  {
-    name: "lastPosition",
-    label: "Work Experience",
-    componentType: "input",
-    type: "text",
-    placeholder: "Position in Last Organization",
-  },
-  {
-    name: "currentPosition",
-    label: "Current Organisation",
-    componentType: "input",
-    type: "text",
-    placeholder: "Position in Last Organization",
-  },
 ];
 export const releventCandidateSalary = [
   {
@@ -1012,6 +998,29 @@ export const releventCandidateSalary = [
         placeholder: "e.g., 9 Lakhs",
         componentType: "input",
         type: "number",
+      },
+    ],
+  },
+];
+export const workingExperience = [
+  {
+    name: "companyName",
+    label: "Work Experience",
+    placeholder: "e.g Company Name",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    row: [
+      {
+        name: "startDate",
+        label: "Starting Year",
+        componentType: "calendar",
+      },
+      {
+        name: "endDate",
+        label: "Ending Year",
+        componentType: "calendar",
       },
     ],
   },
