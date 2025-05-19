@@ -3,17 +3,19 @@ import useAuthStore from "../../stores/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
 import { login, register } from "../../api/recruiter/auth";
 import { toast } from "sonner";
+import { getUserDetails } from "../../api/recruiter/user";
 
 export const useLogin = () => {
   const navigate = useNavigate();
   const { setUser, setToken, setIsAuthenticated } = useAuthStore();
   return useMutation({
     mutationFn: login,
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       toast.success(data.data.message);
-      setUser(data.data.data);
       setToken(data.data.data.token, variables.rememberme);
       setIsAuthenticated(true);
+      const response = await getUserDetails({});
+      setUser(response.data.data);
       navigate("/recruiter/dashboard");
     },
     onError: (error) => {

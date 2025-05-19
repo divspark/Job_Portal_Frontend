@@ -20,14 +20,17 @@ export const useKycDetails = () => {
 };
 export const useSectoralDetails = () => {
   const navigate = useNavigate();
+  const setUser = useAuthStore((state) => state.setUser);
   return useMutation({
     mutationFn: sectoralDetails,
-    onSuccess: (data, variables) => {
+    onSuccess: async (data, variables) => {
       toast.success(data.data.message);
+      const response = await getUserDetails({});
+      setUser(response.data.data);
       if (variables.sectorSpecialization) {
         navigate("/recruiter/profile-setup/qualification-details");
       } else {
-        navigate("/recruiter/profile-setup/dashboard");
+        navigate("/recruiter/dashboard");
       }
     },
     onError: (error) => {

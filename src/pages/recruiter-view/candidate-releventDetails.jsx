@@ -11,6 +11,7 @@ import { Loader2 } from "lucide-react";
 import { useCreateApplicant } from "../../hooks/recruiter/useApplicant";
 import { z } from "zod";
 import { validateFormData } from "../../utils/objectUtils";
+import useJobSeekerProfileStore from "../../stores/useJobSeekerProfileStore";
 
 const experienceDetailSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
@@ -59,7 +60,10 @@ const formDataSchema = z.object({
 });
 
 const CandidateReleventDetails = () => {
+  const { jobSeekerProfile } = useJobSeekerProfileStore();
   const [formData, setFormData] = useState({
+    email: jobSeekerProfile?.email,
+    password: jobSeekerProfile?.password,
     noticePeriod: 0,
     totalExperience: 0,
     totalExperienceInMonth: 0,

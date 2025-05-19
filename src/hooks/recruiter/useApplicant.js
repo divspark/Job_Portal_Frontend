@@ -5,6 +5,7 @@ import {
 } from "../../api/recruiter/applicant";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import useJobSeekerProfileStore from "../../stores/useJobSeekerProfileStore";
 
 export const useGetAllApplicant = () => {
   return useQuery({
@@ -18,10 +19,12 @@ export const useGetAllApplicant = () => {
 };
 export const useCreateApplicant = () => {
   const navigate = useNavigate();
+  const { setJobSeekerProfile } = useJobSeekerProfileStore();
   return useMutation({
     mutationFn: createJobSeeker,
     onSuccess: (data, variables) => {
       toast.success(data.data.message);
+      setJobSeekerProfile(data.data.data);
       if (variables.name) {
         navigate("/recruiter/candidates/relevent-details");
       } else {

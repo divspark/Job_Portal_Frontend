@@ -1,58 +1,62 @@
 import React, { Fragment } from "react";
 import HeroProfile from "../common/hero-profile";
 import { Link } from "react-router-dom";
+import useAuthStore from "../../../stores/useAuthStore";
 
 const Index = () => {
+  const { user } = useAuthStore();
   return (
     <Fragment>
       <div className="hidden lg:flex flex-col gap-[51px] w-full">
         <HeroProfile />
 
-        <div className="self-stretch p-10 bg-white rounded-2xl shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)] outline outline-offset-[-1px] outline-neutral-300 flex flex-col justify-start items-start gap-2.5">
-          <div className="self-stretch inline-flex justify-start items-start gap-12">
-            <div className="inline-flex flex-col justify-center items-start gap-3.5">
-              <div className="justify-start text-gray-900 text-6xl font-semibold leading-[64px]">
-                10%
-              </div>
-              <div className="w-28 opacity-70 justify-start text-gray-900 text-base font-semibold">
-                Of your profile is complete
-              </div>
-            </div>
-            <div className="flex-1 inline-flex flex-col justify-start items-start gap-4">
-              <div className="self-stretch justify-start text-gray-900 text-lg font-semibold leading-tight">
-                Complete your profile to post jobs!
-              </div>
-              <div className="self-stretch inline-flex justify-start items-start gap-2">
-                <div className="flex-1 h-2 bg-lime-600 rounded-xl" />
-                <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-                <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-                <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-                <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-                <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-              </div>
-              <div className="self-stretch inline-flex justify-start items-center gap-12">
-                <div className="flex-1 opacity-70 justify-start text-gray-900 text-base font-normal">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut.
+        {(user?.fatherName === undefined || user?.fatherName === "") && (
+          <div className="self-stretch p-10 bg-white rounded-2xl shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)] outline outline-offset-[-1px] outline-neutral-300 flex flex-col justify-start items-start gap-2.5">
+            <div className="self-stretch inline-flex justify-start items-start gap-12">
+              <div className="inline-flex flex-col justify-center items-start gap-3.5">
+                <div className="justify-start text-gray-900 text-6xl font-semibold leading-[64px]">
+                  50%
                 </div>
-                <Link
-                  to="/recruiter/profile-setup/sectoral-details"
-                  data-color="Default"
-                  data-icon-left="False"
-                  data-icon-right="False"
-                  data-size="Default"
-                  className="px-4 py-3.5 bg-neutral-800 rounded-md shadow-[0px_1px_4px_0px_rgba(25,33,61,0.08)] flex justify-center items-center gap-[3px]"
-                >
-                  <div className="text-center justify-start text-white text-base font-semibold leading-tight">
-                    Proceed to Complete
+                <div className="w-28 opacity-70 justify-start text-gray-900 text-base font-semibold">
+                  Of your profile is complete
+                </div>
+              </div>
+              <div className="flex-1 inline-flex flex-col justify-start items-start gap-4">
+                <div className="self-stretch justify-start text-gray-900 text-lg font-semibold leading-tight">
+                  Complete your profile to post jobs!
+                </div>
+                <div className="self-stretch inline-flex justify-start items-start gap-2">
+                  <div className="flex-1 h-2 bg-lime-600 rounded-xl" />
+                  <div className="flex-1 h-2 bg-lime-600 rounded-xl" />
+                  <div className="flex-1 h-2 bg-lime-600 rounded-xl" />
+                  <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
+                  <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
+                  <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
+                </div>
+                <div className="self-stretch inline-flex justify-start items-center gap-12">
+                  <div className="flex-1 opacity-70 justify-start text-gray-900 text-base font-normal">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                    ullamco laboris nisi ut.
                   </div>
-                </Link>
+                  <Link
+                    to="/recruiter/profile-setup/sectoral-details"
+                    data-color="Default"
+                    data-icon-left="False"
+                    data-icon-right="False"
+                    data-size="Default"
+                    className="px-4 py-3.5 bg-neutral-800 rounded-md shadow-[0px_1px_4px_0px_rgba(25,33,61,0.08)] flex justify-center items-center gap-[3px]"
+                  >
+                    <div className="text-center justify-start text-white text-base font-semibold leading-tight">
+                      Proceed to Complete
+                    </div>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-6 overflow-hidden">
           <div className="self-stretch inline-flex justify-start items-start gap-[662px]">
             <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
