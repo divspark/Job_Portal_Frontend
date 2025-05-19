@@ -2,11 +2,9 @@ import { Route, Routes } from "react-router-dom";
 import RecruiterLayout from "./components/recruiter-view/layout";
 import ProfileSetupLayout from "./components/recruiter-view/profile-setup-layout";
 import JobOpenings from "./pages/recruiter-view/job-openings";
-import Dashboard from "./pages/recruiter-view/dashboard";
 import Candidates from "./pages/recruiter-view/candidates";
 import CandidateCreate from "./pages/recruiter-view/candidate-create";
 import MatchesAndSubmission from "./pages/recruiter-view/matches-and-submission";
-import Login from "./pages/recruiter-view/log-in";
 import BasicDetails from "./pages/recruiter-view/basic-details";
 import KycVerification from "./pages/recruiter-view/kyc-verification";
 import SectoralDetails from "./pages/recruiter-view/sectoral-details";
@@ -16,6 +14,10 @@ import ScrollToTop from "./components/common/scrollToTop";
 import Congratulation from "./pages/recruiter-view/congratulation";
 import CheckAuth from "./components/common/checkAuth";
 import CandidateReleventDetails from "./pages/recruiter-view/candidate-releventDetails";
+import RecruiterLogin from "./pages/recruiter-view/log-in";
+import CorporateLogIn from "./pages/corporate-view/log-in";
+import RecruiterDashboard from "./pages/recruiter-view/dashboard";
+import CorporateDashboard from "./pages/corporate-view/dashboard";
 
 function App() {
   const token =
@@ -47,14 +49,6 @@ function App() {
           />
         </Route>
         <Route
-          path="/recruiter/log-in"
-          element={
-            <CheckAuth allowedRoles={["recruiter"]}>
-              <Login />
-            </CheckAuth>
-          }
-        />
-        <Route
           path="/recruiter"
           element={
             <CheckAuth allowedRoles={["recruiter"]}>
@@ -62,7 +56,7 @@ function App() {
             </CheckAuth>
           }
         >
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<RecruiterDashboard />} />
           <Route path="candidates" element={<Candidates />} />
           <Route
             path="candidates/candidate-create"
@@ -79,7 +73,47 @@ function App() {
             element={<MatchesAndSubmission />}
           />
         </Route>
-        {/* <Route path="*" element={<NotFound />} /> */}
+        <Route
+          path="/recruiter/log-in"
+          element={
+            <CheckAuth allowedRoles={["recruiter"]}>
+              <RecruiterLogin />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="/corporate/log-in"
+          element={
+            <CheckAuth allowedRoles={["corporate"]}>
+              <CorporateLogIn />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="/corporate/dashboard"
+          element={
+            <CheckAuth allowedRoles={["corporate"]}>
+              <CorporateDashboard />
+            </CheckAuth>
+          }
+        />
+
+        <Route
+          path="/"
+          element={
+            <CheckAuth allowedRoles={["corporate"]}>
+              <CorporateDashboard />
+            </CheckAuth>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            <CheckAuth allowedRoles={[""]}>
+              <CorporateDashboard />
+            </CheckAuth>
+          }
+        />
       </Routes>
     </div>
   );

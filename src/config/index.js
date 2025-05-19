@@ -936,17 +936,6 @@ export const highestQualification = [
 
 export const releventCandidateProfessionalDetails = [
   {
-    name: "experienceLevel",
-    label: "Experience Level",
-    componentType: "select",
-    placeholder: "Frontline, Mid-Level, Expert",
-    options: [
-      { id: "frontline", label: "Frontline" },
-      { id: "midlevel", label: "Mid-Level" },
-      { id: "expert", label: "Expert" },
-    ],
-  },
-  {
     name: "currentIndustry",
     label: "Current Sector",
     componentType: "select",
@@ -957,11 +946,11 @@ export const releventCandidateProfessionalDetails = [
     ],
   },
   {
-    label: "Total Experience",
+    label: "",
     row: [
       {
         name: "totalExperience",
-        label: "Years",
+        label: "Total Experience",
         componentType: "select",
         options: Array.from({ length: 31 }, (_, i) => ({
           id: i.toString(),
@@ -971,7 +960,7 @@ export const releventCandidateProfessionalDetails = [
       },
       {
         name: "totalExperienceInMonth",
-        label: "Months",
+        label: "",
         componentType: "select",
         options: Array.from({ length: 12 }, (_, i) => ({
           id: i.toString(),

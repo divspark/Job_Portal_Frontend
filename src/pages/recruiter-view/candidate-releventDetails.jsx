@@ -8,7 +8,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useCreateApplicant } from "../../hooks/useApplicant";
+import { useCreateApplicant } from "../../hooks/recruiter/useApplicant";
 
 const CandidateReleventDetails = () => {
   const [formData, setFormData] = useState({

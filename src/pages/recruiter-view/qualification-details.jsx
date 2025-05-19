@@ -3,7 +3,7 @@ import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import CommonForm from "../../components/common/form";
 import { referenceFields, sectoralFieldsForm2 } from "../../config";
-import { useSectoralDetails } from "../../hooks/useProfile";
+import { useSectoralDetails } from "../../hooks/recruiter/useProfile";
 
 const QualificationDetails = () => {
   const [formData, setFormData] = useState({

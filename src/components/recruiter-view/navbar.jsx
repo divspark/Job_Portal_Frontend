@@ -1,5 +1,6 @@
 import React from "react";
 import { BurgerIcon, GearIcon } from "../../utils/icon";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -9,7 +10,9 @@ const Navbar = () => {
           Company
         </div>
         <div className="lg:flex items-center gap-[24px] text-[#F4F4F4] text-base font-medium hidden ">
-          <span className="cursor-pointer">Dashboard</span>
+          <Link to={"/recruiter/dashboard"} className="cursor-pointer">
+            Dashboard
+          </Link>
           <span className="cursor-pointer">Applied Job/Internship</span>
           <span className="cursor-pointer">Courses</span>
           <span className="cursor-pointer">Chat</span>

@@ -1,23 +1,17 @@
-import React, { useState } from "react";
 import CommonForm from "../../common/form";
 import { LoginFields } from "../../../config";
 import { Button } from "../../ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Link } from "react-router-dom";
-import { useLogin } from "../../../hooks/useAuth";
 import { Loader2 } from "lucide-react";
 
-const Index = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberme: false,
-  });
-  const { mutate, isPending, isError, error } = useLogin();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    mutate(formData);
-  };
+const Index = ({
+  formData,
+  setFormData,
+  handleSubmit,
+  isPending,
+  signUpLink,
+}) => {
   return (
     <div className="flex max-sm:flex-col max-sm:gap-[40px] justify-between p-[20px] pt-[100px] max-sm:p-[24px] max-sm:pt-[100px] w-full pb-[90px] items-center">
       <div className="w-1/2 max-sm:w-full lg:flex lg:items-center lg:justify-end lg:pr-[100px]">
@@ -72,10 +66,7 @@ const Index = () => {
           </form>
           <div className="flex items-center justify-center text-base text-[#212121]">
             New User?
-            <Link
-              to={"/recruiter/profile-setup/basic-details"}
-              className="pl-[2px] font-bold underline"
-            >
+            <Link to={signUpLink} className="pl-[2px] font-bold underline">
               SIGN UP HERE
             </Link>
           </div>

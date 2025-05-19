@@ -1,6 +1,6 @@
 import React from "react";
 import CandidateProfile from "../../components/recruiter-view/candidates";
-import { useGetAllApplicant } from "../../hooks/useApplicant";
+import { useGetAllApplicant } from "../../hooks/recruiter/useApplicant";
 
 const Candidates = () => {
   const { data: applicants, isLoading, isError, error } = useGetAllApplicant();

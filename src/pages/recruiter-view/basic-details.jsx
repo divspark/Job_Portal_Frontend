@@ -3,7 +3,7 @@ import CommonForm from "../../components/common/form";
 import { basicInformation, recruiterSignUp } from "../../config";
 import { Button } from "../../components/ui/button";
 import { Slate, Upload } from "../../utils/icon";
-import { useRegister } from "../../hooks/useAuth";
+import { useRegister } from "../../hooks/recruiter/useAuth";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 

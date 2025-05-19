@@ -5,7 +5,7 @@ import {
   highestQualification,
 } from "../../../config";
 import { Button } from "../../ui/button";
-import { useCreateApplicant } from "../../../hooks/useApplicant";
+import { useCreateApplicant } from "../../../hooks/recruiter/useApplicant";
 import { Loader2 } from "lucide-react";
 
 const Index = () => {
@@ -89,7 +89,7 @@ const Index = () => {
             <div className="self-stretch flex flex-col justify-start items-start gap-2">
               <div className="self-stretch inline-flex justify-start items-center gap-3">
                 <div className="flex justify-start items-start gap-2.5">
-                  <div className="justify-start text-gray-900 text-sm font-medium leading-normal">
+                  <div className="justify-start text-gray-900 text-sm font-semibold leading-normal">
                     Current Working Status
                   </div>
                 </div>
@@ -143,7 +143,7 @@ const Index = () => {
                   onClick={() =>
                     setFormData((prev) => ({
                       ...prev,
-                      currentWorkingStatus: "notworking",
+                      currentWorkingStatus: "not working",
                     }))
                   }
                   className={`min-w-[100px] flex-1 px-4 py-2.5 bg-white rounded outline-2 outline-offset-[-1px] ${
@@ -163,9 +163,9 @@ const Index = () => {
               </div>
             </div>
             <div className="self-stretch flex flex-col justify-start items-start gap-10">
-              <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
+              <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
                 <div className="inline-flex justify-start items-start gap-2.5">
-                  <div className="justify-start text-gray-900 text-sm font-medium leading-normal">
+                  <div className="justify-start text-gray-900 text-sm font-semibold leading-normal">
                     Upload Resume
                   </div>
                 </div>

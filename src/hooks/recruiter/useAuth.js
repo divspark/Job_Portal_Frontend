@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../stores/useAuthStore";
+import useAuthStore from "../../stores/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
-import { login, register } from "../api/recruiter/auth";
+import { login, register } from "../../api/recruiter/auth";
 import { toast } from "sonner";
 
 export const useLogin = () => {

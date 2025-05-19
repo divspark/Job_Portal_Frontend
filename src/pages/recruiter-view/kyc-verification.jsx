@@ -3,7 +3,7 @@ import CommonForm from "../../components/common/form";
 import { KycVerificationDetails, recruiterSignUp } from "../../config";
 import { Button } from "../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useKycDetails } from "../../hooks/useProfile";
+import { useKycDetails } from "../../hooks/recruiter/useProfile";
 
 const KycVerification = () => {
   const [formData, setFormData] = useState({

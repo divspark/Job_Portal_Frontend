@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+import { useLogin } from "../../hooks/corporate/useAuth";
 import Navbar from "../../components/recruiter-view/navbar";
 import LogInComponent from "../../components/recruiter-view/log-in";
-import { useLogin } from "../../hooks/recruiter/useAuth";
 
-const RecruiterLogin = () => {
+const CorporateLogIn = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     rememberme: false,
   });
-  const signUpLink = "/recruiter/profile-setup/basic-details";
+  const signUpLink = "/corporate/profile-setup/basic-details";
   const { mutate, isPending, isError, error } = useLogin();
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,4 +29,4 @@ const RecruiterLogin = () => {
   );
 };
 
-export default RecruiterLogin;
+export default CorporateLogIn;

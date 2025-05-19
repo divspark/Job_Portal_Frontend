@@ -4,7 +4,7 @@ import JobDescription from "../../components/recruiter-view/job-openings/job-des
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import CandidateSelection from "../../components/recruiter-view/job-openings/candidates-selection";
 import CandidateProfile from "../../components/recruiter-view/job-openings/candidate-profile";
-import { useGetAllApplicant } from "../../hooks/useApplicant";
+import { useGetAllApplicant } from "../../hooks/recruiter/useApplicant";
 
 const JobOpenings = () => {
   const [open, setOpen] = useState(false);

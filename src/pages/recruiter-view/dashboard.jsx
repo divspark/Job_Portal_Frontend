@@ -1,7 +1,7 @@
 import React from "react";
 import DashboardComponent from "../../components/recruiter-view/dashboard";
 
-const Dashboard = () => {
+const RecruiterDashboard = () => {
   return (
     <div className="lg:pt-[80px] w-full">
       <DashboardComponent />
@@ -9,4 +9,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default RecruiterDashboard;

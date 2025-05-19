@@ -100,7 +100,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                   Experience
                 </TableHead>
                 <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
-                  Last Update
+                  Contact
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -113,38 +113,41 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                       className="relative cursor-pointer w-[36px] h-[36px] "
                     >
                       <img
-                        src={item.profilePicture}
-                        alt={item.name}
+                        src={item?.profilePicture}
+                        alt={item?.name}
                         className="h-full w-full rounded-[50px] object-cover"
                       />
                     </div>
                     <div className="flex flex-col">
                       <div className="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
-                        {item.name}
+                        {item?.name}
                       </div>
                       <div className="self-stretch justify-start text-[#6E6E71] text-xs font-normal leading-none">
-                        {item.areaOfExpertise}
+                        {item?.areaOfExpertise}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.roleLookingFor}
+                      {item?.roleLookingFor}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.skills.join(", ")}
+                      {item?.skills?.join(", ")}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {convertMonthsToYearsAndMonths(item.totalExperience)}
+                      {convertMonthsToYearsAndMonths(item?.totalExperience)}
                     </div>
                   </TableCell>
-                  <TableCell className="px-[16px] py-[12px]">
+                  <TableCell className="px-[16px] py-[12px] flex flex-col gap-[4px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.lastUpdate}
+                      {item?.phone?.countryCode} {item?.phone?.number}
+                    </div>
+                    <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
+                      {item?.email}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -206,7 +209,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                   Experience
                 </TableHead>
                 <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
-                  Last Update
+                  Contact
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -219,38 +222,41 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
                       className="cursor-pointer w-[36px] h-[36px] flex items-center justify-center"
                     >
                       <img
-                        src={item.profilePicture}
-                        alt={item.name}
+                        src={item?.profilePicture}
+                        alt={item?.name}
                         className="h-full w-full rounded-[50px] object-cover"
                       />
                     </div>
                     <div className="flex flex-col">
                       <div className="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
-                        {item.name}
+                        {item?.name}
                       </div>
                       <div className="self-stretch justify-start text-[#6E6E71] text-xs font-normal leading-none">
-                        {item.areaOfExpertise}
+                        {item?.areaOfExpertise}
                       </div>
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.roleLookingFor}
+                      {item?.roleLookingFor}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.skills.join(", ")}
+                      {item?.skills?.join(", ")}
                     </div>
                   </TableCell>
                   <TableCell className="px-[16px] py-[12px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {convertMonthsToYearsAndMonths(item.totalExperience)}
+                      {convertMonthsToYearsAndMonths(item?.totalExperience)}
                     </div>
                   </TableCell>
-                  <TableCell className="px-[16px] py-[12px]">
+                  <TableCell className="px-[16px] py-[12px] flex flex-col gap-[4px]">
                     <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                      {item.lastUpdate}
+                      {item?.phone?.countryCode} {item?.phone?.number}
+                    </div>
+                    <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
+                      {item?.email}
                     </div>
                   </TableCell>
                 </TableRow>

@@ -373,7 +373,7 @@ export default function CommonForm({ formControls, formData, setFormData, i }) {
                   >
                     <div className={`flex flex-col gap-[8px]`}>
                       {item.label && (
-                        <Label className="text-base text-[#20102B] font-medium">
+                        <Label className="text-base text-[#20102B] font-semibold">
                           {i >= 0 ? `${item.label} - ${i + 1}` : item.label}
                         </Label>
                       )}
