@@ -39,11 +39,6 @@ const Index = ({ applicants, formData, setFormData, setOpen2 }) => {
                   Create Candidate
                 </div>
               </Link>
-              <div className="cursor-pointer px-5 py-4 bg-gray-900 rounded-3xl gap-2.5">
-                <div className="justify-start text-white text-sm font-semibold leading-none">
-                  Delete Candidate
-                </div>
-              </div>
             </div>
             <div className="self-stretch inline-flex justify-start items-center">
               <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
@@ -75,11 +70,6 @@ const Index = ({ applicants, formData, setFormData, setOpen2 }) => {
                 Create Candidate
               </div>
             </Link>
-            <div className="px-5 py-4 bg-gray-900 rounded-3xl inline-flex justify-center items-center gap-2.5">
-              <div className="justify-start text-white text-sm font-semibold leading-none">
-                Delete Candidate
-              </div>
-            </div>
           </div>
 
           <div className="self-stretch inline-flex justify-start items-center">

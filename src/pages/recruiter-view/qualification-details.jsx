@@ -6,6 +6,7 @@ import { z } from "zod";
 import { validateFormData } from "../../utils/objectUtils";
 import ButtonComponent from "../../components/common/button";
 import { useUpload } from "../../hooks/common/useUpload";
+import PrevButton from "../../components/common/prevButton";
 
 const referenceSchema = z.object({
   name: z.string().min(1, "Reference name is required"),
@@ -140,7 +141,8 @@ const QualificationDetails = () => {
             />
           ))}
         </div>
-        <div className="self-stretch flex flex-col justify-end items-end gap-2.5">
+        <div className="self-stretch flex justify-between items-end gap-2.5">
+          <PrevButton link={"/recruiter/profile-setup/sectoral-details"} />
           <ButtonComponent
             isPending={isPending}
             buttonText={"Save & Update Profile"}

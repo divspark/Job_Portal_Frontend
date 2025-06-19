@@ -13,7 +13,7 @@ const ButtonComponent = ({ isPending, buttonText }) => {
             <Loader2 className="animate-spin h-2 w-2" /> Please wait
           </span>
         ) : (
-          `${buttonText}`
+          "Continue"
         )}
       </div>
     </Button>

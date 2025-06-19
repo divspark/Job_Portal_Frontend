@@ -184,11 +184,9 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
           <Table className="w-full border border-[#DADADA] rounded-[8px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold">
-                  <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
-                </TableHead>
+                <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold"></TableHead>
                 <TableHead className="px-[16px] py-[12px] w-[292px] text-sm text-[#101018] font-semibold">
-                  Owner
+                  Candidates
                 </TableHead>
                 <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
                   Applied for
@@ -205,7 +203,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {applicants?.data.map((item, i) => (
+              {applicants?.map((item, i) => (
                 <TableRow key={i}>
                   <TableCell className="w-[50px] px-[16px] py-[12px]">
                     <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
@@ -297,11 +295,9 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
           <Table className="w-full border border-[#DADADA] rounded-[8px]">
             <TableHeader>
               <TableRow>
-                <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold flex">
-                  <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[20px] w-[20px] rounded-[2px] flex items-center justify-center cursor-pointer" />
-                </TableHead>
+                <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold flex"></TableHead>
                 <TableHead className="px-[16px] py-[12px] w-[292px] text-sm text-[#101018] font-semibold">
-                  Owner
+                  Candidates
                 </TableHead>
                 <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
                   Applied for
@@ -318,7 +314,7 @@ const CandidateSelection = ({ setOpen2, show, button, applicants }) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {applicants?.data.map((item, index) => (
+              {applicants?.map((item, index) => (
                 <TableRow key={index}>
                   <TableCell className="w-[50px] px-[16px] py-[12px]">
                     <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[20px] w-[20px] rounded-[2px] flex items-center justify-center cursor-pointer" />

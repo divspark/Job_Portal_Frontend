@@ -11,18 +11,44 @@ import { z } from "zod";
 import { validateFormData } from "../../utils/objectUtils";
 import useJobSeekerProfileStore from "../../stores/useJobSeekerProfileStore";
 import ButtonComponent from "../../components/common/button";
+import PrevButton from "../../components/common/prevButton";
+import { Checkbox } from "../../components/ui/checkbox";
 
-const experienceDetailSchema = z.object({
-  companyName: z.string().min(1, "Company name is required"),
-  employmentType: z.string().optional(),
-  startDate: z.string().min(1, "Start date is required"),
-  endDate: z
-    .string()
-    .min(1, "End date is required")
-    .optional()
-    .or(z.literal("")), // Allow empty string if currentlyWorking is true
-  currentlyWorking: z.boolean().optional(),
-});
+const experienceDetailSchema = z
+  .object({
+    companyName: z.string().min(1, "Company name is required"),
+    employmentType: z.string().optional(),
+    startDate: z
+      .string()
+      .min(1, "Start date is required")
+      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Start date must be in MM/YY format"),
+    endDate: z
+      .string()
+      .min(1, "End date is required")
+      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "End date must be in MM/YY format"), // Allow empty string if currentlyWorking is true
+    currentlyWorking: z.boolean().optional(),
+  })
+  .refine(
+    (data) => {
+      const parseDate = (str) => {
+        const [month, year] = str.split("/").map(Number);
+        const fullYear = year >= 50 ? 1900 + year : 2000 + year;
+        return new Date(fullYear, month - 1);
+      };
+
+      try {
+        const start = parseDate(data.startDate);
+        const end = parseDate(data.endDate);
+        return start <= end;
+      } catch {
+        return false;
+      }
+    },
+    {
+      message: "Start date must be before or equal to end date",
+      path: ["startDate"],
+    }
+  );
 
 const formDataSchema = z.object({
   noticePeriod: z
@@ -71,6 +97,7 @@ const CandidateReleventDetails = () => {
         currentlyWorking: false,
       },
     ],
+    variable: false,
   });
   const { mutate, isPending } = useCreateApplicant();
   const onSubmit = (e) => {
@@ -84,6 +111,7 @@ const CandidateReleventDetails = () => {
     if (!isValid) return;
     mutate(formData);
   };
+  console.log(formData);
   return (
     <div className="self-stretch lg:px-36 lg:py-20 p-[20px] inline-flex flex-col justify-start items-end lg:gap-10 gap-[15px]">
       <div className="w-full inline-flex justify-start items-start gap-8">
@@ -151,7 +179,7 @@ const CandidateReleventDetails = () => {
                       : "outline-neutral-200"
                   }  flex justify-center items-center gap-2`}
                 >
-                  <div className="self-stretch flex justify-start items-start gap-2.5">
+                  <div className="self-stretch flex justify-center items-center gap-2.5">
                     <div className="justify-start text-neutral-400 text-sm font-normal leading-normal">
                       Available Now
                     </div>
@@ -170,7 +198,7 @@ const CandidateReleventDetails = () => {
                       : "outline-neutral-200"
                   }  flex justify-center items-center gap-2`}
                 >
-                  <div className="self-stretch flex justify-start items-start gap-2.5">
+                  <div className="self-stretch flex justify-center items-center gap-2.5">
                     <div className="justify-start text-neutral-400 text-sm font-normal leading-normal">
                       15 Days
                     </div>
@@ -189,7 +217,7 @@ const CandidateReleventDetails = () => {
                       : "outline-neutral-200"
                   }  flex justify-center items-center gap-2`}
                 >
-                  <div className="self-stretch flex justify-start items-start gap-2.5">
+                  <div className="self-stretch flex justify-center items-center gap-2.5">
                     <div className="justify-start text-neutral-400 text-sm font-normal leading-normal">
                       30 Days
                     </div>
@@ -208,7 +236,7 @@ const CandidateReleventDetails = () => {
                       : "outline-neutral-200"
                   }  flex justify-center items-center gap-2`}
                 >
-                  <div className="self-stretch flex justify-start items-start gap-2.5">
+                  <div className="self-stretch flex justify-center items-center gap-2.5">
                     <div className="justify-start text-neutral-400 text-sm font-normal leading-normal">
                       45 Days
                     </div>
@@ -221,13 +249,23 @@ const CandidateReleventDetails = () => {
                   <Input
                     placeholder="Enter Days"
                     value={formData.noticePeriod}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      let inputVal = e.target.value;
+
+                      // Prevent leading 0 unless the input is exactly "0"
+                      if (inputVal.length > 1 && inputVal.startsWith("0")) {
+                        inputVal = inputVal.replace(/^0+/, "");
+                      }
+
+                      // Allow empty string (user is deleting), else clamp max value
+                      const value =
+                        inputVal === "" ? "" : Math.min(Number(inputVal), 99);
+
                       setFormData((prev) => ({
                         ...prev,
-                        noticePeriod: Number(e.target.value),
-                      }))
-                    }
-                    type="number"
+                        noticePeriod: value,
+                      }));
+                    }}
                     className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-0 focus:border-black rounded-[4px]  py-[10px] px-[16px] placeholder:text-[#9B959F] h-full"
                   />
                 </div>
@@ -240,8 +278,36 @@ const CandidateReleventDetails = () => {
                 setFormData={setFormData}
               />
             </div>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                onCheckedChange={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    variable: !formData.variable,
+                  }))
+                }
+                checked={formData.variable}
+                className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer"
+              />
+              <span className="text-xs font-medium">
+                Tick if CTC has variable
+              </span>
+            </div>
+            <div className={`w-1/2 ${formData.variable ? "block" : "hidden"}`}>
+              <Input
+                placeholder="Enter Variable CTC"
+                className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
+              <span className="text-xs font-medium">
+                I accept the Terms & Conditions
+              </span>
+            </div>
           </div>
-          <div className="self-stretch flex flex-col justify-start items-end gap-10">
+          <div className="self-stretch flex justify-between items-end gap-10">
+            <PrevButton link={"/recruiter/candidates/candidate-create"} />
             <ButtonComponent isPending={isPending} buttonText={"Continue"} />
           </div>
         </div>

@@ -24,7 +24,7 @@ const formSchema = z
     confirmPassword: z.string().min(1, "confirm password field is required"),
     profileImage: z
       .string()
-      .min(1, "Resume is Required")
+      .min(1, "Profile Image is Required")
       .url("Must be a valid URL"),
     phone: z.object({
       number: z.union([z.number(), z.string()]), // Accept number or string

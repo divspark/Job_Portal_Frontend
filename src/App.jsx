@@ -25,6 +25,8 @@ import FinalSetup from "./pages/corporate-view/final-setup";
 import Analytics from "./pages/corporate-view/analytics";
 import Listing from "./pages/corporate-view/listing";
 import ResumeFiltering from "./pages/corporate-view/resume-filtering";
+import TrainningPosting from "./pages/corporate-view/trainning-posting";
+import JobPosting from "./pages/corporate-view/job-posting";
 
 function App() {
   const token =
@@ -138,6 +140,8 @@ function App() {
           }
         >
           <Route path="log-in" element={<CorporateLogIn />} />
+          <Route path="trainning-posting" element={<TrainningPosting />} />
+          <Route path="job-posting" element={<JobPosting />} />
         </Route>
         <Route
           path="/corporate"

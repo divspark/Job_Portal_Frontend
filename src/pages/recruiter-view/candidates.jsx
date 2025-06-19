@@ -5,7 +5,8 @@ import { useGetAllApplicant } from "../../hooks/recruiter/useApplicant";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 const Candidates = () => {
-  const { data: applicants, isLoading, isError, error } = useGetAllApplicant();
+  const { data, isLoading, isError, error } = useGetAllApplicant();
+  const applicants = data?.data ? [...data.data].reverse() : [];
   const [formData, setFormData] = useState({ sortBy: "" });
   const [open2, setOpen2] = useState(false);
   console.log(formData);

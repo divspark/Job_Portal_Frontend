@@ -25,6 +25,8 @@ import {
   referenceFields,
   workingExperience,
 } from "../../config";
+import MonthYearPicker from "./monthYearCalendar";
+import { Checkbox } from "../ui/checkbox";
 
 export default function CommonForm({
   formControls,
@@ -115,7 +117,15 @@ export default function CommonForm({
         } else {
           return <Input {...commonInputProps} type={getControlItem.type} />;
         }
-
+      case "monthYear":
+        return (
+          <MonthYearPicker
+            name={nameWithIndex}
+            formData={formData}
+            setFormData={setFormData}
+            value={value}
+          />
+        );
       case "select":
         const isMedicalProblemField =
           getControlItem.name === "hasMedicalProblem";
@@ -449,7 +459,12 @@ export default function CommonForm({
             );
           } else {
             return (
-              <div key={controlItem.name} className="flex flex-col gap-[8px]">
+              <div
+                key={controlItem.name}
+                className={`flex flex-col gap-[8px] ${
+                  controlItem.componentType === "file" ? "mb-2" : ""
+                }`}
+              >
                 {controlItem.label && (
                   <Label className="text-base text-[#20102B] font-semibold">
                     {controlItem.label}

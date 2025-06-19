@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import HeroProfile from "../common/hero-profile";
 import { Input } from "../../ui/input";
 import { SearchIcon } from "../../../utils/icon";
@@ -13,8 +13,10 @@ import {
 import { Button } from "../../ui/button";
 import SearchComponent from "../../common/searchComponent";
 import { Checkbox } from "../../ui/checkbox";
+import Pagination from "../../common/pagination";
 
 const Index = () => {
+  const [currentPage, setCurrentPage] = useState(1);
   const data = [
     {
       name: "Heeral Nant",
@@ -90,11 +92,6 @@ const Index = () => {
             <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
               Matches & Submissions
             </div>
-            <div className="cursor-pointer px-5 py-4 bg-gray-900 rounded-3xl gap-2.5">
-              <div className="justify-start text-white text-sm font-semibold leading-none">
-                Delete Candidate
-              </div>
-            </div>
           </div>
           <div className="self-stretch h-0 outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
           <SearchComponent />
@@ -102,11 +99,9 @@ const Index = () => {
             <Table className="w-full border border-[#DADADA] rounded-[8px]">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold">
-                    <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
-                  </TableHead>
+                  <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold"></TableHead>
                   <TableHead className="px-[16px] py-[12px] w-[292px] text-sm text-[#101018] font-semibold">
-                    Owner
+                    Candidates
                   </TableHead>
                   <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
                     Applied for
@@ -175,6 +170,12 @@ const Index = () => {
               </TableBody>
             </Table>
           </div>
+          <Pagination
+            range={1}
+            currentPage={currentPage}
+            totalPages={10}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
       <div className="w-full p-[24px] lg:hidden inline-flex flex-col justify-start items-start gap-6">
@@ -205,11 +206,9 @@ const Index = () => {
             <Table className="w-full border border-[#DADADA] rounded-[8px]">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold flex">
-                    <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[20px] w-[20px] rounded-[2px] flex items-center justify-center cursor-pointer" />
-                  </TableHead>
+                  <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold flex"></TableHead>
                   <TableHead className="px-[16px] py-[12px] w-[292px] text-sm text-[#101018] font-semibold">
-                    Owner
+                    Candidates
                   </TableHead>
                   <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
                     Applied for
@@ -278,6 +277,12 @@ const Index = () => {
               </TableBody>
             </Table>
           </div>
+          <Pagination
+            range={1}
+            currentPage={currentPage}
+            totalPages={10}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       </div>
     </Fragment>

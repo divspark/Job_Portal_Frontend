@@ -120,7 +120,10 @@ const Dashboard = () => {
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">Main Dashboard</h1>
           <div className="flex gap-6">
-            <button className="cursor-pointer px-6 py-3 bg-gray-900 text-base text-white rounded-lg flex items-center gap-2 font-semibold hover:bg-gray-800">
+            <Link
+              to={"/corporate/job-posting"}
+              className="cursor-pointer px-6 py-3 bg-gray-900 text-base text-white rounded-lg flex items-center gap-2 font-semibold hover:bg-gray-800"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -142,8 +145,11 @@ const Dashboard = () => {
                 />
               </svg>
               Post a New Job
-            </button>
-            <button className="cursor-pointer px-6 py-3 bg-gray-900 text-base text-white rounded-lg flex items-center gap-2 font-semibold hover:bg-gray-800">
+            </Link>
+            <Link
+              to={"/corporate/trainning-posting"}
+              className="cursor-pointer px-6 py-3 bg-gray-900 text-base text-white rounded-lg flex items-center gap-2 font-semibold hover:bg-gray-800"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -165,7 +171,7 @@ const Dashboard = () => {
                 />
               </svg>
               Post a New Training
-            </button>
+            </Link>
           </div>
         </div>
 

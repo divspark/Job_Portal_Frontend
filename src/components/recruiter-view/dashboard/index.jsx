@@ -76,10 +76,10 @@ const Index = () => {
             </div>
           </div>
           <div className="self-stretch h-0 outline outline-offset-[-0.50px] outline-neutral-200"></div>
-          <SearchComponent />
+          {/* <SearchComponent /> */}
           <div className="w-full self-stretch inline-flex justify-between items-center">
             <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex flex-col gap-4">
-              <div className="self-stretch inline-flex justify-center items-start gap-5">
+              <div className="self-stretch inline-flex justify-center items-center gap-5">
                 <div className="justify-start text-gray-900 text-sm font-semibold leading-none">
                   Total Candidates
                   <br />
@@ -91,10 +91,10 @@ const Index = () => {
               </div>
             </div>
             <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex flex-col justify-between items-center gap-4">
-              <div className="self-stretch inline-flex justify-center items-start gap-5">
+              <div className="self-stretch inline-flex justify-center items-center gap-5">
                 <div className="justify-start text-gray-900 text-sm font-semibold leading-none">
-                  Shortlisted by
-                  <br /> Employers
+                  Total Candidates
+                  <br /> Selected
                 </div>
                 <div className="justify-start text-gray-900 text-3xl font-semibold leading-7">
                   120
@@ -102,11 +102,9 @@ const Index = () => {
               </div>
             </div>
             <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex flex-col justify-between items-center gap-4">
-              <div className="self-stretch inline-flex justify-center items-start gap-5">
+              <div className="self-stretch inline-flex justify-center items-center gap-5">
                 <div className="justify-start text-gray-900 text-sm font-semibold leading-none">
-                  Interviews
-                  <br />
-                  Scheduled
+                  Offered
                 </div>
                 <div className="justify-start text-gray-900 text-3xl font-semibold leading-7">
                   120
@@ -114,9 +112,19 @@ const Index = () => {
               </div>
             </div>
             <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex flex-col justify-between items-center gap-4">
-              <div className="self-stretch inline-flex justify-center items-start gap-5">
+              <div className="self-stretch inline-flex justify-center items-center gap-5">
                 <div className="justify-start text-gray-900 text-sm font-semibold leading-none">
-                  Hired Candidates
+                  Joined
+                </div>
+                <div className="justify-start text-gray-900 text-3xl font-semibold leading-7">
+                  120
+                </div>
+              </div>
+            </div>
+            <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex flex-col justify-between items-center gap-4">
+              <div className="self-stretch inline-flex justify-center items-center gap-5">
+                <div className="justify-start text-gray-900 text-sm font-semibold leading-none">
+                  HOLD
                 </div>
                 <div className="justify-start text-gray-900 text-3xl font-semibold leading-7">
                   120
@@ -131,17 +139,18 @@ const Index = () => {
                   Top Hiring Companies
                 </div>
               </div>
-              <div className="w-1/2 rounded-[8px] border bg-white">
+              <div className="w-full rounded-[8px] border bg-white">
                 <Table>
                   <TableHeader className="[&_th]:font-semibold [&_th]:px-[16px]  [&_th]:py-[4px] [&_th]:text-sm">
                     <TableRow>
+                      <TableHead>Job</TableHead>
                       <TableHead>Company</TableHead>
-                      <TableHead>
-                        Candidates
-                        <br /> Submitted
-                      </TableHead>
-                      <TableHead>Shortlisted</TableHead>
-                      <TableHead>Hired</TableHead>
+                      <TableHead>Sumitted</TableHead>
+                      <TableHead>Selected</TableHead>
+                      <TableHead>Offered</TableHead>
+                      <TableHead>Joined</TableHead>
+                      <TableHead>Hold</TableHead>
+                      <TableHead>Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody className="[&_td]:text-base [&_td]:px-[16px] [&_td]:py-[12px]">

@@ -462,42 +462,7 @@ export const candiadateCreationformControls = [
       },
     ],
   },
-  {
-    name: "permanentAddress.address",
-    label: "Permanent Address",
-    placeholder: "Enter Primary Address",
-    componentType: "textarea",
-    type: "text",
-    width: "full",
-  },
-  {
-    row: [
-      {
-        name: "permanentAddress.city",
-        label: "",
-        placeholder: "Enter City",
-        componentType: "input",
-        type: "text",
-        width: "1/3",
-      },
-      {
-        name: "permanentAddress.state",
-        label: "",
-        placeholder: "Enter State",
-        componentType: "input",
-        type: "text",
-        width: "1/3",
-      },
-      {
-        name: "permanentAddress.pincode",
-        label: "",
-        placeholder: "Enter Pincode",
-        componentType: "input",
-        type: "text",
-        width: "1/3",
-      },
-    ],
-  },
+ 
   {
     name: "gender",
     label: "Gender",
@@ -525,12 +490,12 @@ export const highestQualification = [
       {
         name: "startDate",
         label: "Starting Year",
-        componentType: "calendar",
+        componentType: "monthYear",
       },
       {
         name: "endDate",
         label: "Ending Year",
-        componentType: "calendar",
+        componentType: "monthYear",
       },
     ],
   },
@@ -545,6 +510,9 @@ export const releventCandidateProfessionalDetails = [
       { id: "it", label: "IT" },
       { id: "non-it", label: "Non-IT" },
     ],
+    allowOther: true,
+    showOtherInput: true,
+    inlineOther: true,
   },
   {
     label: "",
@@ -596,7 +564,7 @@ export const releventCandidateSalary = [
 export const workingExperience = [
   {
     name: "companyName",
-    label: "Work Experience",
+    label: "Last Organisation",
     placeholder: "e.g Company Name",
     componentType: "input",
     type: "text",
@@ -606,12 +574,12 @@ export const workingExperience = [
       {
         name: "startDate",
         label: "Starting Year",
-        componentType: "calendar",
+        componentType: "monthYear",
       },
       {
         name: "endDate",
         label: "Ending Year",
-        componentType: "calendar",
+        componentType: "monthYear",
       },
     ],
   },
@@ -634,7 +602,7 @@ export const basicCorporateInformation = [
         componentType: "file",
         type: "file",
         width: "1/3",
-        accept:"image"
+        accept: "image",
       },
     ],
   },

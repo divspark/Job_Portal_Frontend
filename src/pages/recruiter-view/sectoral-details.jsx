@@ -11,7 +11,7 @@ import { useUpload } from "../../hooks/common/useUpload";
 const formSchema = z.object({
   sectorSpecialization: z
     .array(z.string().min(1))
-    .length(3, "Exactly 3 sector specializations are required"),
+    .length(1, "Atleast 1 sector specializations is required"),
 
   totalExperience: z
     .number()
@@ -20,7 +20,7 @@ const formSchema = z.object({
 
   experienceLevel: z
     .array(z.string().min(1))
-    .length(2, "Exactly 2 experience levels are required"),
+    .length(1, "At least 1 experience levels is required"),
 
   permanentAddress: z.object({
     address: z.string().min(1, "Permanent address is required"),

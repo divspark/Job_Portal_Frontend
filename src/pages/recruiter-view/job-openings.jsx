@@ -25,7 +25,9 @@ const JobOpenings = () => {
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const { data: applicants, isLoading, isError, error } = useGetAllApplicant();
+  const { data, isLoading, isError, error } = useGetAllApplicant();
+  const applicants = data?.data ? [...data.data].reverse() : [];
+
   const { data: jobPosts, isLoading: isLoading2 } = useFilteredJobs(filters);
   useEffect(() => {
     const delayDebounce = setTimeout(() => {
