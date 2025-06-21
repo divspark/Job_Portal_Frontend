@@ -339,7 +339,7 @@ export default function CommonForm({
                 <span
                   className={`${
                     fileNames === "" ? "text-[#9B959F]" : "text-black"
-                  } text-base`}
+                  } text-base truncate w-60`}
                 >
                   {fileNames || getControlItem.placeholder || "Upload File"}
                 </span>
@@ -360,7 +360,7 @@ export default function CommonForm({
                 </span>
               </Label>
             </div>
-            <div className="absolute bottom-[-15px] left-0 text-xs text-[#655F5F]">
+            <div className="absolute bottom-[-20px] left-0 text-xs text-[#655F5F]">
               Supported formats:{" "}
               {getControlItem.accept === "image" ? "Images only" : "PDF only"},{" "}
               Max size: 5MB.
@@ -473,7 +473,11 @@ export default function CommonForm({
                     key={item.name}
                     className={`gap-[8px] flex-2/3 lg:flex-1`}
                   >
-                    <div className={`flex flex-col gap-[8px]`}>
+                    <div
+                      className={`flex flex-col gap-[8px] ${
+                        item.componentType === "file" ? "max-sm:mb-2" : ""
+                      }`}
+                    >
                       {item.label && (
                         <Label className="text-base text-[#20102B] font-semibold">
                           {i >= 0 ? `${item.label} - ${i + 1}` : item.label}

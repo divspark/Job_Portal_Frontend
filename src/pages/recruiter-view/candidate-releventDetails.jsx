@@ -245,29 +245,40 @@ const CandidateReleventDetails = () => {
                     <div className="w-2 h-2 bg-white rounded-full outline-4 outline-offset-[-2px] outline-[#6945ED]" />
                   )}
                 </div>
-                <div className=" flex-1 h-11  bg-white rounded outline-1 outline-neutral-200 flex justify-center items-center gap-2">
+                <div className="relative flex-1 h-11 bg-white rounded outline outline-neutral-200">
                   <Input
-                    placeholder="Enter Days"
                     value={formData.noticePeriod}
                     onChange={(e) => {
                       let inputVal = e.target.value;
 
-                      // Prevent leading 0 unless the input is exactly "0"
+                      if (inputVal === "") {
+                        setFormData((prev) => ({
+                          ...prev,
+                          noticePeriod: 0,
+                        }));
+                        return;
+                      }
+
+                      if (!/^\d+$/.test(inputVal)) {
+                        return;
+                      }
+
                       if (inputVal.length > 1 && inputVal.startsWith("0")) {
                         inputVal = inputVal.replace(/^0+/, "");
                       }
 
-                      // Allow empty string (user is deleting), else clamp max value
-                      const value =
-                        inputVal === "" ? "" : Math.min(Number(inputVal), 99);
+                      const value = Math.min(Number(inputVal), 99);
 
                       setFormData((prev) => ({
                         ...prev,
                         noticePeriod: value,
                       }));
                     }}
-                    className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-0 focus:border-black rounded-[4px]  py-[10px] px-[16px] placeholder:text-[#9B959F] h-full"
+                    className="w-full h-full pr-14 text-black text-base focus:outline-none focus-visible:ring-0 focus:border-0 rounded-[4px] py-[10px] px-[16px] placeholder:text-[#9B959F]"
                   />
+                  <span className="absolute right-16 top-1/2 -translate-y-1/2 text-sm text-gray-600 pointer-events-none">
+                    {formData?.noticePeriod <=1 ? "day" : "days"}
+                  </span>
                 </div>
               </div>
             </div>

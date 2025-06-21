@@ -20,7 +20,7 @@ const Candidates = () => {
             lg:max-w-[999px] 
             md:max-w-full
             sm:max-w-full 
-            overflow-y-auto"
+            overflow-y-auto [&>button.absolute]:hidden"
         >
           <div className="w-full h-full">
             <CandidateProfiles />

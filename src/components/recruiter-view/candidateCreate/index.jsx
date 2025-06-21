@@ -146,7 +146,7 @@ const Index = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    let payLoad;
+    let payLoad = { ...formData };
     if (formData.sameAs) {
       payLoad = {
         ...formData,
