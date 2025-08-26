@@ -5,6 +5,7 @@ import Navbar from "../../components/recruiter-view/navbar";
 import { PostJobIcon } from "../../utils/icon";
 import { useCorporateJobPost } from "../../hooks/corporate/useJob";
 import { validateFormData } from "../../utils/commonFunctions";
+
 import { z } from "zod";
 import ButtonComponent from "../../components/common/button";
 
@@ -148,6 +149,8 @@ const formSchema = z
   });
 
 const JobPosting = () => {
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [formData, setFormData] = useState({
     jobTitle: "",
     jobType: "",
@@ -256,6 +259,7 @@ const JobPosting = () => {
           </div>
         </div>
       </form>
+      
     </div>
   );
 };

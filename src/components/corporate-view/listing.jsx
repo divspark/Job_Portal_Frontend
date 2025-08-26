@@ -14,6 +14,8 @@ const Listing = ({
   setOpen,
   handleSearch,
   searchText,
+  open1,
+  setOpen1,
 }) => {
   const totalPages = Math.ceil(jobPosts?.pagination?.total / 10);
   console.log(totalPages);
@@ -62,7 +64,12 @@ const Listing = ({
           <SearchComponent handleSearch={handleSearch} value={searchText} />
           <div className="self-stretch flex flex-col justify-start items-start gap-4 w-full">
             {jobPosts?.data?.map((item, i) => (
-              <JobCard key={i} item={item} setOpen={setOpen} />
+              <JobCard
+                key={i}
+                item={item}
+                setOpen={setOpen}
+                setOpen1={setOpen1}
+              />
             ))}
           </div>
           <Pagination

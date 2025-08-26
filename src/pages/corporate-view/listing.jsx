@@ -7,11 +7,101 @@ import Navbar from "../../components/recruiter-view/navbar";
 import { useSearchParams } from "react-router-dom";
 import { useDebounce } from "../../hooks/common/useDebounce";
 import { useTraining } from "../../hooks/corporate/useTraining";
+import CandidateProfiles from "../../components/recruiter-view/job-openings/candidate-profile";
 
+import Pagination from "../../components/common/pagination";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Checkbox } from "../../components/ui/checkbox";
+import SearchComponent from "../../components/common/searchComponent";
+import { convertMonthsToYearsAndMonths } from "../../utils/commonFunctions";
+const candidateList = [
+  {
+    name: "Heeral Nant",
+    areaOfExpertise: "Lead Product Designer",
+    skills: ["Figma", "UX Research"],
+    totalExperience: 3,
+    status: "Pending",
+  },
+  {
+    name: "Nithya Menon",
+    areaOfExpertise: "UI Designer",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Shortlisted",
+  },
+  {
+    name: "Nithya Menon",
+    areaOfExpertise: "UI Designer",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Shortlisted",
+  },
+  {
+    name: "Meera Gonzalez",
+    areaOfExpertise: "Product Designer",
+    skills: ["Figma", "UX Research"],
+    totalExperience: 3,
+    status: "Rejected",
+  },
+  {
+    name: "Karthik Subramanian",
+    areaOfExpertise: "Sub Content",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Shortlisted",
+  },
+  {
+    name: "Mithra B",
+    areaOfExpertise: "Product Designer",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Shortlisted",
+  },
+  {
+    name: "Jagatheesh Narayanan",
+    areaOfExpertise: "UX Designer",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Shortlisted",
+  },
+  {
+    name: "Steve Rogers",
+    areaOfExpertise: "Developer",
+    skills: ["Figma", "UX Research"],
+    totalExperience: 3,
+    status: "Shortlisted",
+  },
+  {
+    name: "Richard Hendricks",
+    areaOfExpertise: "Sr. Developer",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Rejected",
+  },
+  {
+    name: "Monica Patel",
+    areaOfExpertise: "UX Writer",
+    skills: ["Python", "Django"],
+    totalExperience: 3,
+    status: "Rejected",
+  },
+];
 const Listing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
+
   const [open, setOpen] = useState(false);
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const [searchText, setSearchText] = useState("");
+  const [formData, setFormData] = useState({ sortBy: "" });
 
   const [filters, setFilters] = useState(() => {
     // Restore from URL on first render
@@ -100,7 +190,142 @@ const Listing = () => {
         handleSearch={handleSearch}
         searchText={searchText}
         ClearAll={ClearAll}
+        open1={open1}
+        setOpen1={setOpen1}
       />
+      <Sheet open={open2} onOpenChange={setOpen2}>
+        <SheetContent
+          side="right"
+          className="
+              w-full h-screen 
+            lg:max-w-[999px] 
+            md:max-w-full
+            sm:max-w-full 
+            overflow-y-auto border-transparent"
+        >
+          <div className="w-full h-full">
+            <CandidateProfiles />
+          </div>
+        </SheetContent>
+      </Sheet>
+      <Sheet open={open1} onOpenChange={setOpen1}>
+        <SheetContent
+          side="right"
+          className="
+            w-full h-screen 
+            lg:max-w-[999px] 
+            md:max-w-full
+            sm:max-w-full 
+            overflow-y-auto border-transparent"
+        >
+          <div className="w-full h-full">
+            <div className="w-full min-h-screen p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
+              <div className="self-stretch inline-flex justify-start items-start">
+                <div className="flex-1 justify-start text-gray-900 text-lg font-semibold leading-tight">
+                  Candidate List
+                </div>
+              </div>
+              <div className="self-stretch h-0 outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
+              <SearchComponent />
+              <div className="self-stretch rounded-lg ">
+                <div className="w-full overflow-x-auto">
+                  {/* <div className="min-w-[1000px]"> */}
+                  <Table className="w-full border border-[#DADADA] rounded-[8px]">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="[&:has([role=checkbox])]:border-none px-[16px] py-[12px] w-[50px] text-sm text-[#101018] font-semibold">
+                          <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
+                        </TableHead>
+                        <TableHead className="px-[16px] py-[12px] w-[292px] text-sm text-[#101018] font-semibold">
+                          Owner
+                        </TableHead>
+                        <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
+                          Skills
+                        </TableHead>
+                        <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
+                          Experience
+                        </TableHead>
+                        <TableHead className="px-[16px] py-[12px] w-[164px] text-sm text-[#101018] font-semibold">
+                          Status
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {candidateList?.map((item, i) => (
+                        <TableRow key={i}>
+                          <TableCell className="w-[50px] px-[16px] py-[12px]">
+                            <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
+                          </TableCell>
+                          <TableCell className="px-[16px] py-[12px] flex gap-[10px]">
+                            <div
+                              onClick={() => setOpen2(true)}
+                              className="relative cursor-pointer w-[36px] h-[36px] "
+                            >
+                              <img
+                                src={item?.profilePicture}
+                                alt={item?.name}
+                                className="h-full w-full rounded-[50px] object-cover"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <div className="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
+                                {item?.name}
+                              </div>
+                              <div className="self-stretch justify-start text-[#6E6E71] text-xs font-normal leading-none">
+                                {item?.areaOfExpertise}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-[16px] py-[12px]">
+                            <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
+                              {item?.skills?.join(", ")}
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-[16px] py-[12px]">
+                            <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
+                              {convertMonthsToYearsAndMonths(
+                                item?.totalExperience
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell className="px-[16px] py-[12px]">
+                            {item.status === "Rejected" ? (
+                              <div className="size- px-2 py-1 bg-red-600/10 rounded-[3px] inline-flex justify-start items-center gap-1 overflow-hidden">
+                                <div className="justify-start text-red-600 text-xs font-medium leading-none">
+                                  Rejected
+                                </div>
+                              </div>
+                            ) : item.status === "Shortlisted" ? (
+                              <div className="size- px-2 py-1 bg-lime-600/10 rounded-[3px] inline-flex justify-start items-center gap-1 overflow-hidden">
+                                <div className="justify-start text-lime-600 text-xs font-medium leading-none">
+                                  Shortlisted
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="size- px-2 py-1 bg-amber-600/10 rounded-[3px] inline-flex justify-start items-center gap-1 overflow-hidden">
+                                <div className="justify-start text-amber-600 text-xs font-medium leading-none">
+                                  Pending
+                                </div>
+                              </div>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  {/* </div> */}
+                </div>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={10}
+                  range={2}
+                  onPageChange={(page) => setCurrentPage(page)}
+                />
+              </div>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

@@ -16,7 +16,7 @@ import {
 import useJobPostStore from "../../../stores/useJobPostStore";
 import { IndianRupee } from "lucide-react";
 
-const JobCard = ({ setOpen, item }) => {
+const JobCard = ({ setOpen, item, setOpen1 }) => {
   const { setJobPost } = useJobPostStore();
   const handleJob = (job) => {
     setJobPost(job);
@@ -40,7 +40,12 @@ const JobCard = ({ setOpen, item }) => {
                 {item?.companyDetails?.companyName}
               </div>
             </div>
-            <div className="text-[#141414] text-lg font-medium">
+            <div
+              onClick={() => {
+                setOpen1((prev) => !prev);
+              }}
+              className="text-[#141414] text-lg font-medium cursor-pointer"
+            >
               {item?.jobTitle}
             </div>
           </div>
@@ -71,7 +76,12 @@ const JobCard = ({ setOpen, item }) => {
               </div>{" "}
               <div className="flex gap-[6px] items-center">
                 <div className="flex items-center justify-center">
-                  <IndianRupee width={10} height={10} color="#141414" strokeWidth={1.5} />
+                  <IndianRupee
+                    width={10}
+                    height={10}
+                    color="#141414"
+                    strokeWidth={1.5}
+                  />
                 </div>
                 <div className="text-[#141414] text-sm">
                   {item?.salaryRange}

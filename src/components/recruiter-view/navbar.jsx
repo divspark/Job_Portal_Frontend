@@ -31,7 +31,7 @@ const Navbar = ({ onlySupport }) => {
               variant="outline"
               className="cursor-pointer pl-3.5 pr-2 py-2 rounded-[50px] border-1 border-[#6B6B6B] flex justify-center items-center gap-2.5 bg-white"
             >
-              <div className="text-center justify-center text-neutral-500 text-sm font-medium leading-snug">
+              <div className="text-center justify-center text-neutral-500 text-sm font-medium">
                 Support
               </div>
               <SupportIcon />

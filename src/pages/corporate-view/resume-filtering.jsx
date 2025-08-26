@@ -13,7 +13,7 @@ const ResumeFiltering = () => {
         <SheetContent
           side="right"
           className="
-              w-full h-screen 
+            w-full h-screen 
             lg:max-w-[999px] 
             md:max-w-full
             sm:max-w-full 
