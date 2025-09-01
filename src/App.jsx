@@ -233,8 +233,35 @@ function App() {
         >
           <Route path="dashboard" element={<JobSeekerDashboard />} />
           <Route path="dashboard/:id" element={<JobDescription />} />
+          <Route path="faq" element={<Faq />} />
         </Route>
         {/* Job Seeker Dashboard */}
+
+        <Route path="/trainer/log-in" element={<JobSeekerLogin />} />
+
+        {/* Job Seeker Profile Setup */}
+        <Route path="/trainer/profile-setup" element={<ProfileSetupLayout />}>
+          <Route path="basic-details" element={<SeekerBasicDetails />} />
+          <Route path="education-details" element={<EducationDetails />} />
+          <Route path="working-details" element={<WorkingDetails />} />
+          <Route path="certificate-details" element={<CertificateDetails />} />
+          <Route path="additional-details" element={<AdditionalDetails />} />
+        </Route>
+        <Route
+          path="/trainer"
+          element={
+            // <CheckAuth
+            //   // fetchProfileHook={useGetCorporateUserProfile}
+            //   allowedRoles={["job-seeker"]}
+            // >
+            <Layout />
+            // </CheckAuth>
+          }
+        >
+          <Route path="dashboard" element={<JobSeekerDashboard />} />
+          <Route path="dashboard/:id" element={<JobDescription />} />
+          <Route path="faq" element={<Faq />} />
+        </Route>
 
         {/* Congrats fallback route */}
         <Route path="congratulation" element={<DynamicCheckAuthWrapper />} />
