@@ -48,6 +48,15 @@ import CertificateDetails from "./pages/jobSeeker-view/certificate-details";
 import JobSeekerDashboard from "./pages/jobSeeker-view/dashboard";
 import AdditionalDetails from "./pages/jobSeeker-view/additional-details";
 import JobDescription from "./pages/jobSeeker-view/job-description";
+import SeekerSeach from "./pages/jobSeeker-view/search";
+
+// Trainer pages
+import TrainerLogin from "./pages/trainner-view/log-in";
+import TrainerBasicDetails from "./pages/trainner-view/basic-details";
+import TrainerEducation from "./pages/trainner-view/education-details";
+import TrainerWorking from "./pages/trainner-view/working-details";
+import TrainerCertificate from "./pages/trainner-view/certificate-details";
+import TrainerAdditional from "./pages/trainner-view/additional-details";
 
 function App() {
   useEffect(() => {
@@ -233,19 +242,20 @@ function App() {
         >
           <Route path="dashboard" element={<JobSeekerDashboard />} />
           <Route path="dashboard/:id" element={<JobDescription />} />
+          <Route path="search" element={<SeekerSeach />} />
           <Route path="faq" element={<Faq />} />
         </Route>
         {/* Job Seeker Dashboard */}
 
-        <Route path="/trainer/log-in" element={<JobSeekerLogin />} />
+        <Route path="/trainer/log-in" element={<TrainerLogin />} />
 
         {/* Job Seeker Profile Setup */}
         <Route path="/trainer/profile-setup" element={<ProfileSetupLayout />}>
-          <Route path="basic-details" element={<SeekerBasicDetails />} />
-          <Route path="education-details" element={<EducationDetails />} />
-          <Route path="working-details" element={<WorkingDetails />} />
-          <Route path="certificate-details" element={<CertificateDetails />} />
-          <Route path="additional-details" element={<AdditionalDetails />} />
+          <Route path="basic-details" element={<TrainerBasicDetails />} />
+          <Route path="education-details" element={<TrainerEducation />} />
+          <Route path="working-details" element={<TrainerWorking />} />
+          <Route path="certificate-details" element={<TrainerCertificate />} />
+          <Route path="additional-details" element={<TrainerAdditional />} />
         </Route>
         <Route
           path="/trainer"

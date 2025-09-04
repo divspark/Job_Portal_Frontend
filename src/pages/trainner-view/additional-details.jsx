@@ -19,7 +19,7 @@ const AdditionalDetails = () => {
       <div className="w-full flex flex-col justify-start items-start gap-8">
         <div className="flex flex-col justify-start items-start gap-7">
           <div className="justify-start text-gray-900 text-md2 lg:text-3xl font-bold leading-loose">
-            Show off your hands-on experience
+            Additional Information
           </div>
         </div>
       </div>
@@ -36,10 +36,6 @@ const AdditionalDetails = () => {
         </div>
       </div>
       <div className="w-full flex flex-col p-6 rounded-lg border-[#DADADA] border-1 shadow-[0_1px_2px_0_rgba(0,0,0,0.03)] gap-[18px]">
-        <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
-          Additional Information
-        </div>
-        <div className="self-stretch h-0 outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
         <CommonForm
           formControls={additionalDetailsJobSeeker}
           formData={formData}

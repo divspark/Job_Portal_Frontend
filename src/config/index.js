@@ -1757,6 +1757,13 @@ export const jobSeekerEducationFormControls = [
       },
     ],
   },
+  {
+    name: "supporingDoc",
+    label: "Supporting Document",
+    placeholder: "Upload Profile Picture",
+    componentType: "file",
+    accept: "image", // only allow images
+  },
 ];
 export const workExperienceFormControls = [
   {
@@ -1857,8 +1864,8 @@ export const roleExpertiseFormControls = [
   },
   {
     name: "areaOfExpertise",
-    label: "Area of Expertise (In Order)",
-    componentType: "input",
+    label: "Expertise Areas",
+    componentType: "multi-select",
     type: "text",
     placeholder: "Enter the Area of Expertise",
     required: true,
@@ -2044,5 +2051,263 @@ export const additionalDetailsJobSeeker3 = [
     componentType: "multi-select",
     options: [],
     placeholder: "Select all the languages you speak",
+  },
+];
+// candidateFormControls.js
+
+export const trainerFormControls1 = [
+  {
+    row: [
+      {
+        name: "candidateName",
+        label: "Candidate Name",
+        placeholder: "e.g. Jason Wild",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "profilePicture",
+        label: "Profile Picture",
+        placeholder: "Upload Profile Picture",
+        componentType: "file",
+        accept: "image", // only allow images
+      },
+    ],
+  },
+  {
+    name: "phone",
+    label: "Contact Number",
+    placeholder: "Ex. XXXXX XXXXX",
+    componentType: "phone",
+  },
+  {
+    name: "email",
+    label: "E-mail ID",
+    placeholder: "Enter your email",
+    componentType: "input",
+    type: "email",
+  },
+  {
+    row: [
+      {
+        name: "address",
+        label: "Current Address",
+        placeholder: "Enter Current Address",
+        componentType: "input",
+        type: "text",
+      },
+    ],
+  },
+  {
+    row: [
+      {
+        name: "city",
+        placeholder: "Enter City",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "state",
+        placeholder: "Enter State",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "pincode",
+        placeholder: "Enter Pincode",
+        componentType: "input",
+        type: "number",
+      },
+    ],
+  },
+  {
+    row: [
+      {
+        name: "address",
+        label: "Permanent Address",
+        placeholder: "Enter Permanent Address",
+        componentType: "input",
+        type: "text",
+      },
+    ],
+  },
+  {
+    row: [
+      {
+        name: "city",
+        placeholder: "Enter City",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "state",
+        placeholder: "Enter State",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "pincode",
+        placeholder: "Enter Pincode",
+        componentType: "input",
+        type: "number",
+      },
+    ],
+  },
+];
+// kycBankFormControls.js
+
+export const kycBankFormControls = [
+  {
+    name: "aadharCard",
+    label: "Upload Aadhar Card",
+    placeholder: "Upload Aadhar Card",
+    componentType: "file",
+    accept: "image",
+  },
+  {
+    name: "adharNumber",
+    label: "Adhar Number",
+    placeholder: "Enter Adhar Number",
+    componentType: "input",
+    type: "number",
+  },
+  {
+    name: "panCard",
+    label: "Upload PAN Card",
+    placeholder: "Upload PAN Card",
+    componentType: "file",
+    accept: "image",
+  },
+  {
+    name: "pancardnumber",
+    label: "PAN Number",
+    placeholder: "Enter PAN Number",
+    componentType: "input",
+    type: "number",
+  },
+  {
+    name: "accountNumber",
+    label: "Account Number",
+    placeholder: "Enter Account Number",
+    componentType: "input",
+    type: "number",
+  },
+  {
+    row: [
+      {
+        name: "branchName",
+        label: "Branch Name",
+        placeholder: "Branch Name",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "ifscCode",
+        label: "IFSC Code",
+        placeholder: "IFSC Code",
+        componentType: "input",
+        type: "text",
+      },
+    ],
+  },
+  {
+    name: "cancelCheque",
+    label: "Upload Cancel Cheque",
+    placeholder: "",
+    componentType: "file",
+    accept: "image", // you can also use "pdf" if needed
+  },
+];
+// experienceFormControls.js
+
+export const experienceFormControls = [
+  {
+    name: "experienceLevel",
+    label: "Experience Level",
+    placeholder: "Select level",
+    componentType: "select",
+    options: [
+      { id: "frontline", label: "Frontline Team Trainnings" },
+      { id: "midLevel", label: "Mid-Level Hirings" },
+      { id: "expert", label: "Senior-Level Hirings" },
+    ],
+  },
+  {
+    row: [
+      {
+        name: "experienceYears",
+        label: "Total Experience (Years)",
+        placeholder: "X Years",
+        componentType: "select",
+        options: Array.from({ length: 31 }, (_, i) => ({
+          id: i.toString(),
+          label: `${i} Years`,
+        })),
+      },
+      {
+        name: "experienceMonths",
+        label: "Total Experience (Months)",
+        placeholder: "Y Months",
+        componentType: "select",
+        options: Array.from({ length: 12 }, (_, i) => ({
+          id: i.toString(),
+          label: `${i} Months`,
+        })),
+      },
+    ],
+  },
+  {
+    name: "linkedinProfile",
+    label: "LinkedIn Profile",
+    placeholder: "Enter URL",
+    componentType: "input",
+    type: "url",
+  },
+
+  {
+    name: "lastOrganization",
+    label: "Name of Last Organization",
+    placeholder: "Enter Name",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "lastOrganization",
+    label: "Designation in Last Organization",
+    placeholder: "Enter Position",
+    componentType: "input",
+    type: "text",
+  },
+
+  {
+    row: [
+      {
+        name: "startYear",
+        label: "Starting Year",
+        placeholder: "Select Date",
+        componentType: "calendar",
+      },
+      {
+        name: "endYear",
+        label: "Ending Year",
+        placeholder: "Select Date",
+        componentType: "calendar",
+      },
+    ],
+  },
+  {
+    name: "relievingLetter",
+    label: "Relieving Letter",
+    componentType: "file",
+    placeholder: "Upload relieving letter",
+    accept: "pdf",
+  },
+  {
+    name: "areaOfExpertise",
+    label: "Expertise Areas",
+    componentType: "multi-select",
+    type: "text",
+    placeholder: "Enter the Area of Expertise",
+    required: true,
   },
 ];
