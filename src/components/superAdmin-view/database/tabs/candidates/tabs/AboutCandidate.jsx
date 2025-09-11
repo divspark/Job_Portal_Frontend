@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ExternalLink, MailIcon, PhoneCallIcon } from "lucide-react";
 
 const AboutCandidate = () => {
@@ -254,6 +255,10 @@ const AboutCandidate = () => {
           ))}
         </div>
       </div>
+
+      <Button variant={"purple"} className={"w-fit m-6"}>
+        Edit Profile
+      </Button>
     </div>
   );
 };

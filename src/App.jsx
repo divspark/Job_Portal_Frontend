@@ -61,15 +61,14 @@ import TrainerAdditional from "./pages/trainner-view/additional-details";
 // Super Admin Pages
 import SuperAdminLogin from "./pages/superAdmin-view/log-in";
 import SuperAdminDashboard from "./pages/superAdmin-view/dashboard";
-import SuperAdminUsers from "./pages/superAdmin-view/users";
-import SuperAdminJobOpenings from "./pages/superAdmin-view/job-openings";
-import SuperAdminTrainings from "./pages/superAdmin-view/trainings";
-import SuperAdminSettings from "./pages/superAdmin-view/settings";
-import SuperAdminAnalytics from "./pages/superAdmin-view/analytics";
 import SuperAdminProfile from "./pages/superAdmin-view/profile";
-import SuperAdminBasicDetails from "./pages/superAdmin-view/basic-details";
 import SuperAdminLayout from "./components/superAdmin-view/layout";
 import SuperAdminDatabasePage from "./pages/superAdmin-view/database";
+import SuperAdminJobsAndTrainings from "./pages/superAdmin-view/jobs-and-trainings";
+import SuperAdminApprovals from "./pages/superAdmin-view/approvals";
+import SuperAdminAdminManagement from "./pages/superAdmin-view/admin-management";
+import JobCandidates from "./components/superAdmin-view/jobs-and-trainings/candidates/JobCandidates";
+import TrainingCandidates from "./components/superAdmin-view/jobs-and-trainings/candidates/TrainingCandidates";
 
 function App() {
   useEffect(() => {
@@ -289,24 +288,29 @@ function App() {
         {/* Super Admin Auth and Setup */}
         <Route path="/super-admin/log-in" element={<SuperAdminLogin />} />
 
-        <Route
-          path="/super-admin/profile-setup"
-          element={<ProfileSetupLayout />}
-        >
-          <Route path="basic-details" element={<SuperAdminBasicDetails />} />
-        </Route>
-
         {/* Super Admin Main Dashboard */}
         <Route path="/super-admin" element={<SuperAdminLayout />}>
           <Route index element={<SuperAdminDashboard />} />
           <Route path="dashboard" element={<SuperAdminDashboard />} />
-          <Route path="users" element={<SuperAdminUsers />} />
-          <Route path="job-openings" element={<SuperAdminJobOpenings />} />
-          <Route path="trainings" element={<SuperAdminTrainings />} />
-          <Route path="settings" element={<SuperAdminSettings />} />
-          <Route path="analytics" element={<SuperAdminAnalytics />} />
           <Route path="profile" element={<SuperAdminProfile />} />
           <Route path="database" element={<SuperAdminDatabasePage />} />
+          <Route
+            path="jobs-and-trainings"
+            element={<SuperAdminJobsAndTrainings />}
+          />
+          <Route
+            path="jobs-and-trainings/job/:jobId/candidates"
+            element={<JobCandidates />}
+          />
+          <Route
+            path="jobs-and-trainings/training/:trainingId/candidates"
+            element={<TrainingCandidates />}
+          />
+          <Route path="approvals" element={<SuperAdminApprovals />} />
+          <Route
+            path="admin-management"
+            element={<SuperAdminAdminManagement />}
+          />
         </Route>
 
         {/* Congrats fallback route */}

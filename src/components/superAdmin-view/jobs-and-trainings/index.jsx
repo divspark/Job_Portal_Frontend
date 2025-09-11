@@ -1,34 +1,28 @@
-import { databaseTabs } from "./utils";
-import useDatabaseTabStore from "./zustand";
-import CompaniesTab from "./tabs/companies";
-import CandidatesTab from "./tabs/candidates";
-import RecruitersTab from "./tabs/recruiters";
-import TrainersTab from "./tabs/trainers";
+import { jobsAndTrainingsTabs } from "./utils";
+import useJobsAndTrainingsTabStore from "./zustand";
+import JobsTab from "./tabs/jobs";
+import TrainingsTab from "./tabs/trainings";
 
-const SuperAdminDatabase = () => {
-  const { activeTab, setActiveTab } = useDatabaseTabStore();
+const JobsAndTrainings = () => {
+  const { activeTab, setActiveTab } = useJobsAndTrainingsTabStore();
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "companies":
-        return <CompaniesTab />;
-      case "candidates":
-        return <CandidatesTab />;
-      case "trainers":
-        return <TrainersTab />;
-      case "recruiters":
-        return <RecruitersTab />;
+      case "jobs":
+        return <JobsTab />;
+      case "trainings":
+        return <TrainingsTab />;
       default:
-        return <CompaniesTab />;
+        return <JobsTab />;
     }
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 min-w-0">
       {/* Tab Navigation */}
-      <div className="grid grid-cols-6">
-        <div className="col-span-4 flex p-1">
-          {databaseTabs.map((tab) => (
+      <div className="grid grid-cols-6 min-w-0">
+        <div className="col-span-4 flex p-1 min-w-0">
+          {jobsAndTrainingsTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -50,9 +44,9 @@ const SuperAdminDatabase = () => {
       </div>
 
       {/* Tab Content */}
-      <div>{renderTabContent()}</div>
+      <div className="min-w-0">{renderTabContent()}</div>
     </div>
   );
 };
 
-export default SuperAdminDatabase;
+export default JobsAndTrainings;

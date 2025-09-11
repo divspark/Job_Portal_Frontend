@@ -6,6 +6,7 @@ import {
   CursorIcon,
   Dash,
   LogoutIcon,
+  PostJobIcon,
   SignOutIcon,
   Slate2,
   Users,
@@ -28,33 +29,28 @@ import {
 const dashboardMenuSuperAdmin = [
   {
     name: "Dashboard",
-    link: "/superAdmin/dashboard",
+    link: "/super-admin/dashboard",
     icon: <Cubed className="h-[20px] w-[20px]" />,
   },
   {
-    name: "Users Management",
-    link: "/superAdmin/users",
-    icon: <Users className="h-[20px] w-[20px]" />,
+    name: "Database",
+    link: "/super-admin/database",
+    icon: <PostJobIcon className="h-[20px] w-[20px]" />,
   },
   {
-    name: "Job Management",
-    link: "/superAdmin/job-openings",
-    icon: <Bag className="h-[20px] w-[20px]" />,
+    name: "Jobs/Training",
+    link: "/super-admin/jobs-and-trainings",
+    icon: <PostJobIcon className="h-[20px] w-[20px]" />,
   },
   {
-    name: "Training Management",
-    link: "/superAdmin/trainings",
+    name: "Approvals",
+    link: "/super-admin/approvals",
     icon: <BookIcon className="h-[20px] w-[20px]" />,
   },
   {
-    name: "System Settings",
-    link: "/superAdmin/settings",
+    name: "Admin Management",
+    link: "/super-admin/admin-management",
     icon: <CursorIcon className="h-[20px] w-[20px]" />,
-  },
-  {
-    name: "Analytics",
-    link: "/superAdmin/analytics",
-    icon: <Slate2 className="h-[20px] w-[20px]" />,
   },
 ];
 
@@ -229,7 +225,7 @@ const Layout = () => {
           ))}
         </div>
       </div>
-      <section className="lg:w-[calc(100%-327px)] flex-col flex lg:py-[32px] lg:px-[58px]">
+      <section className="lg:w-[calc(100%-327px)] flex-col flex lg:py-[32px] lg:px-[16px] min-w-0">
         <Outlet />
       </section>
     </main>

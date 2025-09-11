@@ -64,6 +64,7 @@
   --color-warning2: #d9790a1a;
   --color-light-blue: #e1e6ff;
   --color-light-pink: #ffe1f7;
+  --color-light-purple: #7d5ae21a;
 
   /* borders */
   --border-1: 1px solid hsl(var(--border));
