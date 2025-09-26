@@ -1,59 +1,25 @@
 import React from "react";
-import { Bag, Cubed, Dash, LogoutIcon, SignOutIcon } from "../../utils/icon";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Button } from "../ui/button";
+import { Bag, Cubed, Dash, LogoutIcon, SignOutIcon } from "../../../utils/icon";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { BriefcaseIcon } from "lucide-react";
-import { useGetSuperAdminProfile } from "../../hooks/superAdmin/useProfile";
-
-const dashboardMenuSuperAdmin = [
-  {
-    name: "Dashboard",
-    link: "/super-admin/dashboard",
-    icon: <BriefcaseIcon className="h-5 w-5 text-white" />,
-  },
-  {
-    name: "Database",
-    link: "/super-admin/database",
-    icon: <BriefcaseIcon className="h-5 w-5 text-white" />,
-  },
-  {
-    name: "Jobs/Trainings",
-    link: "/super-admin/jobs-and-trainings",
-    icon: <BriefcaseIcon className="h-5 w-5 text-white" />,
-  },
-  {
-    name: "Approvals",
-    link: "/super-admin/approvals",
-    icon: <BriefcaseIcon className="h-5 w-5 text-white" />,
-  },
-  {
-    name: "Admin Management",
-    link: "/super-admin/admin-management",
-    icon: <BriefcaseIcon className="h-5 w-5 text-white" />,
-  },
-];
+import { useGetSuperAdminProfile } from "../../../hooks/superAdmin/useProfile";
+import { DASHBOARD_MENU_SUPER_ADMIN } from "./constants.jsx";
+import { useLogout } from "./utils";
 
 const Navbar = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { data: profileData, isLoading: profileLoading } =
     useGetSuperAdminProfile();
-  const dashboardMenu = dashboardMenuSuperAdmin;
+  const dashboardMenu = DASHBOARD_MENU_SUPER_ADMIN;
+  const logOut = useLogout();
 
   const profile = profileData?.data?.data || {};
-
-  const logOut = () => {
-    // Simple localStorage logout
-    localStorage.removeItem("token");
-    localStorage.removeItem("userRole");
-    navigate("/super-admin/log-in");
-  };
 
   return (
     <aside className="fixed top-[18px] left-[19px] hidden w-[308px] bg-[#060606] lg:flex flex-col overflow-hidden rounded-[16px]">

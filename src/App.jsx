@@ -61,8 +61,8 @@ import TrainerAdditional from "./pages/trainner-view/additional-details";
 
 // Super Admin Pages
 import SuperAdminLogin from "./pages/super-admin-view/log-in";
+import SuperAdminLayout from "./components/super-admin-view/shared/Layout";
 import SuperAdminDashboard from "./pages/super-admin-view/dashboard";
-import SuperAdminLayout from "./components/super-admin-view/layout";
 import SuperAdminDatabasePage from "./pages/super-admin-view/database";
 import SuperAdminJobsAndTrainingsPage from "./pages/super-admin-view/jobs-and-trainings/jobs-and-trainings";
 import SuperAdminApprovals from "./pages/super-admin-view/approvals";
