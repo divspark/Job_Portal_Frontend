@@ -129,7 +129,9 @@ const RecruiterDetails = ({ recruiter, areApprovalBtnsVisible = false }) => {
               alt={displayRecruiter?.name}
             />
             <div className="size- inline-flex flex-col justify-center items-start gap-2.5">
-              {areApprovalBtnsVisible ? (
+              {/* Show approval buttons only when status is pending */}
+              {areApprovalBtnsVisible &&
+              displayRecruiter?.data?.approvalStatus === "pending" ? (
                 <div className="flex items-center gap-4">
                   <Button
                     variant={"purple"}

@@ -1,9 +1,9 @@
 import { databaseTabs } from "./utils";
 import useDatabaseTabStore from "./zustand";
 import CompaniesTab from "./tabs/companies";
-import CandidatesTab from "./tabs/candidates";
 import RecruitersTab from "./tabs/recruiters";
 import TrainersTab from "./tabs/trainers";
+import JobTrainingsTab from "./tabs/jobs-and-trainings";
 
 const Approvals = () => {
   const { activeTab, setActiveTab } = useDatabaseTabStore();
@@ -12,8 +12,8 @@ const Approvals = () => {
     switch (activeTab) {
       case "companies":
         return <CompaniesTab />;
-      case "candidates":
-        return <CandidatesTab />;
+      case "jobTrainings":
+        return <JobTrainingsTab />;
       case "trainers":
         return <TrainersTab />;
       case "recruiters":

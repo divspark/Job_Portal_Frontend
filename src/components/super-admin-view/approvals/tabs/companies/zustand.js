@@ -128,34 +128,57 @@ const useCompaniesStore = create((set, get) => ({
       const response = await getApprovalsList("corporate", params);
 
       // Parse the API response structure
-      const companies = response.data?.data?.companies || [];
+      const approvals = response.data?.data?.approvals || [];
       const pagination = response.data?.data?.pagination || {};
 
       // Map API data to component expected format
-      const companiesData = companies.map((company) => ({
-        id: company._id,
-        name: company.name || "N/A",
-        email: company.email || "N/A",
-        contact: company.phone
-          ? `${company.phone.countryCode} ${company.phone.number}`
-          : "N/A",
-        industry: company.industry || "N/A",
-        location: company.location || "N/A",
-        status: company.status || "pending",
-        joinedDate: company.createdAt
-          ? new Date(company.createdAt).toISOString().split("T")[0]
-          : "N/A",
-        lastUpdated: company.updatedAt
-          ? new Date(company.updatedAt).toISOString().split("T")[0]
-          : "N/A",
-        // Additional API fields
-        _id: company._id,
-        phone: company.phone,
-        createdAt: company.createdAt,
-        updatedAt: company.updatedAt,
-      }));
+      const companiesData = approvals.map((approval) => {
+        const companyData = approval.data || {};
+        const basicInfo = companyData.basicInformation || {};
+        const spocInfo = companyData.spocInformation || {};
 
-      const total = pagination.totalCompanies || companiesData.length;
+        return {
+          id: approval._id,
+          name: basicInfo.companyName || "N/A",
+          email: basicInfo.companyEmail || "N/A",
+          contact: basicInfo.companyContactNumber
+            ? `${basicInfo.companyContactNumber.countryCode} ${basicInfo.companyContactNumber.number}`
+            : "N/A",
+          industry: basicInfo.companyType || "N/A",
+          location: "", // Not available in API response
+          status: approval.status || "pending",
+          approvalStatus: approval.status || "pending",
+          joinedDate: companyData.createdAt
+            ? new Date(companyData.createdAt).toISOString().split("T")[0]
+            : "N/A",
+          lastUpdated: companyData.updatedAt
+            ? new Date(companyData.updatedAt).toISOString().split("T")[0]
+            : "N/A",
+          // Additional API fields for drawer
+          _id: approval._id,
+          type: approval.type,
+          applicantId: approval.applicantId,
+          applicantType: approval.applicantType,
+          submittedAt: approval.submittedAt,
+          version: approval.version,
+          isActive: approval.isActive,
+          createdAt: approval.createdAt,
+          updatedAt: approval.updatedAt,
+          // Full company data for drawer
+          fullCompanyData: companyData,
+          // SPOC information
+          spocName: spocInfo.fullName || "N/A",
+          spocEmail: spocInfo.email || "N/A",
+          spocContact: spocInfo.contactNumber
+            ? `${spocInfo.contactNumber.countryCode} ${spocInfo.contactNumber.number}`
+            : "N/A",
+          // Company details
+          companyLogo: basicInfo.companyLogo || "",
+          websiteURL: basicInfo.websiteURL || "",
+        };
+      });
+
+      const total = pagination.totalApprovals || companiesData.length;
 
       set({
         companies: companiesData,

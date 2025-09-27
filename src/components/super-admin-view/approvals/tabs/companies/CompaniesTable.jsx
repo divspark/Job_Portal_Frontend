@@ -8,7 +8,7 @@ import {
 } from "../../../../ui/table";
 import { Sheet, SheetContent } from "../../../../ui/sheet";
 import { Building2 } from "lucide-react";
-import CompanyDetailsDrawer from "./CompanyDetailsDrawer";
+import CompanyApprovalDetailsDrawer from "./CompanyApprovalDetailsDrawer";
 import StatusBadge from "../../../../common/StatusBadge";
 
 import { useState } from "react";
@@ -56,9 +56,6 @@ const CompaniesTable = ({ paginatedCompanies }) => {
                     Contact
                   </TableHead>
                   <TableHead className="min-w-[120px] font-semibold">
-                    Employees
-                  </TableHead>
-                  <TableHead className="min-w-[120px] font-semibold">
                     Last Updated
                   </TableHead>
                   <TableHead className="min-w-[120px] font-semibold">
@@ -88,8 +85,8 @@ const CompaniesTable = ({ paginatedCompanies }) => {
                       <TableCell>{company.name}</TableCell>
                       <TableCell>{company.industry}</TableCell>
                       <TableCell>{company.contact}</TableCell>
-                      <TableCell>{company.jobs}</TableCell>
-                      <TableCell>{company.location}</TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>{company.lastUpdated}</TableCell>
                       <TableCell>
                         <StatusBadge status={company.approvalStatus} />
                       </TableCell>
@@ -125,7 +122,7 @@ const CompaniesTable = ({ paginatedCompanies }) => {
             overflow-y-auto border-transparent [&>button.absolute]:hidden"
         >
           <div className="w-full h-full">
-            <CompanyDetailsDrawer
+            <CompanyApprovalDetailsDrawer
               company={selectedCompany}
               areApprovalBtnsVisible
             />

@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import CandidatesTable from "./CandidatesTable";
+import TrainingsApprovalTable from "./TrainingsApprovalTable";
 import Pagination from "@/components/common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "@/components/common/filterComponent";
-import { candidatesFilters } from "./utils";
-import useCandidatesStore from "./zustand";
+import { trainingsApprovalFilters } from "./utils";
+import useTrainingsApprovalStore from "./useTrainingsApprovalStore";
 
-const CandidatesTab = () => {
+const TrainingApprovalTab = () => {
   const {
     filters,
     currentPage,
@@ -15,32 +15,32 @@ const CandidatesTab = () => {
     setFormData,
     clearAllFilters,
     setCurrentPage,
-    handleDeleteCandidate,
-    getPaginatedCandidates,
+    handleDeleteTraining,
+    getPaginatedTrainings,
     getTotalPages,
     getFilteredCount,
-    fetchCandidates,
-  } = useCandidatesStore();
+    fetchTrainings,
+  } = useTrainingsApprovalStore();
 
-  // Fetch candidates on component mount
+  // Fetch trainings on component mount
   useEffect(() => {
-    fetchCandidates();
-  }, [fetchCandidates]);
+    fetchTrainings();
+  }, [fetchTrainings]);
 
   // Get computed data
-  const paginatedCandidates = getPaginatedCandidates();
+  const paginatedTrainings = getPaginatedTrainings();
   const totalPages = getTotalPages();
   const filteredCount = getFilteredCount();
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Candidates</h1>
+      <h1 className="text-2xl font-bold">Training Approvals</h1>
 
       {/* Error Message */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="text-red-800 font-medium">
-            Error loading candidates
+            Error loading trainings
           </div>
           <div className="text-red-600 text-sm">{error}</div>
         </div>
@@ -64,7 +64,7 @@ const CandidatesTab = () => {
                 </div>
               </div>
               <FilterComponent
-                formControls={candidatesFilters}
+                formControls={trainingsApprovalFilters}
                 formData={filters}
                 setFormData={setFormData}
               />
@@ -86,17 +86,17 @@ const CandidatesTab = () => {
 
           {/* Loading State */}
           {loading && (
-            <div className="flex justify-center items-center py-8">
-              <div className="text-gray-500">Loading candidates...</div>
+            <div className="flex justify-center items-center py-8 min-h-[400px]">
+              <div className="text-gray-500">Loading trainings...</div>
             </div>
           )}
 
-          {/* Candidates Table Container with horizontal scroll */}
+          {/* Trainings Table Container with horizontal scroll */}
           {!loading && (
-            <div className="min-w-0 overflow-x-auto">
-              <CandidatesTable
-                paginatedCandidates={paginatedCandidates}
-                handleDeleteCandidate={handleDeleteCandidate}
+            <div className="min-w-0 overflow-x-auto min-h-[300px]">
+              <TrainingsApprovalTable
+                paginatedTrainings={paginatedTrainings}
+                handleDeleteTraining={handleDeleteTraining}
               />
             </div>
           )}
@@ -117,4 +117,4 @@ const CandidatesTab = () => {
   );
 };
 
-export default CandidatesTab;
+export default TrainingApprovalTab;

@@ -5,8 +5,8 @@ export const databaseTabs = [
     icon: null,
   },
   {
-    id: "candidates",
-    name: "Candidates",
+    id: "jobTrainings",
+    name: "Job/Trainings",
     icon: null,
   },
   {

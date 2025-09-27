@@ -8,8 +8,13 @@ import {
   useApprovals,
   useGetApprovalDetails,
 } from "@/hooks/superAdmin/useApprovals";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
-const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
+const CompanyApprovalDetailsDrawer = ({
+  company,
+  areApprovalBtnsVisible = false,
+}) => {
   const [activeTab, setActiveTab] = useState("details");
   const { isLoading, approveApplication, rejectApplication, holdApplication } =
     useApprovals();
@@ -24,11 +29,13 @@ const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
   });
 
   // Use detailed data if available, otherwise fall back to basic company data
-  const displayCompany = approvalDetails?.data?.data || company;
+  const approvalData = approvalDetails?.data || {};
+  const displayCompany = approvalData.data || company;
+  const displayApprovalData = approvalData;
 
   const handleApprove = async () => {
     try {
-      await approveApplication(displayCompany.id || displayCompany._id);
+      await approveApplication(company?._id || company?.id);
       // Optionally refresh the company data or close the drawer
     } catch (error) {
       console.error("Failed to approve company:", error);
@@ -37,7 +44,7 @@ const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
 
   const handleReject = async () => {
     try {
-      await rejectApplication(displayCompany.id || displayCompany._id);
+      await rejectApplication(company?._id || company?.id);
       // Optionally refresh the company data or close the drawer
     } catch (error) {
       console.error("Failed to reject company:", error);
@@ -45,12 +52,7 @@ const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
   };
 
   const handleHold = async () => {
-    try {
-      await holdApplication(displayCompany.id || displayCompany._id);
-      // Optionally refresh the company data or close the drawer
-    } catch (error) {
-      console.error("Failed to hold company:", error);
-    }
+    toast.info("Company is on hold");
   };
 
   // Handle loading state
@@ -122,29 +124,40 @@ const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
     <div className="w-full h-full p-10 bg-white rounded-l-2xl inline-flex flex-col gap-8 overflow-y-auto">
       {/* Header */}
       <div className="w-full border-1 border-gray2 p-4 rounded-lg flex justify-center gap-4">
-        {displayCompany.logo ? (
+        {displayCompany.companyLogo || displayCompany.logo ? (
           <img
-            src={displayCompany.logo}
-            alt={`${displayCompany.name} logo`}
+            src={displayCompany.companyLogo || displayCompany.logo}
+            alt={`${displayCompany.companyName || displayCompany.name} logo`}
             className="object-contain h-fit"
             width={24}
           />
         ) : (
-          <Building2 className="h-6 w-6 text-gray-400" />
+          <img
+            src="/google.png"
+            alt="company logo"
+            className="h-6 w-6 text-gray-400"
+          />
         )}
 
         <div>
-          <h3 className="text-xl font-medium">{displayCompany.name}</h3>
+          <h3 className="text-xl font-medium">
+            {displayCompany.companyName ||
+              displayCompany.name ||
+              "Company Name"}
+          </h3>
           <div className="border-1 border-gray2 p-4 rounded-lg mt-4">
             <h4 className=" font-medium">About the Company</h4>
             <p className="text-sm text-gray1/75 mt-2">
-              {displayCompany.description}
+              {displayCompany.description ||
+                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi magni quidem maiores sapiente! Quis quam sapiente sit fuga optio. Temporibus modi cum nulla est vero fugit, recusandae hic in doloremque minus odit saepe ea officia esse obcaecati ratione voluptatem ad nobis accusamus similique. Ab, facilis quos aliquam non eligendi ipsa."}
             </p>
           </div>
         </div>
 
         <div className="space-y-3">
-          {areApprovalBtnsVisible ? (
+          {/* Show approval buttons only when status is pending */}
+          {areApprovalBtnsVisible &&
+          displayApprovalData?.data?.status === "pending" ? (
             <Fragment>
               <Button
                 variant={"purple"}
@@ -172,18 +185,23 @@ const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
               </Button>
             </Fragment>
           ) : (
-            <Fragment>
-              <Button variant={"purple"} className={"px-3 w-full"}>
-                Post Job
-              </Button>
-              <Button variant={"black"}>Post Training</Button>
-            </Fragment>
+            <Badge
+              className={`${
+                displayApprovalData?.data?.status === "approved"
+                  ? "bg-success2 text-success1"
+                  : displayApprovalData?.data?.status === "rejected"
+                  ? "bg-danger2 text-danger1"
+                  : "bg-gray2 text-gray1"
+              } text-sm capitalize`}
+            >
+              {displayApprovalData?.data?.status}
+            </Badge>
           )}
         </div>
       </div>
 
       {/* Details Grid */}
-      <CompanyStats company={company} />
+      <CompanyStats company={displayCompany} />
 
       {/* Tabs */}
       <div className="w-full">
@@ -212,12 +230,14 @@ const CompanyDetailsDrawer = ({ company, areApprovalBtnsVisible = false }) => {
 
         {/* Tab Content */}
         <div className="w-full">
-          {activeTab === "details" && <CompanyDetailsTab company={company} />}
-          {activeTab === "jobs" && <JobListingTab company={company} />}
+          {activeTab === "details" && (
+            <CompanyDetailsTab company={displayCompany} />
+          )}
+          {activeTab === "jobs" && <JobListingTab company={displayCompany} />}
         </div>
       </div>
     </div>
   );
 };
 
-export default CompanyDetailsDrawer;
+export default CompanyApprovalDetailsDrawer;
