@@ -72,6 +72,7 @@ import TrainerDashboard from "./pages/trainner-view/dashboard";
 import TrainerJobDescription from "./pages/trainner-view/job-description";
 import TrainerSearch from "./pages/trainner-view/search";
 import { useGetTrainerProfile } from "./hooks/trainer/useProfile";
+import SuperAdminAuth from "./components/common/superAdminAuth";
 
 function App() {
   useEffect(() => {

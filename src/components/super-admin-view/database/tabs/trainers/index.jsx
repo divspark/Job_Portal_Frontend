@@ -4,7 +4,7 @@ import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "../../../../common/filterComponent";
 import { trainersFilters } from "./utils";
 import { useState } from "react";
-import { useGetAllTrainers } from "@/hooks/superAdmin/useTrainers";
+import { useGetAllTrainers } from "@/hooks/super-admin/useTrainers";
 
 const TrainersTab = () => {
   // Local state for filters and pagination

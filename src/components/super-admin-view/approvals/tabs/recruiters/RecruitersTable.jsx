@@ -9,8 +9,6 @@ import {
 import { Sheet, SheetContent } from "../../../../ui/sheet";
 import { User } from "lucide-react";
 import RecruiterDetails from "./RecruiterDetails";
-import StatusBadge from "../../../../common/StatusBadge";
-
 import { useState } from "react";
 import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
 

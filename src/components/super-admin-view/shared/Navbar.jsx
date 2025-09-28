@@ -8,7 +8,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useGetSuperAdminProfile } from "../../../hooks/superAdmin/useProfile";
+import { useGetSuperAdminProfile } from "../../../hooks/super-admin/useProfile";
 import { DASHBOARD_MENU_SUPER_ADMIN } from "./constants.jsx";
 import { useLogout } from "./utils";
 

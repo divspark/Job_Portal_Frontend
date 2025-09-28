@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import {
   useApprovals,
   useGetApprovalDetails,
-} from "@/hooks/superAdmin/useApprovals";
+} from "@/hooks/super-admin/useApprovals";
 import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
 
 const RecruiterDetails = ({

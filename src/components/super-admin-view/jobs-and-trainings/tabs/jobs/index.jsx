@@ -3,7 +3,7 @@ import Pagination from "../../../../common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "../../../../common/filterComponent";
 import { jobsAndTrainingsFilters } from "../../utils";
-import { useGetJobsApplications } from "../../../../../hooks/superAdmin/useJob";
+import { useGetAllJobs } from "../../../../../hooks/super-admin/useJob";
 import { useState, useMemo } from "react";
 
 const JobsTab = () => {
@@ -18,12 +18,12 @@ const JobsTab = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch jobs applications data
+  // Fetch jobs data
   const {
     data: jobsData,
     isLoading,
     error,
-  } = useGetJobsApplications({
+  } = useGetAllJobs({
     page: currentPage,
     limit: itemsPerPage,
     ...filters,
@@ -31,9 +31,9 @@ const JobsTab = () => {
 
   // Filter jobs based on current filters
   const filteredJobs = useMemo(() => {
-    if (!jobsData?.data?.applications) return [];
+    if (!jobsData?.data?.jobs) return [];
 
-    return jobsData.data.applications.filter((job) => {
+    return jobsData.data.jobs.filter((job) => {
       // Search filter
       if (
         filters.search &&
@@ -87,7 +87,7 @@ const JobsTab = () => {
 
       return true;
     });
-  }, [jobsData?.data?.applications, filters]);
+  }, [jobsData?.data?.jobs, filters]);
 
   const setFormData = (newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -109,7 +109,7 @@ const JobsTab = () => {
   // Use server-side pagination data from API
   const paginatedJobs = filteredJobs;
   const totalPages = jobsData?.data?.pagination?.totalPages || 0;
-  const filteredCount = jobsData?.data?.pagination?.totalApplications || 0;
+  const filteredCount = jobsData?.data?.pagination?.totalJobs || 0;
 
   // Loading state
   if (isLoading) {

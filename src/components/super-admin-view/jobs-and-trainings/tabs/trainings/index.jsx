@@ -3,7 +3,7 @@ import Pagination from "../../../../common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "../../../../common/filterComponent";
 import { jobsAndTrainingsFilters } from "../../utils";
-import { useGetTrainingsApplications } from "../../../../../hooks/superAdmin/useTraining";
+import { useGetAllTrainings } from "../../../../../hooks/super-admin/useTraining";
 import { useState, useMemo } from "react";
 
 const TrainingsTab = () => {
@@ -18,12 +18,12 @@ const TrainingsTab = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Fetch trainings applications data
+  // Fetch trainings data
   const {
     data: trainingsData,
     isLoading,
     error,
-  } = useGetTrainingsApplications({
+  } = useGetAllTrainings({
     page: currentPage,
     limit: itemsPerPage,
     ...filters,
@@ -31,9 +31,9 @@ const TrainingsTab = () => {
 
   // Filter trainings based on current filters
   const filteredTrainings = useMemo(() => {
-    if (!trainingsData?.data?.applications) return [];
+    if (!trainingsData?.data?.trainings) return [];
 
-    return trainingsData.data.applications.filter((training) => {
+    return trainingsData.data.trainings.filter((training) => {
       // Search filter
       if (
         filters.search &&
@@ -90,7 +90,7 @@ const TrainingsTab = () => {
 
       return true;
     });
-  }, [trainingsData?.data?.applications, filters]);
+  }, [trainingsData?.data?.trainings, filters]);
 
   const setFormData = (newFilters) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
@@ -112,7 +112,7 @@ const TrainingsTab = () => {
   // Use server-side pagination data from API
   const paginatedTrainings = filteredTrainings;
   const totalPages = trainingsData?.data?.pagination?.totalPages || 0;
-  const filteredCount = trainingsData?.data?.pagination?.totalApplications || 0;
+  const filteredCount = trainingsData?.data?.pagination?.totalTrainings || 0;
 
   // Loading state
   if (isLoading) {

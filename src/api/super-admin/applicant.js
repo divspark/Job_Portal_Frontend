@@ -1,19 +1,29 @@
 import api from "../../lib/axios";
 
-export const getAllApplicants = ({ signal, page = 1, limit = 10, ...params }) =>
-  api.get("/api/v1/superAdmin/applicants", {
+export const getAllApplicants = async ({ signal, ...params } = {}) => {
+  const response = await api.get("/api/v1/admin/applicants", {
     signal,
-    params: { page, limit, ...params },
+    params,
   });
+  return response.data;
+};
 
-export const getApplicantById = ({ signal, id }) =>
-  api.get(`/api/v1/superAdmin/applicants/${id}`, { signal });
+export const getApplicantById = async ({ signal, id } = {}) => {
+  const response = await api.get(`/api/v1/admin/applicants/${id}`, { signal });
+  return response.data;
+};
 
-export const createApplicant = (data) =>
-  api.post("/api/v1/superAdmin/applicants", data);
+export const createApplicant = async (data) => {
+  const response = await api.post("/api/v1/admin/applicants", data);
+  return response.data;
+};
 
-export const updateApplicant = ({ id, data }) =>
-  api.put(`/api/v1/superAdmin/applicants/${id}`, data);
+export const updateApplicant = async ({ id, data }) => {
+  const response = await api.put(`/api/v1/admin/applicants/${id}`, data);
+  return response.data;
+};
 
-export const deleteApplicant = (id) =>
-  api.delete(`/api/v1/superAdmin/applicants/${id}`);
+export const deleteApplicant = async (id) => {
+  const response = await api.delete(`/api/v1/admin/applicants/${id}`);
+  return response.data;
+};

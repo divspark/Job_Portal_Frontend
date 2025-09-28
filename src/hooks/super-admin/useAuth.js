@@ -14,16 +14,8 @@ export const useLogin = () => {
       localStorage.setItem("token", data.data.token);
       localStorage.setItem("userRole", "super-admin");
 
-      console.log("Token set in localStorage:", localStorage.getItem("token"));
-      console.log(
-        "UserRole set in localStorage:",
-        localStorage.getItem("userRole")
-      );
-      console.log("About to navigate to /super-admin/database");
-
       // Use setTimeout to ensure localStorage is set before navigation
       setTimeout(() => {
-        console.log("Navigating now...");
         navigate("/super-admin/database");
       }, 100);
     },

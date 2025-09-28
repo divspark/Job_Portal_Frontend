@@ -17,7 +17,7 @@ import {
 import {
   useApprovals,
   useGetApprovalDetails,
-} from "../../../../../hooks/superAdmin/useApprovals";
+} from "../../../../../hooks/super-admin/useApprovals";
 
 const JobApprovalDetailsDrawer = ({
   jobId: approvalId, // This is actually the approval ID
@@ -156,7 +156,6 @@ const JobApprovalDetailsDrawer = ({
   const displayJob = job || mockJob;
   const displayApplicant = applicant || mockApplicant;
   const displayApprovalData = approvalData || mockApprovalData;
-  console.log(displayApprovalData);
 
   return (
     <div className="min-h-full flex flex-col bg-white p-6">

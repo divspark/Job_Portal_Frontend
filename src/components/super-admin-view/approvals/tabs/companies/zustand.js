@@ -7,15 +7,17 @@ const useCompaniesStore = create((set, get) => ({
   loading: false,
   error: null,
   totalCount: 0,
+  companyOptions: [],
 
   // Filter state
   filters: {
     search: "",
-    status: [],
+    status: "pending",
     location: [],
     company: [],
     industry: [],
-    postedDate: null,
+    dateFrom: null,
+    dateTo: null,
   },
 
   // Pagination state
@@ -27,23 +29,6 @@ const useCompaniesStore = create((set, get) => ({
   selectedCompany: null,
 
   // Actions
-  setFilter: (filterName, value) => {
-    set((state) => ({
-      filters: { ...state.filters, [filterName]: value },
-      currentPage: 1, // Reset to first page when filtering
-    }));
-    // Trigger API call after setting filter
-    setTimeout(() => get().fetchCompanies(), 0);
-  },
-
-  updateFilters: (newFilters) => {
-    set((state) => ({
-      filters: { ...state.filters, ...newFilters },
-      currentPage: 1, // Reset to first page when filtering
-    }));
-    // Trigger API call after updating filters
-    setTimeout(() => get().fetchCompanies(), 0);
-  },
 
   // Method to handle FilterComponent updates
   setFormData: (newFormData) => {
@@ -64,15 +49,35 @@ const useCompaniesStore = create((set, get) => ({
     setTimeout(() => get().fetchCompanies(), 0);
   },
 
+  // Method to handle search updates (debounced)
+  setSearchData: (newFormData) => {
+    set((state) => {
+      // Handle both function updates (from MultiSelectFilter) and object updates (from other components)
+      const updatedFilters =
+        typeof newFormData === "function"
+          ? newFormData(state.filters)
+          : { ...state.filters, ...newFormData };
+
+      return {
+        ...state,
+        filters: updatedFilters,
+        currentPage: 1,
+      };
+    });
+    // Trigger API call after setting search data
+    setTimeout(() => get().fetchCompanies(), 0);
+  },
+
   clearAllFilters: () => {
     set({
       filters: {
         search: "",
-        status: [],
+        status: "pending",
         location: [],
         company: [],
         industry: [],
-        postedDate: null,
+        dateFrom: null,
+        dateTo: null,
       },
       currentPage: 1,
     });
@@ -86,25 +91,11 @@ const useCompaniesStore = create((set, get) => ({
     setTimeout(() => get().fetchCompanies(), 0);
   },
 
-  setShowDeleteDialog: (show) => set({ showDeleteDialog: show }),
-
-  setSelectedCompany: (company) => set({ selectedCompany: company }),
-
   handleDeleteCompany: (company) =>
     set({
       selectedCompany: company,
       showDeleteDialog: true,
     }),
-
-  confirmDelete: () => {
-    // TODO: Implement actual delete logic here
-    const selectedCompany = get().selectedCompany;
-
-    set({
-      showDeleteDialog: false,
-      selectedCompany: null,
-    });
-  },
 
   // API actions
   fetchCompanies: async () => {
@@ -117,15 +108,21 @@ const useCompaniesStore = create((set, get) => ({
       const params = {
         page: currentPage,
         limit: itemsPerPage,
-        search: filters.search,
-        ...(filters.status.length > 0 && { status: filters.status }),
+        sortBy: "submittedAt",
+        sortOrder: "desc",
+        ...(filters.search &&
+          filters.search.trim() && { search: filters.search.trim() }),
+        ...(filters.status && { status: filters.status }),
         ...(filters.location.length > 0 && { location: filters.location }),
         ...(filters.industry.length > 0 && { industry: filters.industry }),
         ...(filters.company.length > 0 && { company: filters.company }),
-        ...(filters.postedDate && { postedDate: filters.postedDate }),
+        ...(filters.dateFrom && { dateFrom: filters.dateFrom }),
+        ...(filters.dateTo && { dateTo: filters.dateTo }),
       };
 
       const response = await getApprovalsList("corporate", params);
+
+      console.log("API call params:", params);
 
       // Parse the API response structure
       const approvals = response.data?.data?.approvals || [];
@@ -180,9 +177,20 @@ const useCompaniesStore = create((set, get) => ({
 
       const total = pagination.totalApprovals || companiesData.length;
 
+      // Extract unique company names for filter options
+      const uniqueCompanies = [
+        ...new Set(companiesData.map((company) => company.name)),
+      ]
+        .filter((name) => name !== "N/A")
+        .map((name, index) => ({
+          id: name.toLowerCase().replace(/\s+/g, "-"),
+          label: name,
+        }));
+
       set({
         companies: companiesData,
         totalCount: total,
+        companyOptions: uniqueCompanies,
         loading: false,
       });
     } catch (error) {
@@ -194,15 +202,7 @@ const useCompaniesStore = create((set, get) => ({
     }
   },
 
-  refetchCompanies: () => {
-    get().fetchCompanies();
-  },
-
   // Computed properties (getters)
-  getFilteredCompanies: () => {
-    const { companies } = get();
-    return companies;
-  },
 
   getPaginatedCompanies: () => {
     const { companies } = get();
@@ -217,31 +217,6 @@ const useCompaniesStore = create((set, get) => ({
   getFilteredCount: () => {
     const { totalCount } = get();
     return totalCount;
-  },
-
-  // Additional utility methods
-  hasActiveFilters: () => {
-    const { filters } = get();
-    return (
-      filters.search !== "" ||
-      filters.status.length > 0 ||
-      filters.location.length > 0 ||
-      filters.company.length > 0 ||
-      filters.industry.length > 0 ||
-      filters.postedDate !== null
-    );
-  },
-
-  getActiveFiltersCount: () => {
-    const { filters } = get();
-    let count = 0;
-    if (filters.search !== "") count++;
-    if (filters.status.length > 0) count++;
-    if (filters.location.length > 0) count++;
-    if (filters.company.length > 0) count++;
-    if (filters.industry.length > 0) count++;
-    if (filters.postedDate !== null) count++;
-    return count;
   },
 }));
 

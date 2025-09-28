@@ -1,12 +1,12 @@
-import { databaseTabs } from "./utils";
-import useDatabaseTabStore from "./zustand";
+import { approvalTabs } from "./utils";
+import useApprovalsTabStore from "./zustand";
 import CompaniesTab from "./tabs/companies";
 import RecruitersTab from "./tabs/recruiters";
 import TrainersTab from "./tabs/trainers";
 import JobTrainingsTab from "./tabs/jobs-and-trainings";
 
 const Approvals = () => {
-  const { activeTab, setActiveTab } = useDatabaseTabStore();
+  const { activeTab, setActiveTab } = useApprovalsTabStore();
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -28,7 +28,7 @@ const Approvals = () => {
       {/* Tab Navigation */}
       <div className="flex items-center justify-between">
         <div className="flex p-1 overflow-x-auto flex-1 lg:max-w-3xl">
-          {databaseTabs.map((tab) => (
+          {approvalTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}

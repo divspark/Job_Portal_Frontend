@@ -1,4 +1,4 @@
-export const databaseTabs = [
+export const approvalTabs = [
   {
     id: "companies",
     name: "Companies",

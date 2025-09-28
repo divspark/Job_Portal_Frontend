@@ -16,7 +16,7 @@ import {
   useUpdateAdmin,
   useGetFeatures,
   useProfileImageUpload,
-} from "@/hooks/superAdmin/useAdminManagement";
+} from "@/hooks/super-admin/useAdminManagement";
 
 const EditAdminDrawer = ({ open, onClose, admin }) => {
   const [formData, setFormData] = useState({

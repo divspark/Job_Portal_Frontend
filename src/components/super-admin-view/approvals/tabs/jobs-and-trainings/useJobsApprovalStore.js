@@ -11,11 +11,11 @@ const useJobsApprovalStore = create((set, get) => ({
   // Filter state
   filters: {
     search: "",
-    status: [],
-    location: [],
-    industry: [],
-    experience: [],
-    postedDate: null,
+    status: "pending",
+    dateFrom: null,
+    dateTo: null,
+    sortBy: "submittedAt",
+    sortOrder: "desc",
   },
 
   // Pagination state
@@ -68,11 +68,11 @@ const useJobsApprovalStore = create((set, get) => ({
     set({
       filters: {
         search: "",
-        status: [],
-        location: [],
-        industry: [],
-        experience: [],
-        postedDate: null,
+        status: "pending",
+        dateFrom: null,
+        dateTo: null,
+        sortBy: "submittedAt",
+        sortOrder: "desc",
       },
       currentPage: 1,
     });
@@ -96,21 +96,11 @@ const useJobsApprovalStore = create((set, get) => ({
         page: state.currentPage,
         limit: state.itemsPerPage,
         search: state.filters.search,
-        ...(state.filters.status.length > 0 && {
-          status: state.filters.status,
-        }),
-        ...(state.filters.location.length > 0 && {
-          location: state.filters.location,
-        }),
-        ...(state.filters.industry.length > 0 && {
-          industry: state.filters.industry,
-        }),
-        ...(state.filters.experience.length > 0 && {
-          experience: state.filters.experience,
-        }),
-        ...(state.filters.postedDate && {
-          postedDate: state.filters.postedDate,
-        }),
+        status: state.filters.status,
+        sortBy: state.filters.sortBy,
+        sortOrder: state.filters.sortOrder,
+        ...(state.filters.dateFrom && { dateFrom: state.filters.dateFrom }),
+        ...(state.filters.dateTo && { dateTo: state.filters.dateTo }),
       };
 
       const response = await getApprovalsList("job", params);
@@ -158,7 +148,6 @@ const useJobsApprovalStore = create((set, get) => ({
 
   handleDeleteJob: async (jobId) => {
     // Implementation for deleting a job
-    console.log("Delete job:", jobId);
     // Add actual delete logic here
   },
 

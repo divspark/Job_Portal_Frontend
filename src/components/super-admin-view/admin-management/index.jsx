@@ -14,7 +14,7 @@ import SearchComponent from "@/components/common/searchComponent";
 import {
   useGetAllAdmins,
   useDeleteAdmin,
-} from "@/hooks/superAdmin/useAdminManagement";
+} from "@/hooks/super-admin/useAdminManagement";
 
 const SuperAdminAdminManagement = () => {
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);

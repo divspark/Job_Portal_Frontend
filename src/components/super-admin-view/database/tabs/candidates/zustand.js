@@ -64,6 +64,25 @@ const useCandidatesStore = create((set, get) => ({
     setTimeout(() => get().fetchCandidates(), 0);
   },
 
+  // Method to handle search updates (debounced)
+  setSearchData: (newFormData) => {
+    set((state) => {
+      // Handle both function updates (from MultiSelectFilter) and object updates (from other components)
+      const updatedFilters =
+        typeof newFormData === "function"
+          ? newFormData(state.filters)
+          : { ...state.filters, ...newFormData };
+
+      return {
+        ...state,
+        filters: updatedFilters,
+        currentPage: 1,
+      };
+    });
+    // Trigger API call after setting search data
+    setTimeout(() => get().fetchCandidates(), 0);
+  },
+
   clearAllFilters: () => {
     set({
       filters: {

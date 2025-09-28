@@ -11,11 +11,11 @@ const useRecruitersStore = create((set, get) => ({
   // Filter state
   filters: {
     search: "",
-    jobStatus: [],
-    location: [],
-    company: [],
-    industry: [],
-    postedDate: null,
+    status: "pending",
+    dateFrom: null,
+    dateTo: null,
+    sortBy: "submittedAt",
+    sortOrder: "desc",
   },
 
   // Pagination state
@@ -68,11 +68,11 @@ const useRecruitersStore = create((set, get) => ({
     set({
       filters: {
         search: "",
-        jobStatus: [],
-        location: [],
-        company: [],
-        industry: [],
-        postedDate: null,
+        status: "pending",
+        dateFrom: null,
+        dateTo: null,
+        sortBy: "submittedAt",
+        sortOrder: "desc",
       },
       currentPage: 1,
     });
@@ -118,11 +118,11 @@ const useRecruitersStore = create((set, get) => ({
         page: currentPage,
         limit: itemsPerPage,
         search: filters.search,
-        ...(filters.jobStatus.length > 0 && { jobStatus: filters.jobStatus }),
-        ...(filters.location.length > 0 && { location: filters.location }),
-        ...(filters.company.length > 0 && { company: filters.company }),
-        ...(filters.industry.length > 0 && { industry: filters.industry }),
-        ...(filters.postedDate && { postedDate: filters.postedDate }),
+        status: filters.status,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        ...(filters.dateFrom && { dateFrom: filters.dateFrom }),
+        ...(filters.dateTo && { dateTo: filters.dateTo }),
       };
 
       const response = await getApprovalsList("recruiter", params);
@@ -227,11 +227,11 @@ const useRecruitersStore = create((set, get) => ({
     const { filters } = get();
     return (
       filters.search !== "" ||
-      filters.jobStatus.length > 0 ||
-      filters.location.length > 0 ||
-      filters.company.length > 0 ||
-      filters.industry.length > 0 ||
-      filters.postedDate !== null
+      filters.status !== "pending" ||
+      filters.dateFrom !== null ||
+      filters.dateTo !== null ||
+      filters.sortBy !== "submittedAt" ||
+      filters.sortOrder !== "desc"
     );
   },
 
@@ -239,11 +239,11 @@ const useRecruitersStore = create((set, get) => ({
     const { filters } = get();
     let count = 0;
     if (filters.search !== "") count++;
-    if (filters.jobStatus.length > 0) count++;
-    if (filters.location.length > 0) count++;
-    if (filters.company.length > 0) count++;
-    if (filters.industry.length > 0) count++;
-    if (filters.postedDate !== null) count++;
+    if (filters.status !== "pending") count++;
+    if (filters.dateFrom !== null) count++;
+    if (filters.dateTo !== null) count++;
+    if (filters.sortBy !== "submittedAt") count++;
+    if (filters.sortOrder !== "desc") count++;
     return count;
   },
 

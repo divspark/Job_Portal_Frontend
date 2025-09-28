@@ -11,11 +11,11 @@ const useTrainingsApprovalStore = create((set, get) => ({
   // Filter state
   filters: {
     search: "",
-    status: [],
-    category: [],
-    duration: [],
-    level: [],
-    postedDate: null,
+    status: "pending",
+    dateFrom: null,
+    dateTo: null,
+    sortBy: "submittedAt",
+    sortOrder: "desc",
   },
 
   // Pagination state
@@ -68,11 +68,11 @@ const useTrainingsApprovalStore = create((set, get) => ({
     set({
       filters: {
         search: "",
-        status: [],
-        category: [],
-        duration: [],
-        level: [],
-        postedDate: null,
+        status: "pending",
+        dateFrom: null,
+        dateTo: null,
+        sortBy: "submittedAt",
+        sortOrder: "desc",
       },
       currentPage: 1,
     });
@@ -96,19 +96,11 @@ const useTrainingsApprovalStore = create((set, get) => ({
         page: state.currentPage,
         limit: state.itemsPerPage,
         search: state.filters.search,
-        ...(state.filters.status.length > 0 && {
-          status: state.filters.status,
-        }),
-        ...(state.filters.category.length > 0 && {
-          category: state.filters.category,
-        }),
-        ...(state.filters.duration.length > 0 && {
-          duration: state.filters.duration,
-        }),
-        ...(state.filters.level.length > 0 && { level: state.filters.level }),
-        ...(state.filters.postedDate && {
-          postedDate: state.filters.postedDate,
-        }),
+        status: state.filters.status,
+        sortBy: state.filters.sortBy,
+        sortOrder: state.filters.sortOrder,
+        ...(state.filters.dateFrom && { dateFrom: state.filters.dateFrom }),
+        ...(state.filters.dateTo && { dateTo: state.filters.dateTo }),
       };
 
       const response = await getApprovalsList("training", params);
@@ -156,7 +148,6 @@ const useTrainingsApprovalStore = create((set, get) => ({
 
   handleDeleteTraining: async (trainingId) => {
     // Implementation for deleting a training
-    console.log("Delete training:", trainingId);
     // Add actual delete logic here
   },
 

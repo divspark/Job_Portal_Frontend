@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { BriefcaseIcon } from "lucide-react";
-import { useGetSuperAdminProfile } from "../../hooks/superAdmin/useProfile";
+import { useGetSuperAdminProfile } from "../../hooks/super-admin/useProfile";
 
 const dashboardMenuSuperAdmin = [
   {

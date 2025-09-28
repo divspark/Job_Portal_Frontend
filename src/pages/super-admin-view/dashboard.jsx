@@ -1,4 +1,4 @@
-import { useGetSuperAdminProfile } from "../../hooks/superAdmin/useProfile";
+import { useGetSuperAdminProfile } from "../../hooks/super-admin/useProfile";
 
 const SuperAdminDashboard = () => {
   const { data: profileData, isLoading: profileLoading } =

@@ -9,7 +9,7 @@ import {
   TwitterIcon,
   LinkedinIcon,
 } from "lucide-react";
-import { useGetJobDetails } from "../../../../../hooks/superAdmin/useJob";
+import { useGetJobDetails } from "../../../../../hooks/super-admin/useJob";
 
 const JobDetailsDrawer = ({ jobId }) => {
   const { data: jobData, isLoading, error } = useGetJobDetails(jobId);

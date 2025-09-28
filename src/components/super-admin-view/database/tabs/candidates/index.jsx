@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CandidatesTable from "./CandidatesTable";
 import Pagination from "@/components/common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "@/components/common/filterComponent";
 import { candidatesFilters } from "./utils";
 import useCandidatesStore from "./zustand";
+import { useDebounce } from "@/hooks/common/useDebounce";
 
 const CandidatesTab = () => {
   const {
@@ -13,6 +14,7 @@ const CandidatesTab = () => {
     loading,
     error,
     setFormData,
+    setSearchData,
     clearAllFilters,
     setCurrentPage,
     handleDeleteCandidate,
@@ -21,6 +23,26 @@ const CandidatesTab = () => {
     getFilteredCount,
     fetchCandidates,
   } = useCandidatesStore();
+
+  // Local search state for debouncing
+  const [searchText, setSearchText] = useState(filters.search || "");
+
+  // Debounce search text
+  const debouncedSearch = useDebounce(searchText, 500);
+
+  // Sync debounced search to filters
+  useEffect(() => {
+    if (debouncedSearch !== filters.search) {
+      setSearchData({ search: debouncedSearch });
+    }
+  }, [debouncedSearch, filters.search, setSearchData]);
+
+  // Sync filters.search to searchText on mount and when filters change externally
+  useEffect(() => {
+    if (filters.search !== searchText) {
+      setSearchText(filters.search);
+    }
+  }, [filters.search]);
 
   // Fetch candidates on component mount
   useEffect(() => {
@@ -76,10 +98,7 @@ const CandidatesTab = () => {
         <div className="flex-1 space-y-6">
           {/* Header Actions */}
           <div className="flex justify-between items-center">
-            <SearchComponent
-              value={filters.search}
-              onChange={(e) => setFormData({ search: e.target.value })}
-            />
+            <SearchComponent value={searchText} handleSearch={setSearchText} />
           </div>
 
           {/* Loading State */}

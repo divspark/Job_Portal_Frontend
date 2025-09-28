@@ -9,7 +9,7 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { User } from "lucide-react";
 import CandidateDetailsDrawer from "./CandidateDetailsDrawer";
-import { useGetCandidateDetails } from "@/hooks/superAdmin/useApplicant";
+import { useGetCandidateDetails } from "@/hooks/super-admin/useApplicant";
 
 import { useState } from "react";
 

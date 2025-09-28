@@ -1,7 +1,7 @@
 import api from "../../lib/axios";
 
 export const getAllJobs = ({ signal, page = 1, limit = 10, ...params }) =>
-  api.get("/api/v1/superAdmin/jobs", {
+  api.get("/api/v1/admin/jobs/list", {
     signal,
     params: { page, limit, ...params },
   });

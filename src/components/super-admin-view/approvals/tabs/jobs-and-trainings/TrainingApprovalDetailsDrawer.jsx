@@ -6,7 +6,7 @@ import { ClockIcon, CalendarIcon } from "lucide-react";
 import {
   useApprovals,
   useGetApprovalDetails,
-} from "../../../../../hooks/superAdmin/useApprovals";
+} from "../../../../../hooks/super-admin/useApprovals";
 
 const TrainingApprovalDetailsDrawer = ({
   training,
@@ -152,7 +152,6 @@ const TrainingApprovalDetailsDrawer = ({
   const displayTraining = detailedTraining || training || mockTraining;
   const displayApplicant = applicant || mockApplicant;
   const displayApprovalData = approvalData || mockApprovalData;
-  console.log(displayApprovalData);
 
   return (
     <div className="min-h-full flex flex-col bg-white p-6">

@@ -1,7 +1,7 @@
 import api from "../../lib/axios";
 
 export const getAllTrainings = ({ signal, page = 1, limit = 10, ...params }) =>
-  api.get("/api/v1/superAdmin/trainings", {
+  api.get("/api/v1/admin/trainings/list", {
     signal,
     params: { page, limit, ...params },
   });

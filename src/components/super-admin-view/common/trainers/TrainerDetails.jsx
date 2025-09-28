@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import {
   useApprovals,
   useGetApprovalDetails,
-} from "@/hooks/superAdmin/useApprovals";
+} from "@/hooks/super-admin/useApprovals";
 
 const TrainerDetails = ({
   trainer,

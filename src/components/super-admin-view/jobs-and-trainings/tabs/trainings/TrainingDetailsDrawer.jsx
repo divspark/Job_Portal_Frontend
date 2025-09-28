@@ -9,7 +9,7 @@ import {
   TwitterIcon,
   LinkedinIcon,
 } from "lucide-react";
-import { useGetTrainingDetails } from "../../../../../hooks/superAdmin/useTraining";
+import { useGetTrainingDetails } from "../../../../../hooks/super-admin/useTraining";
 
 const TrainingDetailsDrawer = ({ trainingId }) => {
   const {

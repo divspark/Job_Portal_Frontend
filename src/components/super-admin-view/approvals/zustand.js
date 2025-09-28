@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
-const useDatabaseTabStore = create((set) => ({
+const useApprovalsTabStore = create((set) => ({
   activeTab: "companies",
   setActiveTab: (tab) => set({ activeTab: tab }),
 }));
 
-export default useDatabaseTabStore;
+export default useApprovalsTabStore;

@@ -10,12 +10,10 @@ const TrainersTab = () => {
   // Local state for filters and pagination
   const [filters, setFilters] = useState({
     search: "",
-    skills: [],
-    industry: [],
-    experience: [],
-    location: [],
     status: "pending", // For approvals, we want pending trainers by default
-    sortBy: "createdAt",
+    dateFrom: null,
+    dateTo: null,
+    sortBy: "submittedAt",
     sortOrder: "desc",
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,15 +35,11 @@ const TrainersTab = () => {
         page: currentPage,
         limit: itemsPerPage,
         search: filters.search,
-        ...(filters.skills.length > 0 && { skills: filters.skills }),
-        ...(filters.industry.length > 0 && { industry: filters.industry }),
-        ...(filters.experience.length > 0 && {
-          experience: filters.experience,
-        }),
-        ...(filters.location.length > 0 && { location: filters.location }),
-        ...(filters.status && { status: filters.status }),
-        ...(filters.sortBy && { sortBy: filters.sortBy }),
-        ...(filters.sortOrder && { sortOrder: filters.sortOrder }),
+        status: filters.status,
+        sortBy: filters.sortBy,
+        sortOrder: filters.sortOrder,
+        ...(filters.dateFrom && { dateFrom: filters.dateFrom }),
+        ...(filters.dateTo && { dateTo: filters.dateTo }),
       };
 
       const response = await getApprovalsList("trainer", params);
@@ -131,12 +125,10 @@ const TrainersTab = () => {
   const clearAllFilters = () => {
     setFilters({
       search: "",
-      skills: [],
-      industry: [],
-      experience: [],
-      location: [],
       status: "pending",
-      sortBy: "createdAt",
+      dateFrom: null,
+      dateTo: null,
+      sortBy: "submittedAt",
       sortOrder: "desc",
     });
     setCurrentPage(1);

@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import CompaniesApprovalTable from "./CompaniesApprovalTable";
 import Pagination from "../../../../common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "../../../../common/filterComponent";
-import { companiesFilters } from "./utils";
+import { getCompaniesApprovalFilters } from "./utils";
 import useCompaniesStore from "./zustand";
+import { useDebounce } from "@/hooks/common/useDebounce";
 
 const CompaniesTab = () => {
   const {
@@ -12,7 +13,9 @@ const CompaniesTab = () => {
     currentPage,
     loading,
     error,
+    companyOptions,
     setFormData,
+    setSearchData,
     clearAllFilters,
     setCurrentPage,
     handleDeleteCompany,
@@ -21,6 +24,27 @@ const CompaniesTab = () => {
     getFilteredCount,
     fetchCompanies,
   } = useCompaniesStore();
+
+  // Local search state for debouncing
+  const [searchText, setSearchText] = useState(filters.search || "");
+
+  // Debounce search text
+  const debouncedSearch = useDebounce(searchText, 500);
+
+  // Sync debounced search to filters
+  useEffect(() => {
+    if (debouncedSearch !== filters.search) {
+      console.log("Setting search data:", debouncedSearch);
+      setSearchData({ search: debouncedSearch });
+    }
+  }, [debouncedSearch, filters.search, setSearchData]);
+
+  // Sync filters.search to searchText on mount and when filters change externally
+  useEffect(() => {
+    if (filters.search !== searchText) {
+      setSearchText(filters.search);
+    }
+  }, [filters.search]);
 
   // Fetch companies on component mount
   useEffect(() => {
@@ -64,7 +88,7 @@ const CompaniesTab = () => {
                 </div>
               </div>
               <FilterComponent
-                formControls={companiesFilters}
+                formControls={getCompaniesApprovalFilters(companyOptions)}
                 formData={filters}
                 setFormData={setFormData}
               />
@@ -78,8 +102,8 @@ const CompaniesTab = () => {
           <div className="flex justify-between items-center min-w-0">
             <div className="max-w-sm w-full">
               <SearchComponent
-                value={filters.search}
-                onChange={(e) => setFormData({ search: e.target.value })}
+                value={searchText}
+                handleSearch={setSearchText}
               />
             </div>
           </div>

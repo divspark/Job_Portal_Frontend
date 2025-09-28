@@ -7,7 +7,7 @@ import CompanyStats from "./CompanyStats";
 import {
   useApprovals,
   useGetApprovalDetails,
-} from "@/hooks/superAdmin/useApprovals";
+} from "@/hooks/super-admin/useApprovals";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
