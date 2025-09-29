@@ -4,13 +4,17 @@ import useMasterDataTabStore from "./zustand";
 import DynamicDropdownTab from "./tabs/DynamicDropdownTab";
 import { useGetDropdowns } from "../../../hooks/super-admin/useDropdowns";
 import AddDropdownModal from "./tabs/AddDropdownModal";
+import EditDropdownModal from "./tabs/EditDropdownModal";
 import { Button } from "../../ui/button";
+import { PencilIcon } from "lucide-react";
 
 const SuperAdminMasterData = () => {
   const { activeTab, setActiveTab, initializeFirstTab } =
     useMasterDataTabStore();
   const { data: dropdownsData, isLoading, error } = useGetDropdowns();
   const [isAddDropdownModalOpen, setIsAddDropdownModalOpen] = useState(false);
+  const [isEditDropdownModalOpen, setIsEditDropdownModalOpen] = useState(false);
+  const [selectedDropdown, setSelectedDropdown] = useState(null);
 
   const masterDataTabs = generateMasterDataTabs(dropdownsData);
 
@@ -20,6 +24,11 @@ const SuperAdminMasterData = () => {
       initializeFirstTab(masterDataTabs[0].id);
     }
   }, [masterDataTabs, activeTab, initializeFirstTab]);
+
+  const handleEditDropdown = (dropdown) => {
+    setSelectedDropdown(dropdown);
+    setIsEditDropdownModalOpen(true);
+  };
 
   const renderTabContent = () => {
     if (isLoading) {
@@ -74,20 +83,40 @@ const SuperAdminMasterData = () => {
       {/* Tab Navigation */}
       <div className="flex items-center justify-between min-w-0">
         <div className="flex p-1 min-w-0 overflow-x-auto flex-1 lg:max-w-3xl">
-          {masterDataTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center px-4 py-2 transition-colors font-medium border-b-[1px] cursor-pointer whitespace-nowrap ${
-                activeTab === tab.id
-                  ? "border-b-primary-purple text-primary-purple"
-                  : "text-gray1 border-b-gray1"
-              }`}
-            >
-              {tab.icon && <span className="mr-2">{tab.icon}</span>}
-              <span className="">{tab.name}</span>
-            </button>
-          ))}
+          {masterDataTabs.map((tab) => {
+            const dropdown = dropdownsData?.data?.dropdowns?.find(
+              (d) => d.dropdownId === tab.id
+            );
+            return (
+              <div
+                key={tab.id}
+                className={`flex items-center px-4 py-2 transition-colors font-medium border-b-[1px] cursor-pointer whitespace-nowrap group ${
+                  activeTab === tab.id
+                    ? "border-b-primary-purple text-primary-purple"
+                    : "text-gray1 border-b-gray1"
+                }`}
+              >
+                <div
+                  className="flex items-center"
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.icon && <span className="mr-2">{tab.icon}</span>}
+                  <span className="">{tab.name}</span>
+                </div>
+                {dropdown && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditDropdown(dropdown);
+                    }}
+                    className="ml-2 p-1 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100 rounded-md"
+                  >
+                    <PencilIcon className="w-4 h-4 text-gray-500 hover:text-gray-700" />
+                  </button>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         <div className="flex justify-end items-center space-x-4 ml-4">
@@ -107,6 +136,13 @@ const SuperAdminMasterData = () => {
       <AddDropdownModal
         isOpen={isAddDropdownModalOpen}
         onClose={() => setIsAddDropdownModalOpen(false)}
+      />
+
+      {/* Edit Dropdown Modal */}
+      <EditDropdownModal
+        isOpen={isEditDropdownModalOpen}
+        onClose={() => setIsEditDropdownModalOpen(false)}
+        dropdown={selectedDropdown}
       />
     </div>
   );

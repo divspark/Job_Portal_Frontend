@@ -75,3 +75,16 @@ export const createDropdown = async (payload) => {
     throw error;
   }
 };
+
+export const updateDropdown = async (dropdownId, payload) => {
+  try {
+    const response = await api.put(
+      `/api/v1/admin/dropdowns/${dropdownId}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Update dropdown API error:", error);
+    throw error;
+  }
+};
