@@ -89,23 +89,15 @@ function App() {
       store.setTokenInitialized(); // ✅ even if no token, we set initialized
     }
   }, []);
+  const { user } = useAuthStore();
+  // console.log(user);
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <ScrollToTop />
       <Routes>
         {/* Home redirect */}
-        <Route
-          path="/"
-          element={
-            <CheckAuth
-              fetchProfileHook={useGetRecruiterUserProfile}
-              allowedRoles={["recruiter", "corporate"]}
-            >
-              <CorporateDashboard />
-            </CheckAuth>
-          }
-        />
+        <Route path="/" element={<div>Home</div>} />
 
         {/* Super Admin Home redirect */}
         <Route
@@ -145,6 +137,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetRecruiterUserProfile}
               allowedRoles={["recruiter"]}
+              userRole={"recruiter"}
             >
               <ProfileSetupLayout />
             </CheckAuth>
@@ -158,6 +151,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetRecruiterUserProfile}
               allowedRoles={["recruiter"]}
+              userRole={"recruiter"}
               lockedPages={{
                 "/recruiter/profile-setup/basic-details": "page1",
                 "/recruiter/profile-setup/kyc-verification": "page2",
@@ -185,6 +179,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetRecruiterUserProfile}
               allowedRoles={["recruiter"]}
+              userRole={"recruiter"}
             >
               <Layout />
             </CheckAuth>
@@ -216,6 +211,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetCorporateUserProfile}
               allowedRoles={["corporate"]}
+              userRole={"corporate"}
             >
               <ProfileSetupLayout />
             </CheckAuth>
@@ -231,6 +227,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetCorporateUserProfile}
               allowedRoles={["corporate"]}
+              userRole={"corporate"}
               lockedPages={{
                 "/corporate/profile-setup/basic-details": "page1",
                 "/corporate/profile-setup/final-setup": "page2",
@@ -251,6 +248,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetCorporateUserProfile}
               allowedRoles={["corporate"]}
+              userRole={"corporate"}
             >
               <Layout />
             </CheckAuth>
@@ -270,6 +268,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetJobseekerProfile}
               allowedRoles={["job-seeker"]}
+              userRole={"job-seeker"}
             >
               <ProfileSetupLayout />
             </CheckAuth>
@@ -319,6 +318,7 @@ function App() {
             <CheckAuth
               fetchProfileHook={useGetTrainerProfile}
               allowedRoles={["trainer"]}
+              userRole={"trainer"}
             >
               <ProfileSetupLayout />
             </CheckAuth>
@@ -331,12 +331,13 @@ function App() {
         <Route
           path="/trainer/profile-setup"
           element={
-            // <CheckAuth
-            //   fetchProfileHook={useGetTrainerProfile}
-            //   allowedRoles={["trainer"]}
-            // >
-            <ProfileSetupLayout />
-            // </CheckAuth>
+            <CheckAuth
+              fetchProfileHook={useGetTrainerProfile}
+              allowedRoles={["trainer"]}
+              userRole={"trainer"}
+            >
+              <ProfileSetupLayout />
+            </CheckAuth>
           }
         >
           <Route path="basic-details" element={<TrainerBasicDetails />} />
@@ -349,12 +350,13 @@ function App() {
         <Route
           path="/trainer"
           element={
-            // <CheckAuth
-            //   // fetchProfileHook={useGetCorporateUserProfile}
-            //   allowedRoles={["job-seeker"]}
-            // >
-            <Layout />
-            // </CheckAuth>
+            <CheckAuth
+              fetchProfileHook={useGetTrainerProfile}
+              allowedRoles={["trainer"]}
+              userRole={"trainer"}
+            >
+              <Layout />
+            </CheckAuth>
           }
         >
           <Route path="dashboard" element={<JobSeekerDashboard />} />

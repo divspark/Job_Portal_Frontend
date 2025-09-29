@@ -31,10 +31,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    // Commented out for development - no auth required
-    // if (status === 401) {
-    //   window.location.href = "/unauthorized";
-    // }
+    if (status === 401) {
+      // window.location.href = "/unauthorized";
+    }
     return Promise.reject(error);
   }
 );
