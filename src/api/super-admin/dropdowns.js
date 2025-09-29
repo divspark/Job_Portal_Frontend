@@ -4,6 +4,7 @@ export const getDropdowns = async ({ signal }) => {
   try {
     const response = await api.get("/api/v1/admin/dropdowns", {
       signal,
+      params: { isActive: true },
     });
     return response.data;
   } catch (error) {
