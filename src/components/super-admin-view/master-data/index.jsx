@@ -1,13 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { generateMasterDataTabs } from "./utils";
 import useMasterDataTabStore from "./zustand";
 import DynamicDropdownTab from "./tabs/DynamicDropdownTab";
 import { useGetDropdowns } from "../../../hooks/super-admin/useDropdowns";
+import AddDropdownModal from "./tabs/AddDropdownModal";
+import { Button } from "../../ui/button";
 
 const SuperAdminMasterData = () => {
   const { activeTab, setActiveTab, initializeFirstTab } =
     useMasterDataTabStore();
   const { data: dropdownsData, isLoading, error } = useGetDropdowns();
+  const [isAddDropdownModalOpen, setIsAddDropdownModalOpen] = useState(false);
 
   const masterDataTabs = generateMasterDataTabs(dropdownsData);
 
@@ -88,12 +91,23 @@ const SuperAdminMasterData = () => {
         </div>
 
         <div className="flex justify-end items-center space-x-4 ml-4">
-          {/* Right Action buttons */}
+          <Button
+            onClick={() => setIsAddDropdownModalOpen(true)}
+            className="bg-primary-purple hover:bg-primary-purple/90 text-white cursor-pointer"
+          >
+            Add Dropdown
+          </Button>
         </div>
       </div>
 
       {/* Tab Content */}
       <div className="min-w-0">{renderTabContent()}</div>
+
+      {/* Add Dropdown Modal */}
+      <AddDropdownModal
+        isOpen={isAddDropdownModalOpen}
+        onClose={() => setIsAddDropdownModalOpen(false)}
+      />
     </div>
   );
 };

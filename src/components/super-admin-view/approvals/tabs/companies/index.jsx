@@ -34,7 +34,6 @@ const CompaniesTab = () => {
   // Sync debounced search to filters
   useEffect(() => {
     if (debouncedSearch !== filters.search) {
-      console.log("Setting search data:", debouncedSearch);
       setSearchData({ search: debouncedSearch });
     }
   }, [debouncedSearch, filters.search, setSearchData]);

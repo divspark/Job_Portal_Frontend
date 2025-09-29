@@ -122,8 +122,6 @@ const useCompaniesStore = create((set, get) => ({
 
       const response = await getApprovalsList("corporate", params);
 
-      console.log("API call params:", params);
-
       // Parse the API response structure
       const approvals = response.data?.data?.approvals || [];
       const pagination = response.data?.data?.pagination || {};

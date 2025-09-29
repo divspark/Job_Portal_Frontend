@@ -65,3 +65,13 @@ export const deleteDropdownValue = async (dropdownId, value) => {
     throw error;
   }
 };
+
+export const createDropdown = async (payload) => {
+  try {
+    const response = await api.post("/api/v1/admin/dropdowns", payload);
+    return response.data;
+  } catch (error) {
+    console.error("Create dropdown API error:", error);
+    throw error;
+  }
+};
