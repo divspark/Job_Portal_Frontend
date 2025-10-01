@@ -3,7 +3,7 @@ import useDatabaseTabStore from "./zustand";
 import CompaniesTabDatabase from "./tabs/companies";
 import CandidatesTab from "./tabs/candidates";
 import RecruitersTab from "./tabs/recruiters";
-import TrainersTab from "./tabs/trainers";
+import TrainersTabDatabase from "./tabs/trainers";
 import TabNavigation from "@/components/common/TabNavigation";
 import TabContent from "@/components/common/TabContent";
 
@@ -13,7 +13,7 @@ const SuperAdminDatabase = () => {
   const tabComponents = {
     companies: CompaniesTabDatabase,
     candidates: CandidatesTab,
-    trainers: TrainersTab,
+    trainers: TrainersTabDatabase,
     recruiters: RecruitersTab,
   };
 

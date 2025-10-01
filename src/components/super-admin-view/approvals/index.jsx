@@ -2,7 +2,7 @@ import { approvalTabs } from "./utils";
 import useApprovalsTabStore from "./zustand";
 import CompaniesTabApprovals from "./tabs/companies";
 import RecruitersTab from "./tabs/recruiters";
-import TrainersTab from "./tabs/trainers";
+import TrainersTabApprovals from "./tabs/trainers";
 import JobTrainingsTab from "./tabs/jobs-and-trainings";
 import TabNavigation from "@/components/common/TabNavigation";
 import TabContent from "@/components/common/TabContent";
@@ -13,7 +13,7 @@ const Approvals = () => {
   const tabComponents = {
     companies: CompaniesTabApprovals,
     jobTrainings: JobTrainingsTab,
-    trainers: TrainersTab,
+    trainers: TrainersTabApprovals,
     recruiters: RecruitersTab,
   };
 

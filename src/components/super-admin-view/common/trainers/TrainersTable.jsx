@@ -18,6 +18,7 @@ const TrainersTable = ({
   showStatusColumn = false,
   areApprovalBtnsVisible = false,
   onRevalidate,
+  context = "database", // "database" or "approvals"
 }) => {
   const [selectedTrainerId, setSelectedTrainerId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
