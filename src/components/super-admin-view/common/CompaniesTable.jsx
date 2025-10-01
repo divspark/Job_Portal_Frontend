@@ -9,8 +9,7 @@ import {
 import { Sheet, SheetContent } from "../../ui/sheet";
 import { Building2 } from "lucide-react";
 import { useState } from "react";
-import CompanyDetailsDrawer from "../database/tabs/companies/CompanyDetailsDrawer";
-import CompanyApprovalDetailsDrawer from "../approvals/tabs/companies/CompanyApprovalDetailsDrawer";
+import CompanyDetailsDrawer from "./CompanyDetailsDrawer";
 import AdminStatusBadge from "../shared/AdminStatusBadge";
 
 const CompaniesTable = ({
@@ -119,18 +118,15 @@ const CompaniesTable = ({
   };
 
   const renderDrawer = () => {
-    if (context === "approvals") {
-      return (
-        <CompanyApprovalDetailsDrawer
-          company={selectedCompany}
-          areApprovalBtnsVisible
-          onClose={() => setDrawerOpen(false)}
-          onRevalidate={onRevalidate}
-        />
-      );
-    }
-
-    return <CompanyDetailsDrawer companyId={selectedCompany?._id} />;
+    return (
+      <CompanyDetailsDrawer
+        companyId={selectedCompany?._id}
+        company={selectedCompany}
+        context={context}
+        onClose={() => setDrawerOpen(false)}
+        onRevalidate={onRevalidate}
+      />
+    );
   };
 
   return (

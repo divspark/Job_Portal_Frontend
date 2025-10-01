@@ -5,14 +5,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../../../../ui/table";
-import { Sheet, SheetContent } from "../../../../ui/sheet";
+} from "../../ui/table";
+import { Sheet, SheetContent } from "../../ui/sheet";
 import { User } from "lucide-react";
-import RecruiterDetails from "./RecruiterDetails";
 import { useState } from "react";
-import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
+import AdminStatusBadge from "../shared/AdminStatusBadge";
+import RecruiterDetailsApprovals from "../approvals/tabs/recruiters/RecruiterDetails";
+import RecruiterDetailsDatabase from "../database/tabs/recruiters/RecruiterDetails";
 
-const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
+const RecruitersTable = ({
+  paginatedRecruiters = [],
+  onRevalidate,
+  showStatusColumn = false,
+  context = "database", // "database" or "approvals"
+}) => {
   const [selectedRecruiterId, setSelectedRecruiterId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedRecruiter, setSelectedRecruiter] = useState(null);
@@ -22,7 +28,6 @@ const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
   };
 
   const handleRowClick = (recruiter, event) => {
-    // Don't open drawer if radio button was clicked
     if (event.target.type === "radio") {
       return;
     }
@@ -31,13 +36,56 @@ const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
     setDrawerOpen(true);
   };
 
+  const getRecruiterId = (recruiter) => {
+    return context === "approvals" ? recruiter.id : recruiter._id;
+  };
+
+  const getRecruiterName = (recruiter) => {
+    return recruiter.name || "N/A";
+  };
+
+  const getRecruiterEmail = (recruiter) => {
+    return recruiter.email || "N/A";
+  };
+
+  const getRecruiterPhone = (recruiter) => {
+    if (context === "approvals") {
+      return recruiter.phone?.countryCode && recruiter.phone?.number
+        ? `${recruiter.phone.countryCode} ${recruiter.phone.number}`
+        : recruiter.contact || "N/A";
+    }
+    return recruiter.phone || "N/A";
+  };
+
+  const getRecruiterCompany = (recruiter) => {
+    return recruiter.company || "N/A";
+  };
+
+  const getRecruiterCandidatesCount = (recruiter) => {
+    return recruiter.candidatesCount || 0;
+  };
+
+  const getRecruiterStatus = (recruiter) => {
+    return recruiter.approvalStatus || recruiter.jobStatus;
+  };
+
+  const getRecruiterProfileImage = (recruiter) => {
+    return recruiter.profileImage;
+  };
+
+  const getRecruiterDesignation = (recruiter) => {
+    return recruiter.designation || "Recruiter";
+  };
+
+  const colSpan = showStatusColumn ? 8 : 7;
+
   return (
     <>
       <div className="bg-white rounded-lg border overflow-hidden">
         <div className="overflow-x-auto">
-          <div className="min-w-[1100px]">
-            {" "}
-            {/* Ensure minimum width for proper table display */}
+          <div
+            className={showStatusColumn ? "min-w-[1100px]" : "max-w-[900px]"}
+          >
             <Table>
               <TableHeader>
                 <TableRow>
@@ -60,16 +108,18 @@ const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
                   <TableHead className="min-w-[120px] font-semibold">
                     Candidates
                   </TableHead>
-                  <TableHead className="min-w-[120px] font-semibold">
-                    Status
-                  </TableHead>
+                  {showStatusColumn && (
+                    <TableHead className="min-w-[120px] font-semibold">
+                      Status
+                    </TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {paginatedRecruiters && paginatedRecruiters.length > 0 ? (
                   paginatedRecruiters.map((recruiter) => (
                     <TableRow
-                      key={recruiter.id}
+                      key={getRecruiterId(recruiter)}
                       onClick={(e) => handleRowClick(recruiter, e)}
                       className="cursor-pointer hover:bg-gray-50 transition-colors"
                     >
@@ -77,19 +127,25 @@ const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
                         <input
                           type="radio"
                           name="selectRecruiter"
-                          checked={selectedRecruiterId === recruiter.id}
-                          onChange={() => handleSelectRecruiter(recruiter.id)}
-                          aria-label={`Select recruiter ${recruiter.name}`}
+                          checked={
+                            selectedRecruiterId === getRecruiterId(recruiter)
+                          }
+                          onChange={() =>
+                            handleSelectRecruiter(getRecruiterId(recruiter))
+                          }
+                          aria-label={`Select recruiter ${getRecruiterName(
+                            recruiter
+                          )}`}
                           className="w-4 h-4 text-primary-purple border-2 border-gray-300 focus:ring-2 focus:ring-primary-purple/50 focus:ring-offset-0 cursor-pointer appearance-none rounded-full checked:bg-primary-purple checked:border-primary-purple relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:bg-white before:rounded-full before:opacity-0 checked:before:opacity-100"
                         />
                       </TableCell>
-                      <TableCell>{recruiter.id}</TableCell>
+                      <TableCell>{getRecruiterId(recruiter)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          {recruiter.profileImage ? (
+                          {getRecruiterProfileImage(recruiter) ? (
                             <img
-                              src={recruiter.profileImage}
-                              alt={`${recruiter.name} avatar`}
+                              src={getRecruiterProfileImage(recruiter)}
+                              alt={`${getRecruiterName(recruiter)} avatar`}
                               className="w-10 h-10 rounded-full object-cover"
                             />
                           ) : (
@@ -99,40 +155,38 @@ const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
                           )}
                           <div className="flex flex-col">
                             <span className="font-medium text-gray-900">
-                              {recruiter.name}
+                              {getRecruiterName(recruiter)}
                             </span>
                             <span className="text-sm text-gray-500">
-                              {recruiter.designation || "Recruiter"}
+                              {getRecruiterDesignation(recruiter)}
                             </span>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell className="text-gray-700">
-                        {recruiter.email}
+                        {getRecruiterEmail(recruiter)}
                       </TableCell>
                       <TableCell className="text-gray-700">
-                        {recruiter.phone?.countryCode && recruiter.phone?.number
-                          ? `${recruiter.phone.countryCode} ${recruiter.phone.number}`
-                          : recruiter.contact || "N/A"}
+                        {getRecruiterPhone(recruiter)}
                       </TableCell>
                       <TableCell className="text-gray-700">
-                        {recruiter.company || "N/A"}
+                        {getRecruiterCompany(recruiter)}
                       </TableCell>
                       <TableCell className="text-gray-700">
-                        {recruiter.candidatesCount || 0}
+                        {getRecruiterCandidatesCount(recruiter)}
                       </TableCell>
-                      <TableCell>
-                        <AdminStatusBadge
-                          status={
-                            recruiter.approvalStatus || recruiter.jobStatus
-                          }
-                        />
-                      </TableCell>
+                      {showStatusColumn && (
+                        <TableCell>
+                          <AdminStatusBadge
+                            status={getRecruiterStatus(recruiter)}
+                          />
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
+                    <TableCell colSpan={colSpan} className="text-center py-8">
                       <div className="flex flex-col items-center justify-center space-y-2">
                         <User className="h-8 w-8 text-gray-400" />
                         <span className="text-gray-500">
@@ -160,12 +214,16 @@ const RecruitersTable = ({ paginatedRecruiters = [], onRevalidate }) => {
             overflow-y-auto border-transparent [&>button.absolute]:hidden"
         >
           <div className="w-full h-full">
-            <RecruiterDetails
-              recruiter={selectedRecruiter}
-              areApprovalBtnsVisible={true}
-              onClose={() => setDrawerOpen(false)}
-              onRevalidate={onRevalidate}
-            />
+            {context === "approvals" ? (
+              <RecruiterDetailsApprovals
+                recruiter={selectedRecruiter}
+                areApprovalBtnsVisible={true}
+                onClose={() => setDrawerOpen(false)}
+                onRevalidate={onRevalidate}
+              />
+            ) : (
+              <RecruiterDetailsDatabase recruiterId={selectedRecruiter?._id} />
+            )}
           </div>
         </SheetContent>
       </Sheet>
