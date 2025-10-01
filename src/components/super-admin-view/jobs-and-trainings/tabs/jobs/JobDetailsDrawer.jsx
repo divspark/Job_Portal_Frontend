@@ -1,11 +1,19 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LocationIcon } from "@/utils/icon";
-import { ClockIcon, DollarSignIcon, CalendarIcon } from "lucide-react";
+import {
+  ClockIcon,
+  DollarSignIcon,
+  CalendarIcon,
+  SquarePenIcon,
+} from "lucide-react";
 import { useGetJobDetails } from "../../../../../hooks/super-admin/useJob";
+import { useState } from "react";
+import EditJobDrawer from "../../../common/jobs/EditJobDrawer";
 
-const JobDetailsDrawer = ({ jobId }) => {
+const JobDetailsDrawer = ({ jobId, onRevalidate }) => {
   const { data: jobData, isLoading, error } = useGetJobDetails(jobId);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -86,7 +94,18 @@ const JobDetailsDrawer = ({ jobId }) => {
             </div>
           )}
         </div>
-        <Button variant="black">Apply Now</Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditDrawerOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <SquarePenIcon className="w-4 h-4" />
+            Edit Job
+          </Button>
+          <Button variant="black">Apply Now</Button>
+        </div>
       </div>
 
       {/* Content */}
@@ -202,6 +221,14 @@ const JobDetailsDrawer = ({ jobId }) => {
           </div>
         </div>
       </div>
+
+      {/* Edit Job Drawer */}
+      <EditJobDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        job={job}
+        onRevalidate={onRevalidate}
+      />
     </div>
   );
 };

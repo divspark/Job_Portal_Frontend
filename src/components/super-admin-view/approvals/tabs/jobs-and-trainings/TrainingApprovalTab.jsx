@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import TrainingsApprovalTable from "./TrainingsApprovalTable";
 import Pagination from "@/components/common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "@/components/common/filterComponent";
 import { getApprovalFilters } from "../../utils";
 import useTrainingsApprovalStore from "./useTrainingsApprovalStore";
+import StatusTabs from "../../common/StatusTabs";
 
 const TrainingApprovalTab = () => {
   const {
@@ -22,10 +23,19 @@ const TrainingApprovalTab = () => {
     fetchTrainings,
   } = useTrainingsApprovalStore();
 
-  // Fetch trainings on component mount
+  const [activeStatus, setActiveStatus] = useState("pending");
+
+  // Handle status change
+  const handleStatusChange = (status) => {
+    setActiveStatus(status);
+    setFormData({ status });
+    setCurrentPage(1);
+  };
+
+  // Fetch trainings on component mount and when status changes
   useEffect(() => {
     fetchTrainings();
-  }, [fetchTrainings]);
+  }, [fetchTrainings, activeStatus]);
 
   // Get computed data
   const paginatedTrainings = getPaginatedTrainings();
@@ -34,7 +44,13 @@ const TrainingApprovalTab = () => {
 
   return (
     <div className="w-full grid grid-rows-[auto_auto_1fr] gap-6 min-h-0">
-      <h1 className="text-2xl font-bold">Training Approvals</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Training Approvals</h1>
+        <StatusTabs
+          activeStatus={activeStatus}
+          onStatusChange={handleStatusChange}
+        />
+      </div>
 
       {/* Error Message */}
       {error && (

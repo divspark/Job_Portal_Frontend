@@ -1,2 +1,2 @@
 export { default as TrainersTable } from "./TrainersTable";
-export { default as TrainerDetails } from "./TrainerDetails";
+export { default as TrainerApprovalDetails } from "./TrainerApprovalDetails";

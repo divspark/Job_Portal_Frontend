@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RecruitersTable from "./RecruitersTable";
 import Pagination from "../../../../common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "../../../../common/filterComponent";
 import { getApprovalFilters } from "../../utils";
 import useRecruitersStore from "./zustand";
+import StatusTabs from "../../common/StatusTabs";
 
 const RecruitersTab = () => {
   const {
@@ -22,10 +23,19 @@ const RecruitersTab = () => {
     fetchRecruiters,
   } = useRecruitersStore();
 
-  // Fetch recruiters on component mount
+  const [activeStatus, setActiveStatus] = useState("pending");
+
+  // Handle status change
+  const handleStatusChange = (status) => {
+    setActiveStatus(status);
+    setFormData({ status });
+    setCurrentPage(1);
+  };
+
+  // Fetch recruiters on component mount and when status changes
   useEffect(() => {
     fetchRecruiters();
-  }, [fetchRecruiters]);
+  }, [fetchRecruiters, activeStatus]);
 
   // Get computed data
   const paginatedRecruiters = getPaginatedRecruiters();
@@ -34,7 +44,13 @@ const RecruitersTab = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Recruiters</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Recruiters</h1>
+        <StatusTabs
+          activeStatus={activeStatus}
+          onStatusChange={handleStatusChange}
+        />
+      </div>
 
       {/* Error Message */}
       {error && (

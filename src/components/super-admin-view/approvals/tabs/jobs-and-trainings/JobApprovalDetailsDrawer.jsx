@@ -18,6 +18,8 @@ import {
   useApprovals,
   useGetApprovalDetails,
 } from "../../../../../hooks/super-admin/useApprovals";
+import RejectionReasonModal from "@/components/common/RejectionReasonModal";
+import { useState } from "react";
 
 const JobApprovalDetailsDrawer = ({
   jobId: approvalId, // This is actually the approval ID
@@ -25,6 +27,7 @@ const JobApprovalDetailsDrawer = ({
   onClose,
   onRevalidate,
 }) => {
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
   const {
     isLoading: isLoadingApprovals,
     approveApplication,
@@ -49,9 +52,9 @@ const JobApprovalDetailsDrawer = ({
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (rejectionReason) => {
     try {
-      await rejectApplication(approvalId);
+      await rejectApplication(approvalId, rejectionReason);
       // Revalidate the list data before closing
       if (onRevalidate) {
         await onRevalidate();
@@ -63,6 +66,10 @@ const JobApprovalDetailsDrawer = ({
     } catch (error) {
       console.error("Failed to reject job:", error);
     }
+  };
+
+  const handleRejectClick = () => {
+    setShowRejectionModal(true);
   };
 
   const handleHold = async () => {
@@ -222,7 +229,7 @@ const JobApprovalDetailsDrawer = ({
             </Button>
             <Button
               variant={"destructive"}
-              onClick={handleReject}
+              onClick={handleRejectClick}
               disabled={isLoadingApprovals}
             >
               {isLoadingApprovals ? "Processing..." : "Reject Job"}
@@ -413,6 +420,15 @@ const JobApprovalDetailsDrawer = ({
           </div>
         </div>
       )}
+
+      {/* Rejection Reason Modal */}
+      <RejectionReasonModal
+        isOpen={showRejectionModal}
+        onClose={() => setShowRejectionModal(false)}
+        onConfirm={handleReject}
+        isLoading={isLoadingApprovals}
+        entityType="job"
+      />
     </div>
   );
 };

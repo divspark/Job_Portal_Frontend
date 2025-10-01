@@ -1,15 +1,23 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LocationIcon } from "@/utils/icon";
-import { ClockIcon, DollarSignIcon, CalendarIcon } from "lucide-react";
+import {
+  ClockIcon,
+  DollarSignIcon,
+  CalendarIcon,
+  SquarePenIcon,
+} from "lucide-react";
 import { useGetTrainingDetails } from "../../../../../hooks/super-admin/useTraining";
+import { useState } from "react";
+import EditTrainingDrawer from "../../../common/trainings/EditTrainingDrawer";
 
-const TrainingDetailsDrawer = ({ trainingId }) => {
+const TrainingDetailsDrawer = ({ trainingId, onRevalidate }) => {
   const {
     data: trainingData,
     isLoading,
     error,
   } = useGetTrainingDetails(trainingId);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -97,7 +105,18 @@ const TrainingDetailsDrawer = ({ trainingId }) => {
             </div>
           )}
         </div>
-        <Button variant="black">Apply Now</Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsEditDrawerOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <SquarePenIcon className="w-4 h-4" />
+            Edit Training
+          </Button>
+          <Button variant="black">Apply Now</Button>
+        </div>
       </div>
 
       {/* Content */}
@@ -228,6 +247,14 @@ const TrainingDetailsDrawer = ({ trainingId }) => {
           </div>
         </div>
       </div>
+
+      {/* Edit Training Drawer */}
+      <EditTrainingDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        training={training}
+        onRevalidate={onRevalidate}
+      />
     </div>
   );
 };

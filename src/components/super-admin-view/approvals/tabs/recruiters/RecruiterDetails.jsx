@@ -7,6 +7,8 @@ import {
   useGetApprovalDetails,
 } from "@/hooks/super-admin/useApprovals";
 import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
+import RejectionReasonModal from "@/components/common/RejectionReasonModal";
+import { useState } from "react";
 
 const RecruiterDetails = ({
   recruiter,
@@ -14,6 +16,7 @@ const RecruiterDetails = ({
   onClose,
   onRevalidate,
 }) => {
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
   const {
     isLoading: isApprovalLoading,
     approveApplication,
@@ -51,9 +54,12 @@ const RecruiterDetails = ({
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (rejectionReason) => {
     try {
-      await rejectApplication(displayRecruiter.id || displayRecruiter._id);
+      await rejectApplication(
+        displayRecruiter.id || displayRecruiter._id,
+        rejectionReason
+      );
       // Revalidate the list data before closing
       if (onRevalidate) {
         await onRevalidate();
@@ -65,6 +71,10 @@ const RecruiterDetails = ({
     } catch (error) {
       console.error("Failed to reject displayRecruiter:", error);
     }
+  };
+
+  const handleRejectClick = () => {
+    setShowRejectionModal(true);
   };
 
   const handleHold = async () => {
@@ -157,7 +167,7 @@ const RecruiterDetails = ({
                   </Button>
                   <Button
                     variant={"destructive"}
-                    onClick={handleReject}
+                    onClick={handleRejectClick}
                     disabled={isLoading}
                   >
                     {isLoading ? "Processing..." : "Reject Recruiter"}
@@ -604,6 +614,15 @@ const RecruiterDetails = ({
           </div>
         </div>
       </div>
+
+      {/* Rejection Reason Modal */}
+      <RejectionReasonModal
+        isOpen={showRejectionModal}
+        onClose={() => setShowRejectionModal(false)}
+        onConfirm={handleReject}
+        isLoading={isLoading}
+        entityType="recruiter"
+      />
     </div>
   );
 };

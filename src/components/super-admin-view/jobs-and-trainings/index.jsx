@@ -2,49 +2,30 @@ import { jobsAndTrainingsTabs } from "./utils";
 import useJobsAndTrainingsTabStore from "./zustand";
 import JobsTab from "./tabs/jobs";
 import TrainingsTab from "./tabs/trainings";
+import TabNavigation from "@/components/common/TabNavigation";
+import TabContent from "@/components/common/TabContent";
 
 const JobsAndTrainings = () => {
   const { activeTab, setActiveTab } = useJobsAndTrainingsTabStore();
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "jobs":
-        return <JobsTab />;
-      case "trainings":
-        return <TrainingsTab />;
-      default:
-        return <JobsTab />;
-    }
+  const tabComponents = {
+    jobs: JobsTab,
+    trainings: TrainingsTab,
   };
 
   return (
     <div className="w-full space-y-6 min-w-0">
-      {/* Tab Navigation */}
-      <div className="flex items-center justify-between min-w-0">
-        <div className="flex p-1 min-w-0 overflow-x-auto flex-1 lg:max-w-3xl">
-          {jobsAndTrainingsTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center px-4 py-2 transition-colors font-medium border-b-[1px] cursor-pointer whitespace-nowrap ${
-                activeTab === tab.id
-                  ? "border-b-primary-purple text-primary-purple"
-                  : "text-gray1 border-b-gray1"
-              }`}
-            >
-              {tab.icon && <span className="mr-2">{tab.icon}</span>}
-              <span>{tab.name}</span>
-            </button>
-          ))}
-        </div>
+      <TabNavigation
+        tabs={jobsAndTrainingsTabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
 
-        <div className="flex justify-end items-center space-x-4 ml-4">
-          {/* --- Right Action buttons */}
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      <div className="min-w-0">{renderTabContent()}</div>
+      <TabContent
+        activeTab={activeTab}
+        tabComponents={tabComponents}
+        defaultTab="jobs"
+      />
     </div>
   );
 };

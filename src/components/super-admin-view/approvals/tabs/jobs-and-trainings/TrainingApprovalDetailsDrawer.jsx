@@ -7,6 +7,8 @@ import {
   useApprovals,
   useGetApprovalDetails,
 } from "../../../../../hooks/super-admin/useApprovals";
+import RejectionReasonModal from "@/components/common/RejectionReasonModal";
+import { useState } from "react";
 
 const TrainingApprovalDetailsDrawer = ({
   training,
@@ -14,6 +16,7 @@ const TrainingApprovalDetailsDrawer = ({
   onClose,
   onRevalidate,
 }) => {
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
   const {
     isLoading: isLoadingApprovals,
     approveApplication,
@@ -43,9 +46,9 @@ const TrainingApprovalDetailsDrawer = ({
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (rejectionReason) => {
     try {
-      await rejectApplication(training?._id || training?.id);
+      await rejectApplication(training?._id || training?.id, rejectionReason);
       // Revalidate the list data before closing
       if (onRevalidate) {
         await onRevalidate();
@@ -57,6 +60,10 @@ const TrainingApprovalDetailsDrawer = ({
     } catch (error) {
       console.error("Failed to reject training:", error);
     }
+  };
+
+  const handleRejectClick = () => {
+    setShowRejectionModal(true);
   };
 
   const handleHold = async () => {
@@ -224,7 +231,7 @@ const TrainingApprovalDetailsDrawer = ({
             </Button>
             <Button
               variant={"destructive"}
-              onClick={handleReject}
+              onClick={handleRejectClick}
               disabled={isLoadingApprovals}
             >
               Reject Training
@@ -432,6 +439,15 @@ const TrainingApprovalDetailsDrawer = ({
           </div>
         </div>
       )}
+
+      {/* Rejection Reason Modal */}
+      <RejectionReasonModal
+        isOpen={showRejectionModal}
+        onClose={() => setShowRejectionModal(false)}
+        onConfirm={handleReject}
+        isLoading={isLoadingApprovals}
+        entityType="training"
+      />
     </div>
   );
 };

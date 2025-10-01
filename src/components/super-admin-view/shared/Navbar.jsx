@@ -1,4 +1,3 @@
-import React from "react";
 import { Bag, Cubed, Dash, LogoutIcon, SignOutIcon } from "../../../utils/icon";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../../ui/button";

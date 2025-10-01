@@ -15,14 +15,19 @@ import {
   useApprovals,
   useGetApprovalDetails,
 } from "@/hooks/super-admin/useApprovals";
+import { useGetTrainerDetails } from "@/hooks/super-admin/useTrainers";
+import EditTrainerDrawer from "./EditTrainerDrawer";
+import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 
-const TrainerDetails = ({
+const TrainerApprovalDetails = ({
   trainer,
   areApprovalBtnsVisible = false,
   onClose,
   onRevalidate,
 }) => {
   const [hasApprovalAction, setHasApprovalAction] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
 
   const {
     isLoading: isApprovalLoading,
@@ -31,19 +36,33 @@ const TrainerDetails = ({
     holdApplication,
   } = useApprovals();
 
-  // Fetch detailed trainer data using unified approval endpoint
+  // Fetch detailed trainer data using appropriate endpoint based on approval buttons visibility
   const {
     data: approvalDetails,
-    isLoading: isLoadingDetails,
-    error: detailsError,
+    isLoading: isLoadingApprovalDetails,
+    error: approvalDetailsError,
   } = useGetApprovalDetails(trainer?._id || trainer?.id, {
-    enabled: !!(trainer?._id || trainer?.id),
+    enabled: !!(trainer?._id || trainer?.id) && areApprovalBtnsVisible,
   });
 
-  // Use detailed data if available, otherwise fall back to basic trainer data
-  const displayTrainer = approvalDetails?.data?.data || trainer;
-  const isLoading = isLoadingDetails;
-  const error = detailsError;
+  const {
+    data: trainerDetails,
+    isLoading: isLoadingTrainerDetails,
+    error: trainerDetailsError,
+  } = useGetTrainerDetails(trainer?._id || trainer?.id, {
+    enabled: !!(trainer?._id || trainer?.id) && !areApprovalBtnsVisible,
+  });
+
+  // Use appropriate data based on which API was called
+  const displayTrainer = areApprovalBtnsVisible
+    ? approvalDetails?.data?.data || trainer
+    : trainerDetails?.data?.data || trainer;
+  const isLoading = areApprovalBtnsVisible
+    ? isLoadingApprovalDetails
+    : isLoadingTrainerDetails;
+  const error = areApprovalBtnsVisible
+    ? approvalDetailsError
+    : trainerDetailsError;
 
   const handleApprove = async () => {
     try {
@@ -62,9 +81,9 @@ const TrainerDetails = ({
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (rejectionReason) => {
     try {
-      await rejectApplication(displayTrainer._id);
+      await rejectApplication(displayTrainer._id, rejectionReason);
       setHasApprovalAction(true);
       // Revalidate the list data before closing
       if (onRevalidate) {
@@ -77,6 +96,10 @@ const TrainerDetails = ({
     } catch (error) {
       console.error("Failed to reject displayTrainer:", error);
     }
+  };
+
+  const handleRejectClick = () => {
+    setShowRejectionModal(true);
   };
 
   const handleHold = () => {
@@ -165,7 +188,7 @@ const TrainerDetails = ({
         />
         <SquarePenIcon
           className="absolute -bottom-[32%] left-[12%] text-primary-purple bg-white p-1.5 rounded cursor-pointer"
-          onClick={() => {}}
+          onClick={() => setIsEditDrawerOpen(true)}
         />
         <div className="ml-36 flex items-center justify-between w-full">
           <div>
@@ -185,7 +208,7 @@ const TrainerDetails = ({
               </Button>
               <Button
                 variant={"destructive"}
-                onClick={handleReject}
+                onClick={handleRejectClick}
                 disabled={isApprovalLoading}
               >
                 {isApprovalLoading ? "Processing..." : "Reject Trainer"}
@@ -417,8 +440,25 @@ const TrainerDetails = ({
           </div>
         </div>
       </div>
+
+      {/* Edit Trainer Drawer */}
+      <EditTrainerDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        trainer={displayTrainer}
+        onRevalidate={onRevalidate}
+      />
+
+      {/* Rejection Reason Modal */}
+      <RejectionReasonModal
+        isOpen={showRejectionModal}
+        onClose={() => setShowRejectionModal(false)}
+        onConfirm={handleReject}
+        isLoading={isApprovalLoading}
+        entityType="trainer"
+      />
     </div>
   );
 };
 
-export default TrainerDetails;
+export default TrainerApprovalDetails;

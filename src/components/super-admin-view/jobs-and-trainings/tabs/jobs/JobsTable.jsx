@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getJobApplications } from "../../../../../api/super-admin/jobsAndTrainings";
 
-const JobsTable = ({ paginatedJobs }) => {
+const JobsTable = ({ paginatedJobs, onRevalidate }) => {
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
@@ -220,7 +220,7 @@ const JobsTable = ({ paginatedJobs }) => {
             overflow-y-auto border-transparent [&>button.absolute]:hidden"
         >
           <div className="w-full h-full">
-            <JobDetailsDrawer jobId={selectedJob} />
+            <JobDetailsDrawer jobId={selectedJob} onRevalidate={onRevalidate} />
           </div>
         </SheetContent>
       </Sheet>

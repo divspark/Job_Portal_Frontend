@@ -35,3 +35,6 @@ export const getAllCandidates = ({ signal, page = 1, limit = 10, ...params }) =>
 
 export const getCandidateById = ({ signal, id }) =>
   api.get(`/admin/candidates/${id}`, { signal });
+
+export const updateTrainer = ({ id, data }) =>
+  api.put(`/admin/trainers/${id}`, data);

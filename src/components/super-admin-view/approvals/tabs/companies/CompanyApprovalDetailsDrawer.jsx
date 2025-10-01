@@ -10,6 +10,7 @@ import {
 } from "@/hooks/super-admin/useApprovals";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 
 const CompanyApprovalDetailsDrawer = ({
   company,
@@ -18,6 +19,7 @@ const CompanyApprovalDetailsDrawer = ({
   onRevalidate,
 }) => {
   const [activeTab, setActiveTab] = useState("details");
+  const [showRejectionModal, setShowRejectionModal] = useState(false);
   const { isLoading, approveApplication, rejectApplication, holdApplication } =
     useApprovals();
 
@@ -51,9 +53,9 @@ const CompanyApprovalDetailsDrawer = ({
     }
   };
 
-  const handleReject = async () => {
+  const handleReject = async (rejectionReason) => {
     try {
-      await rejectApplication(company?._id || company?.id);
+      await rejectApplication(company?._id || company?.id, rejectionReason);
       // Revalidate the list data before closing
       if (onRevalidate) {
         await onRevalidate();
@@ -65,6 +67,10 @@ const CompanyApprovalDetailsDrawer = ({
     } catch (error) {
       console.error("Failed to reject company:", error);
     }
+  };
+
+  const handleRejectClick = () => {
+    setShowRejectionModal(true);
   };
 
   const handleHold = async () => {
@@ -186,7 +192,7 @@ const CompanyApprovalDetailsDrawer = ({
               <Button
                 variant={"destructive"}
                 className={"w-full"}
-                onClick={handleReject}
+                onClick={handleRejectClick}
                 disabled={isLoading}
               >
                 {isLoading ? "Processing..." : "Reject Company"}
@@ -252,6 +258,15 @@ const CompanyApprovalDetailsDrawer = ({
           {activeTab === "jobs" && <JobListingTab company={displayCompany} />}
         </div>
       </div>
+
+      {/* Rejection Reason Modal */}
+      <RejectionReasonModal
+        isOpen={showRejectionModal}
+        onClose={() => setShowRejectionModal(false)}
+        onConfirm={handleReject}
+        isLoading={isLoading}
+        entityType="company"
+      />
     </div>
   );
 };

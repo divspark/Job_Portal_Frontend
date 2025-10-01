@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import JobsApprovalTable from "./JobsApprovalTable";
 import Pagination from "@/components/common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "@/components/common/filterComponent";
 import { getApprovalFilters } from "../../utils";
 import useJobsApprovalStore from "./useJobsApprovalStore";
+import StatusTabs from "../../common/StatusTabs";
 
 const JobApprovalTab = () => {
   const {
@@ -22,10 +23,19 @@ const JobApprovalTab = () => {
     fetchJobs,
   } = useJobsApprovalStore();
 
-  // Fetch jobs on component mount
+  const [activeStatus, setActiveStatus] = useState("pending");
+
+  // Handle status change
+  const handleStatusChange = (status) => {
+    setActiveStatus(status);
+    setFormData({ status });
+    setCurrentPage(1);
+  };
+
+  // Fetch jobs on component mount and when status changes
   useEffect(() => {
     fetchJobs();
-  }, [fetchJobs]);
+  }, [fetchJobs, activeStatus]);
 
   // Get computed data
   const paginatedJobs = getPaginatedJobs();
@@ -34,7 +44,13 @@ const JobApprovalTab = () => {
 
   return (
     <div className="w-full grid grid-rows-[auto_auto_1fr] gap-6 min-h-0">
-      <h1 className="text-2xl font-bold">Job Approvals</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Job Approvals</h1>
+        <StatusTabs
+          activeStatus={activeStatus}
+          onStatusChange={handleStatusChange}
+        />
+      </div>
 
       {/* Error Message */}
       {error && (

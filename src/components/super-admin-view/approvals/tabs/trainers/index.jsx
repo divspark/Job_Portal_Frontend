@@ -5,6 +5,7 @@ import FilterComponent from "../../../../common/filterComponent";
 import { getApprovalFilters } from "../../utils";
 import { useState, useEffect } from "react";
 import { getApprovalsList } from "../../../../../api/super-admin/approvals";
+import StatusTabs from "../../common/StatusTabs";
 
 const TrainersTab = () => {
   // Local state for filters and pagination
@@ -17,6 +18,7 @@ const TrainersTab = () => {
     sortOrder: "desc",
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeStatus, setActiveStatus] = useState("pending");
   const itemsPerPage = 10;
 
   // State for API data
@@ -103,10 +105,17 @@ const TrainersTab = () => {
     }
   };
 
+  // Handle status change
+  const handleStatusChange = (status) => {
+    setActiveStatus(status);
+    setFilters((prev) => ({ ...prev, status }));
+    setCurrentPage(1);
+  };
+
   // Fetch trainers on component mount and when filters change
   useEffect(() => {
     fetchTrainers();
-  }, [currentPage, filters]);
+  }, [currentPage, filters, activeStatus]);
 
   const totalPages = Math.ceil(totalCount / itemsPerPage);
 
@@ -136,7 +145,13 @@ const TrainersTab = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Trainers</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Trainers</h1>
+        <StatusTabs
+          activeStatus={activeStatus}
+          onStatusChange={handleStatusChange}
+        />
+      </div>
 
       {/* Error Message */}
       {error && (

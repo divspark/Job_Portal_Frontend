@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getTrainingApplications } from "../../../../../api/super-admin/jobsAndTrainings";
 
-const TrainingsTable = ({ paginatedTrainings }) => {
+const TrainingsTable = ({ paginatedTrainings, onRevalidate }) => {
   const [selectedTrainingId, setSelectedTrainingId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedTraining, setSelectedTraining] = useState(null);
@@ -224,7 +224,10 @@ const TrainingsTable = ({ paginatedTrainings }) => {
             overflow-y-auto border-transparent [&>button.absolute]:hidden"
         >
           <div className="w-full h-full">
-            <TrainingDetailsDrawer trainingId={selectedTraining} />
+            <TrainingDetailsDrawer
+              trainingId={selectedTraining}
+              onRevalidate={onRevalidate}
+            />
           </div>
         </SheetContent>
       </Sheet>

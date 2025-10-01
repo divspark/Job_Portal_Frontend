@@ -1,56 +1,37 @@
 import { approvalTabs } from "./utils";
 import useApprovalsTabStore from "./zustand";
-import CompaniesTab from "./tabs/companies";
+import CompaniesTabApprovals from "./tabs/companies";
 import RecruitersTab from "./tabs/recruiters";
 import TrainersTab from "./tabs/trainers";
 import JobTrainingsTab from "./tabs/jobs-and-trainings";
+import TabNavigation from "@/components/common/TabNavigation";
+import TabContent from "@/components/common/TabContent";
 
 const Approvals = () => {
   const { activeTab, setActiveTab } = useApprovalsTabStore();
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case "companies":
-        return <CompaniesTab />;
-      case "jobTrainings":
-        return <JobTrainingsTab />;
-      case "trainers":
-        return <TrainersTab />;
-      case "recruiters":
-        return <RecruitersTab />;
-      default:
-        return <CompaniesTab />;
-    }
+  const tabComponents = {
+    companies: CompaniesTabApprovals,
+    jobTrainings: JobTrainingsTab,
+    trainers: TrainersTab,
+    recruiters: RecruitersTab,
   };
 
   return (
     <div className="w-full space-y-6">
-      {/* Tab Navigation */}
-      <div className="flex items-center justify-between">
-        <div className="flex p-1 overflow-x-auto flex-1 lg:max-w-3xl">
-          {approvalTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center px-4 py-2 transition-colors font-medium border-b-[1px] cursor-pointer whitespace-nowrap ${
-                activeTab === tab.id
-                  ? "border-b-primary-purple text-primary-purple"
-                  : "text-gray1 border-b-gray1"
-              }`}
-            >
-              {tab.icon && <span className="mr-2">{tab.icon}</span>}
-              <span>{tab.name}</span>
-            </button>
-          ))}
-        </div>
+      <TabNavigation
+        tabs={approvalTabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        containerClassName="w-full space-y-6"
+      />
 
-        <div className="flex justify-end items-center space-x-4 ml-4">
-          {/* --- Right Action buttons */}
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      <div className="w-full">{renderTabContent()}</div>
+      <TabContent
+        activeTab={activeTab}
+        tabComponents={tabComponents}
+        defaultTab="companies"
+        className="w-full"
+      />
     </div>
   );
 };

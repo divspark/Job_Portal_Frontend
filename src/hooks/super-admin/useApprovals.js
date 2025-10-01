@@ -40,11 +40,12 @@ export const useApprovals = () => {
     );
   };
 
-  const rejectApplication = async (approvalId) => {
+  const rejectApplication = async (approvalId, rejectionReason = "") => {
     return handleApiCall(
       () =>
         reviewApproval(approvalId, {
           status: "rejected",
+          rejectionReason: rejectionReason,
         }),
       "Application rejected successfully",
       "Failed to reject application"
