@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   applyBulkSeeker,
   applySingleSeeker,
@@ -26,10 +26,12 @@ export const useGetJobById = (id, jobType) => {
   });
 };
 export const useApplySingle = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: applySingleSeeker,
     onSuccess: (data) => {
       toast.success(data.data.message);
+      queryClient.invalidateQueries({ queryKey: ["applicants"] });
     },
     onError: (error) => {
       console.log(error);
@@ -38,11 +40,13 @@ export const useApplySingle = () => {
   });
 };
 export const useBulkApplySingle = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: applyBulkSeeker,
     onSuccess: (data) => {
       if (data.data.failed > 0) {
         toast.error(data.data.message);
+        queryClient.invalidateQueries({ queryKey: ["applicants"] });
       } else {
         toast.success(data.data.message);
       }

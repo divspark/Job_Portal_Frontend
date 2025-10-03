@@ -16,7 +16,7 @@ import {
 import useJobPostStore from "../../../stores/useJobPostStore";
 import { IndianRupee } from "lucide-react";
 
-const JobCard = ({ setOpen, item, setOpen1 }) => {
+const JobCard = ({ setOpen, item, setOpen1, setCandidateFilters }) => {
   const { setJobPost } = useJobPostStore();
   const handleParentClick = (e) => {
     setOpen1((prev) => !prev);
@@ -26,6 +26,10 @@ const JobCard = ({ setOpen, item, setOpen1 }) => {
     e.stopPropagation();
     setJobPost(job);
     setOpen(true);
+    setCandidateFilters((prev) => ({
+      ...prev,
+      excludeAppliedForJob: job?._id,
+    }));
   };
   return (
     <Fragment>

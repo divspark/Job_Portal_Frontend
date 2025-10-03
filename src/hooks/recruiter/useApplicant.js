@@ -14,7 +14,6 @@ export const useGetAllApplicant = (filters) => {
     queryKey: ["applicants", filters],
     queryFn: getAllApplicantDetails,
     retry: false,
-    keepPreviousData: true,
   });
 };
 

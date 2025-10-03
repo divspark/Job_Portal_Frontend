@@ -41,6 +41,8 @@ const JobOpenings = () => {
     salaryRange: "",
     experienceRange: "",
     currentWorkingStatus: "",
+    excludeAppliedForJob: "",
+    // showOnlyApplied: true,
   });
   const [open1, setOpen1] = useState(false);
   const [open2, setOpen2] = useState(false);
@@ -197,6 +199,7 @@ const JobOpenings = () => {
           handleSearch={handleSearch}
           searchText={searchText}
           ClearAll={ClearAll}
+          setCandidateFilters={setCandidateFilters}
         />
       </div>
     </Fragment>

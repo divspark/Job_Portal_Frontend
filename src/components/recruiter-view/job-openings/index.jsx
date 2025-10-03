@@ -14,6 +14,7 @@ const Index = ({
   handleSearch,
   searchText,
   ClearAll,
+  setCandidateFilters,
 }) => {
   const totalPages = Math.ceil(jobPosts?.pagination?.total / 10);
   return (
@@ -43,7 +44,12 @@ const Index = ({
             <div className="border border-[#DFDFDF]"></div>
             <SearchComponent handleSearch={handleSearch} value={searchText} />
             {jobPosts?.data?.map((item, i) => (
-              <JobCard key={i} item={item} setOpen={setOpen} />
+              <JobCard
+                key={i}
+                item={item}
+                setOpen={setOpen}
+                setCandidateFilters={setCandidateFilters}
+              />
             ))}
             <Pagination
               range={2}
@@ -68,7 +74,12 @@ const Index = ({
           <div className="self-stretch h-0 outline outline-offset-[-0.50px] outline-neutral-200"></div>
           <SearchComponent handleSearch={handleSearch} value={searchText} />
           {jobPosts?.data?.map((item, i) => (
-            <JobCard key={i} item={item} setOpen={setOpen} />
+            <JobCard
+              key={i}
+              item={item}
+              setOpen={setOpen}
+              setCandidateFilters={setCandidateFilters}
+            />
           ))}
         </div>
         <Pagination

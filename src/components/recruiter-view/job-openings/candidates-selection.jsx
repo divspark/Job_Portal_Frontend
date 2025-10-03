@@ -27,20 +27,22 @@ import {
 import { Button } from "../../ui/button";
 import useJobPostStore from "../../../stores/useJobPostStore";
 import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const CandidateSelection = ({
   setOpen2,
   show,
   button,
   applicants,
-  selectedSeeker,
-  setSelectedSeeker,
+  selectedSeeker = [],
+  setSelectedSeeker = () => {},
   filters,
   setFilters,
   totalPages,
   handleSearch,
   searchTextCandidate,
 }) => {
+  const queryClient = useQueryClient();
   const { setJobSeekerProfile } = useJobSeekerProfileStore();
   const { jobPost } = useJobPostStore();
   const {
@@ -83,6 +85,11 @@ const CandidateSelection = ({
     }
     setSelectedSeeker([]);
   };
+  useEffect(() => {
+    return () => {
+      setSelectedSeeker([]);
+    };
+  }, []);
 
   return (
     <Fragment>
