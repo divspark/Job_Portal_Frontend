@@ -288,7 +288,7 @@ export const sectoralFieldsForm = [
 ];
 export const sectoralFieldsForm2 = [
   {
-    name: "",
+    name: "latestQualifications",
     label: "Latest Qualification",
     componentType: "input",
     placeholder: "Experience",
@@ -868,19 +868,6 @@ export const formControlsForIndividual = [
   },
 ];
 export const jobOpeningFilters = [
-  {
-    label: "Job Type",
-    componentType: "select",
-    placeholder: "Choose Job Type",
-    name: "jobType",
-    options: [
-      {
-        id: "training",
-        label: "Training",
-      },
-      { id: "job", label: "Job" },
-    ],
-  },
   {
     label: "Status",
     componentType: "select",
