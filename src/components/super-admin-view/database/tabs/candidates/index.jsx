@@ -65,7 +65,7 @@ const CandidatesTab = () => {
   });
 
   // Get computed data from React Query
-  const paginatedCandidates = candidatesData?.data?.data?.candidates || [];
+  const paginatedCandidates = candidatesData?.data?.data?.jobSeekers || [];
   const totalPages = candidatesData?.data?.pagination?.totalPages || 0;
   const filteredCount = candidatesData?.data?.pagination?.total || 0;
 

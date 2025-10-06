@@ -10,8 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import StatusBadge from "@/components/common/StatusBadge";
-import { Badge } from "@/components/ui/badge";
 import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
 
 const JobsApprovalTable = ({

@@ -33,7 +33,7 @@ const CandidatesTable = ({ paginatedCandidates }) => {
       return;
     }
 
-    setCandidateIdForDetails(candidate.id);
+    setCandidateIdForDetails(candidate._id);
     setDrawerOpen(true);
   };
 
@@ -45,21 +45,23 @@ const CandidatesTable = ({ paginatedCandidates }) => {
             <TableHeader>
               <TableRow>
                 <TableHead className="min-w-[40px] font-semibold"></TableHead>
-                <TableHead className="min-w-[80px] font-semibold">ID</TableHead>
-                <TableHead className="min-w-[250px] font-semibold">
-                  Name
-                </TableHead>
                 <TableHead className="min-w-[120px] font-semibold">
-                  Industry
+                  ID
+                </TableHead>
+                <TableHead className="min-w-[250px] font-semibold">
+                  Candidates
+                </TableHead>
+                <TableHead className="min-w-[150px] font-semibold">
+                  Applied for
                 </TableHead>
                 <TableHead className="min-w-[150px] font-semibold">
                   Skills
                 </TableHead>
-                <TableHead className="min-w-[100px] font-semibold">
+                <TableHead className="min-w-[150px] font-semibold">
                   Experience
                 </TableHead>
-                <TableHead className="min-w-[120px] font-semibold">
-                  Last Updated
+                <TableHead className="min-w-[180px] font-semibold">
+                  Contact
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -67,7 +69,7 @@ const CandidatesTable = ({ paginatedCandidates }) => {
               {paginatedCandidates.length > 0 ? (
                 paginatedCandidates.map((candidate) => (
                   <TableRow
-                    key={candidate.id}
+                    key={candidate._id}
                     onClick={(e) => handleRowClick(candidate, e)}
                     className="cursor-pointer hover:bg-gray-50 transition-colors"
                   >
@@ -75,40 +77,65 @@ const CandidatesTable = ({ paginatedCandidates }) => {
                       <input
                         type="radio"
                         name="selectCandidate"
-                        checked={selectedCandidateId === candidate.id}
-                        onChange={() => handleSelectCandidate(candidate.id)}
-                        aria-label={`Select candidate ${candidate.name}`}
+                        checked={selectedCandidateId === candidate._id}
+                        onChange={() => handleSelectCandidate(candidate._id)}
+                        aria-label={`Select candidate ${candidate?.name}`}
                         className="w-4 h-4 text-primary-purple border-2 border-gray-300 focus:ring-2 focus:ring-primary-purple/50 focus:ring-offset-0 cursor-pointer appearance-none rounded-full checked:bg-primary-purple checked:border-primary-purple relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:bg-white before:rounded-full before:opacity-0 checked:before:opacity-100"
                       />
                     </TableCell>
-                    <TableCell>{candidate.id}</TableCell>
+                    <TableCell>{candidate?._id}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        {/* {candidate.avatar ? (
+                        {candidate?.profilePicture ? (
                           <img
-                            src={candidate.avatar}
-                            alt={`${candidate.name} avatar`}
+                            src={candidate.profilePicture}
+                            alt={`${candidate?.name} avatar`}
                             className="w-10 h-10 rounded-full object-cover"
                           />
-                        ) : ( */}
-                        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                          <User className="h-5 w-5 text-gray-400" />
-                        </div>
-                        {/* )} */}
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <User className="h-5 w-5 text-gray-400" />
+                          </div>
+                        )}
                         <div className="flex flex-col">
                           <span className="font-medium text-gray-900">
-                            {candidate.name}
+                            {candidate?.name}
                           </span>
-                          <span className="text-sm text-gray-500">
-                            {candidate.occupation}
-                          </span>
+                          {candidate?.roleLookingFor && (
+                            <span className="text-sm text-gray-500">
+                              {candidate.roleLookingFor}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>{candidate.industry}</TableCell>
-                    <TableCell>{candidate.skills}</TableCell>
-                    <TableCell>{candidate.experience}</TableCell>
-                    <TableCell>{candidate.lastUpdated}</TableCell>
+                    <TableCell>{candidate?.roleLookingFor || "N/A"}</TableCell>
+                    <TableCell>
+                      {Array.isArray(candidate?.skills) &&
+                      candidate.skills.length > 0
+                        ? candidate.skills.join(", ")
+                        : "N/A"}
+                    </TableCell>
+                    <TableCell>
+                      {(candidate?.totalExperience !== undefined ||
+                        candidate?.totalExperienceInMonth !== undefined) && (
+                        <span>
+                          {candidate?.totalExperience !== undefined &&
+                            `${candidate.totalExperience} Years `}
+                          {candidate?.totalExperienceInMonth !== undefined &&
+                            `${candidate.totalExperienceInMonth} Months`}
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-1">
+                        <span>
+                          {candidate?.phone?.countryCode}{" "}
+                          {candidate?.phone?.number}
+                        </span>
+                        <span>{candidate?.email}</span>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -141,7 +168,7 @@ const CandidatesTable = ({ paginatedCandidates }) => {
         >
           <div className="w-full h-full">
             <CandidateDetailsDrawer
-              candidate={candidateDetails?.data}
+              candidate={candidateDetails}
               isLoading={isLoadingCandidateDetails}
             />
           </div>

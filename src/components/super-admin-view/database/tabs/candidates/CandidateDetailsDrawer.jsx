@@ -3,9 +3,11 @@ import { useState } from "react";
 import JobsApplied from "./tabs/JobsApplied";
 import AboutCandidate from "./tabs/AboutCandidate";
 import { Button } from "@/components/ui/button";
+import EditCandidateDrawer from "@/components/super-admin-view/common/candidates/EditCandidateDrawer";
 
 const CandidateDetailsDrawer = ({ candidate, isLoading }) => {
   const [activeTab, setActiveTab] = useState("aboutCandidate");
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   const tabs = [
     {
@@ -45,13 +47,30 @@ const CandidateDetailsDrawer = ({ candidate, isLoading }) => {
       <img src="/Group_1000005865.jpg" className="w-full object-contain" />
 
       <div className="bg-white p-6 w-[800px] mx-auto rounded-lg shadow-md -mt-20 flex items-center gap-6">
-        <User className="h-6 w-6 text-gray-400 mx-auto mb-4" />
+        {candidate?.profilePicture ? (
+          <img
+            src={candidate.profilePicture}
+            alt={candidate?.name}
+            className="h-12 w-12 rounded-full object-cover"
+          />
+        ) : (
+          <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center">
+            <User className="h-6 w-6 text-gray-400" />
+          </div>
+        )}
         <div className="flex-1">
-          <h3 className="font-semibold">Margaret Thetcher</h3>
-          <p className="text-gray1">
-            I am a Product Designer Based in Bengaluru
-          </p>
+          <h3 className="font-semibold capitalize">
+            {candidate?.name || "N/A"}
+          </h3>
+          <p className="text-gray1 break-all">{candidate?.email || ""}</p>
         </div>
+        <Button
+          variant={"purple"}
+          className={"w-fit"}
+          onClick={() => setIsEditOpen(true)}
+        >
+          Edit Candidate
+        </Button>
       </div>
 
       <div className="px-6">
@@ -75,9 +94,17 @@ const CandidateDetailsDrawer = ({ candidate, isLoading }) => {
         <div className="py-6">
           {activeTab === "jobsApplied" && <JobsApplied />}
 
-          {activeTab === "aboutCandidate" && <AboutCandidate />}
+          {activeTab === "aboutCandidate" && (
+            <AboutCandidate candidate={candidate} />
+          )}
         </div>
       </div>
+
+      <EditCandidateDrawer
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        candidate={candidate}
+      />
     </div>
   );
 };

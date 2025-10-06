@@ -13,7 +13,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { validateFormData } from "@/utils/commonFunctions";
 import { z } from "zod";
-import { toast } from "sonner";
 
 // Validation schemas
 const editTrainerSchema = z
@@ -368,14 +367,11 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
       if (onSave) {
         await onSave(payload);
       }
-
-      toast.success("Trainer updated successfully!");
       if (onClose) {
         onClose();
       }
     } catch (error) {
       console.error("Error updating trainer:", error);
-      toast.error("Failed to update trainer");
     } finally {
       setIsSubmitting(false);
     }
@@ -395,7 +391,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
             <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="firstName">First Name</Label>
+                <Label className="mb-2 block" htmlFor="firstName">
+                  First Name
+                </Label>
                 <Input
                   id="firstName"
                   value={formData.firstName}
@@ -406,7 +404,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="lastName">Last Name</Label>
+                <Label className="mb-2 block" htmlFor="lastName">
+                  Last Name
+                </Label>
                 <Input
                   id="lastName"
                   value={formData.lastName}
@@ -417,7 +417,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label className="mb-2 block" htmlFor="email">
+                  Email
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -429,7 +431,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Label className="mb-2 block" htmlFor="phoneNumber">
+                  Phone Number
+                </Label>
                 <Input
                   id="phoneNumber"
                   value={formData.phoneNumber}
@@ -440,7 +444,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="profileImage">Profile Image URL</Label>
+                <Label className="mb-2 block" htmlFor="profileImage">
+                  Profile Image URL
+                </Label>
                 <Input
                   id="profileImage"
                   value={formData.profileImage}
@@ -451,7 +457,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="location">Location</Label>
+                <Label className="mb-2 block" htmlFor="location">
+                  Location
+                </Label>
                 <Input
                   id="location"
                   value={formData.location}
@@ -471,7 +479,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
             </h3>
             <div className="space-y-4">
               <div>
-                <Label htmlFor="bio">Bio</Label>
+                <Label className="mb-2 block" htmlFor="bio">
+                  Bio
+                </Label>
                 <Textarea
                   id="bio"
                   value={formData.bio}
@@ -484,7 +494,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="specialization">Specialization</Label>
+                  <Label className="mb-2 block" htmlFor="specialization">
+                    Specialization
+                  </Label>
                   <Input
                     id="specialization"
                     value={formData.specialization}
@@ -498,7 +510,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="experience">Experience (years)</Label>
+                  <Label className="mb-2 block" htmlFor="experience">
+                    Experience (years)
+                  </Label>
                   <Input
                     id="experience"
                     type="number"
@@ -510,7 +524,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="linkedinProfile">LinkedIn Profile</Label>
+                  <Label className="mb-2 block" htmlFor="linkedinProfile">
+                    LinkedIn Profile
+                  </Label>
                   <Input
                     id="linkedinProfile"
                     value={formData.linkedinProfile}
@@ -524,7 +540,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="portfolio">Portfolio</Label>
+                  <Label className="mb-2 block" htmlFor="portfolio">
+                    Portfolio
+                  </Label>
                   <Input
                     id="portfolio"
                     value={formData.portfolio}
@@ -535,7 +553,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="website">Website</Label>
+                  <Label className="mb-2 block" htmlFor="website">
+                    Website
+                  </Label>
                   <Input
                     id="website"
                     value={formData.website}
@@ -547,7 +567,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 </div>
               </div>
               <div>
-                <Label htmlFor="skills">Skills (comma-separated)</Label>
+                <Label className="mb-2 block" htmlFor="skills">
+                  Skills (comma-separated)
+                </Label>
                 <Input
                   id="skills"
                   value={formData.skills.join(", ")}
@@ -562,7 +584,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="languages">Languages (comma-separated)</Label>
+                <Label className="mb-2 block" htmlFor="languages">
+                  Languages (comma-separated)
+                </Label>
                 <Input
                   id="languages"
                   value={formData.languages.join(", ")}
@@ -585,7 +609,7 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="teachingExperience">
+                  <Label className="mb-2 block" htmlFor="teachingExperience">
                     Teaching Experience (years)
                   </Label>
                   <Input
@@ -602,7 +626,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="hourlyRate">Hourly Rate</Label>
+                  <Label className="mb-2 block" htmlFor="hourlyRate">
+                    Hourly Rate
+                  </Label>
                   <Input
                     id="hourlyRate"
                     type="number"
@@ -614,7 +640,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="currency">Currency</Label>
+                  <Label className="mb-2 block" htmlFor="currency">
+                    Currency
+                  </Label>
                   <Select
                     value={formData.currency}
                     onValueChange={(value) =>
@@ -643,13 +671,18 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                       })
                     }
                   />
-                  <Label htmlFor="isAvailableForTraining">
+                  <Label
+                    className="mb-2 block"
+                    htmlFor="isAvailableForTraining"
+                  >
                     Available for Training
                   </Label>
                 </div>
               </div>
               <div>
-                <Label htmlFor="teachingStyle">Teaching Style</Label>
+                <Label className="mb-2 block" htmlFor="teachingStyle">
+                  Teaching Style
+                </Label>
                 <Textarea
                   id="teachingStyle"
                   value={formData.teachingStyle}
@@ -661,7 +694,7 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="preferredTrainingTypes">
+                <Label className="mb-2 block" htmlFor="preferredTrainingTypes">
                   Preferred Training Types (comma-separated)
                 </Label>
                 <Input
@@ -688,7 +721,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
             <h3 className="text-lg font-semibold mb-4">Social Media</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Label className="mb-2 block" htmlFor="linkedin">
+                  LinkedIn
+                </Label>
                 <Input
                   id="linkedin"
                   value={formData.socialMedia.linkedin}
@@ -705,7 +740,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="twitter">Twitter</Label>
+                <Label className="mb-2 block" htmlFor="twitter">
+                  Twitter
+                </Label>
                 <Input
                   id="twitter"
                   value={formData.socialMedia.twitter}
@@ -722,7 +759,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="youtube">YouTube</Label>
+                <Label className="mb-2 block" htmlFor="youtube">
+                  YouTube
+                </Label>
                 <Input
                   id="youtube"
                   value={formData.socialMedia.youtube}
@@ -766,7 +805,10 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor={`education-${index}-institution`}>
+                      <Label
+                        className="mb-2 block"
+                        htmlFor={`education-${index}-institution`}
+                      >
                         Institution
                       </Label>
                       <Input
@@ -781,7 +823,10 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`education-${index}-degree`}>
+                      <Label
+                        className="mb-2 block"
+                        htmlFor={`education-${index}-degree`}
+                      >
                         Degree
                       </Label>
                       <Input
@@ -796,7 +841,10 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`education-${index}-graduationYear`}>
+                      <Label
+                        className="mb-2 block"
+                        htmlFor={`education-${index}-graduationYear`}
+                      >
                         Graduation Year
                       </Label>
                       <Input
@@ -866,7 +914,10 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor={`cert-${index}-name`}>
+                      <Label
+                        className="mb-2 block"
+                        htmlFor={`cert-${index}-name`}
+                      >
                         Certificate Name
                       </Label>
                       <Input
@@ -886,7 +937,12 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`cert-${index}-issuer`}>Issuer</Label>
+                      <Label
+                        className="mb-2 block"
+                        htmlFor={`cert-${index}-issuer`}
+                      >
+                        Issuer
+                      </Label>
                       <Input
                         id={`cert-${index}-issuer`}
                         value={item.issuer}
@@ -904,7 +960,12 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`cert-${index}-date`}>Date</Label>
+                      <Label
+                        className="mb-2 block"
+                        htmlFor={`cert-${index}-date`}
+                      >
+                        Date
+                      </Label>
                       <Input
                         id={`cert-${index}-date`}
                         type="date"
@@ -953,7 +1014,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="currentPassword">Current Password</Label>
+                <Label className="mb-2 block" htmlFor="currentPassword">
+                  Current Password
+                </Label>
                 <Input
                   id="currentPassword"
                   type="password"
@@ -968,7 +1031,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="newPassword">New Password</Label>
+                <Label className="mb-2 block" htmlFor="newPassword">
+                  New Password
+                </Label>
                 <Input
                   id="newPassword"
                   type="password"
@@ -980,7 +1045,9 @@ const EditTrainerForm = ({ trainer, onClose, onSave }) => {
                 />
               </div>
               <div>
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Label className="mb-2 block" htmlFor="confirmPassword">
+                  Confirm Password
+                </Label>
                 <Input
                   id="confirmPassword"
                   type="password"

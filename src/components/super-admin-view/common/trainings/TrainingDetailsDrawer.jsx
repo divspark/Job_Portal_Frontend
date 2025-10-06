@@ -52,6 +52,7 @@ const TrainingDetailsDrawer = ({
     isLoading: isApprovalActionLoading,
     approveApplication,
     rejectApplication,
+    holdApplication,
   } = useApprovals();
 
   const isLoading = isLoadingDetails || isLoadingApprovals;
@@ -91,15 +92,17 @@ const TrainingDetailsDrawer = ({
 
   const handleHold = async (holdReason) => {
     try {
-      await holdApplication(
-        displayTraining.id || displayTraining._id,
-        holdReason
-      );
-      // Revalidate the list data before closing
+      const approvalId =
+        training?.id || displayApprovalData?._id || displayApprovalData?.id;
+      if (!approvalId) {
+        console.error("Missing approval id for hold action");
+        return;
+      }
+      await holdApplication(approvalId, holdReason);
       if (onRevalidate) {
         await onRevalidate();
       }
-      // Close the drawer after successful hold and revalidation
+      setShowHoldModal(false);
       if (onClose) {
         onClose();
       }
