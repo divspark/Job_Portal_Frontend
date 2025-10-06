@@ -225,7 +225,10 @@ const RecruitersTable = ({
                 onRevalidate={onRevalidate}
               />
             ) : (
-              <RecruiterDetailsDatabase recruiterId={selectedRecruiter?._id} />
+              <RecruiterDetailsDatabase
+                recruiterId={selectedRecruiter?._id}
+                onRevalidate={onRevalidate}
+              />
             )}
           </div>
         </SheetContent>

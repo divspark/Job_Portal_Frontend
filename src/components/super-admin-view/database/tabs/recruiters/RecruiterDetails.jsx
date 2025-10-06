@@ -1,9 +1,12 @@
 import { getValue } from "@/utils/commonFunctions";
 import { DownloadIcon, YourImageIcon, YourPdfIcon } from "@/utils/icon";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useRecruiterDetails } from "../../../../../hooks/super-admin/useRecruiterDetails";
+import EditRecruiterDrawer from "../../../common/recruiters/EditRecruiterDrawer";
 
-const RecruiterDetails = ({ recruiterId }) => {
+const RecruiterDetails = ({ recruiterId, onRevalidate }) => {
+  const [showEditDrawer, setShowEditDrawer] = useState(false);
   const {
     data: response,
     isLoading: loading,
@@ -68,7 +71,10 @@ const RecruiterDetails = ({ recruiterId }) => {
               alt={`Recruiter ${recruiter?._id || "avatar"}`}
             />
             <div className="size- inline-flex flex-col justify-center items-start gap-2.5">
-              <div className="self-stretch px-3 py-2 bg-black rounded-lg inline-flex justify-center items-center gap-1">
+              <button
+                onClick={() => setShowEditDrawer(true)}
+                className="self-stretch px-3 py-2 bg-black rounded-lg inline-flex justify-center items-center gap-1 hover:bg-gray-800 transition-colors cursor-pointer"
+              >
                 <div className="items-center justify-start text-white text-xs font-normal leading-tight">
                   Edit Your Profile
                 </div>
@@ -87,7 +93,7 @@ const RecruiterDetails = ({ recruiterId }) => {
                     stroke-linejoin="round"
                   />
                 </svg>
-              </div>
+              </button>
             </div>
             <div className="size- p-2 left-[123px] top-[66px] absolute bg-white rounded-lg flex justify-start items-center gap-2.5">
               <svg
@@ -589,6 +595,14 @@ const RecruiterDetails = ({ recruiterId }) => {
           </div>
         </div>
       </div>
+
+      {/* Edit Recruiter Drawer */}
+      <EditRecruiterDrawer
+        isOpen={showEditDrawer}
+        onClose={() => setShowEditDrawer(false)}
+        recruiter={recruiter}
+        onRevalidate={onRevalidate}
+      />
     </div>
   );
 };

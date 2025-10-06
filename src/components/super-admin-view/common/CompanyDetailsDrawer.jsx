@@ -12,6 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
+import EditCompanyDrawer from "./companies/EditCompanyDrawer";
 
 const CompanyDetailsDrawer = ({
   companyId,
@@ -23,6 +24,7 @@ const CompanyDetailsDrawer = ({
   const [activeTab, setActiveTab] = useState("details");
   const [showRejectionModal, setShowRejectionModal] = useState(false);
   const [showHoldModal, setShowHoldModal] = useState(false);
+  const [showEditDrawer, setShowEditDrawer] = useState(false);
   const { isLoading, approveApplication, rejectApplication, holdApplication } =
     useApprovals();
 
@@ -125,6 +127,14 @@ const CompanyDetailsDrawer = ({
     setShowHoldModal(true);
   };
 
+  const handleEditClick = () => {
+    setShowEditDrawer(true);
+  };
+
+  const handleEditClose = () => {
+    setShowEditDrawer(false);
+  };
+
   // Handle loading state
   const isLoadingData = context === "database" ? loading : isLoadingDetails;
   const hasError = context === "database" ? error : detailsError;
@@ -179,7 +189,11 @@ const CompanyDetailsDrawer = ({
     if (context === "database") {
       return (
         <div className="space-y-3">
-          <Button variant={"purple"} className={"px-3 w-full"}>
+          <Button
+            variant={"purple"}
+            className={"px-3 w-full"}
+            onClick={handleEditClick}
+          >
             Edit Company
           </Button>
         </div>
@@ -391,6 +405,16 @@ const CompanyDetailsDrawer = ({
           onConfirm={handleHold}
           isLoading={isLoading}
           entityType="company"
+        />
+      )}
+
+      {/* Edit Company Drawer - Only for database context */}
+      {context === "database" && (
+        <EditCompanyDrawer
+          isOpen={showEditDrawer}
+          onClose={handleEditClose}
+          company={displayCompany}
+          onRevalidate={onRevalidate}
         />
       )}
     </div>

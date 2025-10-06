@@ -19,7 +19,7 @@ export const createApplicant = async (data) => {
 };
 
 export const updateApplicant = async ({ id, data }) => {
-  const response = await api.put(`/admin/applicants/${id}`, data);
+  const response = await api.put(`/admin/user-profile/${id}/profile`, data);
   return response.data;
 };
 

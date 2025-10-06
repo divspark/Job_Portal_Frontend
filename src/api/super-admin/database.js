@@ -36,5 +36,17 @@ export const getAllCandidates = ({ signal, page = 1, limit = 10, ...params }) =>
 export const getCandidateById = ({ signal, id }) =>
   api.get(`/admin/jobseekers/${id}`, { signal });
 
-export const updateTrainer = ({ id, data }) =>
-  api.put(`/trainer/profile`, data);
+// Generic update function for all user types (company, candidate, trainer, recruiter)
+export const updateUserProfile = ({ id, data }) =>
+  api.put(`/admin/user-profile/${id}/profile`, data);
+
+// Specific update functions for backward compatibility
+export const updateTrainer = ({ id, data }) => updateUserProfile({ id, data });
+
+export const updateCompany = ({ id, data }) => updateUserProfile({ id, data });
+
+export const updateCandidate = ({ id, data }) =>
+  updateUserProfile({ id, data });
+
+export const updateRecruiter = ({ id, data }) =>
+  updateUserProfile({ id, data });
