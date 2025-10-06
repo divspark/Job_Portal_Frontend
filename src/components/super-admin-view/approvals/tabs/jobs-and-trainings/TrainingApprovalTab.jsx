@@ -43,7 +43,7 @@ const TrainingApprovalTab = ({ onError }) => {
 
   // Process the data
   const trainings =
-    data?.data?.approvals?.map((approval) => {
+    data?.data?.data?.approvals?.map((approval) => {
       const training = approval.data || {};
       return {
         id: approval._id,
