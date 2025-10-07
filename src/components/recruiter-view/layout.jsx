@@ -60,7 +60,7 @@ const dashboardMenuCorporate = [
   },
   {
     name: "Trainings",
-    link: "/corporate/training-posting/listing",
+    link: "/corporate/training-listing",
     icon: <Bag className="h-[20px] w-[20px]" />,
   },
   {

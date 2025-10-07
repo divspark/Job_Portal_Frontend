@@ -17,12 +17,11 @@ export const useFilteredJobs = (filters) => {
     keepPreviousData: true, // helpful for pagination
   });
 };
-export const useGetJobById = (id, jobType) => {
+export const useGetJobById = (id) => {
   return useQuery({
     queryKey: ["job-by-id", id],
     queryFn: () => getJobById(id),
     retry: false,
-    enabled: jobType === "job",
   });
 };
 export const useApplySingle = () => {

@@ -1,3 +1,5 @@
+import { max } from "date-fns";
+
 export const KycVerificationDetails = [
   {
     name: "cancelChequeOrPassbookImage",
@@ -305,7 +307,8 @@ export const sectoralFieldsForm2 = [
   {
     name: "joinReason",
     label: "Why do you want to join? (Max 30 words)",
-    componentType: "textarea",
+    componentType: "textarea-count",
+    maxWords: 30,
     placeholder: "Write your reason...",
   },
 
@@ -677,6 +680,12 @@ export const basicInformationControls = [
       { id: "proprietorship", label: "Proprietorship" },
       { id: "lld", label: "LLD" },
     ],
+  },
+  {
+    name: "basicInformation.aboutCompany",
+    label: "About Company",
+    componentType: "textarea",
+    placeholder: "Write about your company",
   },
 ];
 export const spocInformationControls = [
@@ -1134,7 +1143,7 @@ export const trainingController2 = [
     label: " What is the total duration of the training in days?",
     placeholder: "Enter duration",
     componentType: "input",
-    type: "number",
+    type: "text",
   },
   {
     name: "hoursPerDay",
@@ -1200,29 +1209,8 @@ export const trainingController3 = [
     componentType: "input",
     type: "text",
   },
-  {
-    label: "Would you like the trainer to upload any certifications?",
-    componentType: "select",
-    placeholder: "Select",
-    name: "certificationUploadRequired",
-    options: [
-      {
-        id: "yes",
-        label: "Yes",
-      },
-      { id: "no", label: "No" },
-    ],
-  },
 ];
-export const certificationUpload = [
-  {
-    name: "certificationUpload",
-    placeholder: "Upload Certificate",
-    componentType: "file",
-    type: "file",
-    accept: "image",
-  },
-];
+
 export const trainingController4 = [
   {
     name: "sessionsExpected",
@@ -1294,30 +1282,6 @@ export const trainingController4 = [
       { id: "no", label: "No" },
     ],
   },
-  {
-    label: "Would you require Recommendations from past Clients?",
-    componentType: "select",
-    placeholder: "Select",
-    name: "recommendationsFromPastClients",
-    options: [
-      {
-        id: "No",
-        label: "No",
-      },
-      {
-        id: "At least 1 Recommendation required",
-        label: "At least 1 Recommendation required",
-      },
-      {
-        id: "At least 2 Recommendation required",
-        label: "At least 2 Recommendation required",
-      },
-      {
-        id: "At least 3 Recommendation required",
-        label: "At least 3 Recommendation required",
-      },
-    ],
-  },
 ];
 export const jobController1 = [
   {
@@ -1338,8 +1302,7 @@ export const jobController1 = [
         label: "Full-Time",
       },
       { id: "Part-Time", label: "Part-Time" },
-      { id: "Both", label: "Both" },
-      { id: "Night-Time", label: "Night-Time" },
+      { id: "Internship", label: "Internship" },
     ],
   },
   {
@@ -1496,6 +1459,18 @@ export const jobController2 = [
       { id: "no", label: "No" },
     ],
   },
+];
+export const regionalLanguage = [
+  {
+    name: "regionalLanguages",
+    label: "",
+    placeholder: "Enter Language",
+    componentType: "multi-select",
+    max: 30,
+    options: [],
+  },
+];
+export const jobController3 = [
   {
     name: "noOfPositions",
     componentType: "input",
@@ -1537,8 +1512,9 @@ export const jobController2 = [
     label:
       "Please provide a detailed job description. (Minimum 300 characters)",
     placeholder: "Enter Description",
-    componentType: "textarea",
+    componentType: "textarea-count",
     type: "text",
+    maxChars: 300,
     width: "full",
   },
   {
@@ -2306,7 +2282,8 @@ export const gigTrainingFormControls = [
     name: "whyProceed",
     label: "Why you want to proceed ahead with this Gig Training assignment?",
     placeholder: "Write in 30 words max",
-    componentType: "textarea",
+    componentType: "textarea-count",
+    maxWords: 30,
   },
   {
     name: "avgMonthlySessions",
@@ -2457,7 +2434,8 @@ export const gigTrainingFormControls = [
     name: "professionalAchievements",
     label: "Any Professional Achievement to Highlight?",
     placeholder: "Max 50 words",
-    componentType: "textarea",
+    componentType: "textarea-count",
+    maxWords: 50,
   },
 
   {
