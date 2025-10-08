@@ -49,18 +49,36 @@ export const formatIndianNumber = (num) => {
   }
 };
 export const formatToMonthYear = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleString("en-US", { month: "short", year: "numeric" });
+  // Split "MM/YY" format
+  const [month, year] = dateString.split("/");
+
+  // Convert to full date: assume 1st day of month, and prepend "20" to year
+  const fullDate = new Date(`20${year}-${month}-01`);
+
+  return fullDate.toLocaleString("en-US", { month: "short", year: "numeric" });
 };
 export const getDurationBetweenDates = (startDateStr, endDateStr) => {
-  const startDate = new Date(startDateStr);
-  const endDate = new Date(endDateStr);
+  const parseDate = (str) => {
+    if (/^\d{2}\/\d{2}$/.test(str)) {
+      // MM/YY format → convert to full date
+      const [month, year] = str.split("/");
+      return new Date(`20${year}-${month}-01`);
+    }
+    return new Date(str);
+  };
+
+  const startDate = parseDate(startDateStr);
+  const endDate = parseDate(endDateStr);
+
+  if (isNaN(startDate) || isNaN(endDate)) {
+    return "Invalid date";
+  }
 
   let totalMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12;
   totalMonths += endDate.getMonth() - startDate.getMonth();
 
   if (endDate.getDate() < startDate.getDate()) {
-    totalMonths--; // account for partial month
+    totalMonths--; // adjust for partial month
   }
 
   const years = Math.floor(totalMonths / 12);
@@ -72,6 +90,7 @@ export const getDurationBetweenDates = (startDateStr, endDateStr) => {
 
   return result.trim() || "0 mon";
 };
+
 export const validateFormData = (validationSchema, formData) => {
   if (!validationSchema) return true;
 
