@@ -120,7 +120,7 @@ const hiringFunnelData = [
 
 const Dashboard = () => {
   const { user } = useAuthStore();
-  console.log(user)
+  console.log(user);
   const { data: profileData } = useCorporateProfileProgress();
   console.log(profileData);
   const nextStagePath =
@@ -194,9 +194,9 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-        ) : (
-          user?.status !== "active" && <PendingApprove />
-        )}
+        ) : user?.status === "pending" ? (
+          <PendingApprove />
+        ) : null}
       </div>
 
       {/* Stats Section */}

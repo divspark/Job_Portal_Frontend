@@ -367,7 +367,7 @@ function App() {
           }
         >
           <Route path="dashboard" element={<TrainerDashboard />} />
-          <Route path="dashboard/:id" element={<JobDescription />} />
+          <Route path="dashboard/:id" element={<TrainerJobDescription />} />
           <Route path="faq" element={<Faq />} />
         </Route>
 

@@ -11,7 +11,7 @@ import { useTrainerRegisterationStage3 } from "../../hooks/trainer/useAuth";
 import useAuthStore from "../../stores/useAuthStore";
 
 export const experienceSchema = z.object({
-  expertiseLevel: z.string().min(1, "Expertise level is required"),
+  // expertiseLevel: z.string().min(1, "Expertise level is required"),
 
   totalYearsExperience: z
     .string()
@@ -71,7 +71,7 @@ export const experienceSchema = z.object({
 const WorkingDetails = () => {
   const { mutate: UploadImage } = useUpload();
   const [formData, setFormData] = useState({
-    expertiseLevel: "",
+    expertiseLevel: [],
     totalYearsExperience: "",
     totalMonthsExperience: "",
     linkedin: "",

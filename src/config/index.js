@@ -2190,12 +2190,13 @@ export const experienceFormControls = [
     name: "expertiseLevel",
     label: "Experience Level",
     placeholder: "Select level",
-    componentType: "select",
+    componentType: "multi-select",
     options: [
       { id: "frontline", label: "Frontline Team Trainnings" },
       { id: "midLevel", label: "Mid-Level Hirings" },
       { id: "expert", label: "Senior-Level Hirings" },
     ],
+    max: 2,
   },
   {
     row: [

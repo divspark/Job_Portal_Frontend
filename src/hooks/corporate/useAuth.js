@@ -54,6 +54,7 @@ export const useCorporateSignupStage2 = () => {
   return useMutation({
     mutationFn: signupStage2,
     onSuccess: (data) => {
+      console.log(data);
       toast.success(data.data.message);
       approve({
         type: "corporate",

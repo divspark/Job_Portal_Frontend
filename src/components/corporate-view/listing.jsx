@@ -65,14 +65,29 @@ const Listing = ({
           <div className="self-stretch h-0 outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
           <SearchComponent handleSearch={handleSearch} value={searchText} />
           <div className="self-stretch flex flex-col justify-start items-start gap-4 w-full">
-            {(jobPosts?.data || jobPosts?.trainings)?.map((item, i) => (
-              <JobCard
-                key={i}
-                item={item}
-                setOpen={setOpen}
-                setOpen1={setOpen1}
-              />
-            ))}
+            {jobPosts?.data?.length > 0 ? (
+              jobPosts.data.map((item, i) => (
+                <JobCard
+                  key={i}
+                  item={item}
+                  setOpen={setOpen}
+                  setOpen1={setOpen1}
+                />
+              ))
+            ) : jobPosts?.trainings?.length > 0 ? (
+              jobPosts.trainings.map((item, i) => (
+                <JobCard
+                  key={i}
+                  item={item}
+                  setOpen={setOpen}
+                  setOpen1={setOpen1}
+                />
+              ))
+            ) : (
+              <div className="w-full text-center py-10 text-gray-500">
+                No job posts found
+              </div>
+            )}
           </div>
           <Pagination
             range={2}

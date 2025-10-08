@@ -5,7 +5,6 @@ import {
   getCorporateUserDetails,
   updateCorporateUserDetails,
 } from "../../api/corporate/user";
-import { use } from "react";
 import { toast } from "sonner";
 
 export const useGetCorporateUserProfile = () => {

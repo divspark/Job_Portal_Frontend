@@ -1,7 +1,11 @@
 import React from "react";
 import Navbar from "../../components/recruiter-view/navbar";
+import { useGetJobById } from "@/hooks/recruiter/useJob";
 
 const JobDescription = () => {
+  const { id } = useParams();
+  const { data: jobData } = useGetJobById(id);
+  console.log(jobData);
   return (
     <div className="w-full flex flex-col gap-[10px]">
       <Navbar onlySupport={false} />

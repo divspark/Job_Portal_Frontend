@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useGetUserProgress } from "../../../hooks/recruiter/useProfile";
+import PendingApprove from "@/components/common/pending-approve";
 
 const data = [
   { company: "ABC Tech", submitted: 32, shortlisted: 18, hired: 18 },
@@ -38,8 +39,7 @@ const Index = () => {
     <Fragment>
       <div className="hidden lg:flex flex-col gap-[25px] w-full">
         <HeroProfile />
-
-        {progress?.data?.signupProgress < 100 && (
+        {progress?.data?.signupProgress < 100 ? (
           <div className="self-stretch p-10 bg-white rounded-2xl shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)] outline outline-offset-[-1px] outline-neutral-300 flex flex-col justify-start items-start gap-2.5">
             <div className="self-stretch inline-flex justify-start items-start gap-12">
               <div className="inline-flex flex-col justify-center items-start gap-3.5">
@@ -87,7 +87,9 @@ const Index = () => {
               </div>
             </div>
           </div>
-        )}
+        ) : user?.status === "pending" ? (
+          <PendingApprove />
+        ) : null}
         <div className="w-full self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-6 overflow-hidden">
           <div className="self-stretch inline-flex justify-start items-start gap-[662px]">
             <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">

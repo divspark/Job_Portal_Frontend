@@ -1,7 +1,27 @@
-import React from "react";
+import { useGetJobById } from "@/hooks/recruiter/useJob";
 import Navbar from "../../components/recruiter-view/navbar";
+import { useParams } from "react-router-dom";
+import {
+  useApplyForTraining,
+  useGetTrainingById,
+} from "@/hooks/trainer/useTrainings";
+import { timeAgo } from "@/utils/commonFunctions";
 
-const JobDescription = () => {
+const TrainerJobDescription = () => {
+  const { id } = useParams();
+  const { data: jobData } = useGetTrainingById(id);
+  const { mutate: applyForTraining } = useApplyForTraining();
+
+  console.log(jobData);
+  const handleApply = (e, trainingId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    applyForTraining({
+      trainingId: trainingId,
+    });
+    console.log(`Applied to training with ID: ${trainingId}`);
+  };
+
   return (
     <div className="w-full flex flex-col gap-[10px]">
       <Navbar onlySupport={false} />
@@ -10,19 +30,20 @@ const JobDescription = () => {
           <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-1 outline-offset-[-1px] outline-zinc-300 inline-flex justify-start items-start gap-6">
             <img
               className="size-16 relative rounded-sm"
-              src="https://placehold.co/72x72"
+              src={jobData?.data?.companyLogo}
+              alt={jobData?.data?.companyName}
             />
             <div className="flex-1 inline-flex flex-col justify-start items-start gap-3">
               <div className="self-stretch flex flex-col justify-start items-start gap-1.5">
                 <div className="self-stretch flex flex-col justify-start items-start gap-1">
                   <div className="self-stretch inline-flex justify-start items-center gap-3">
                     <div className="justify-start text-neutral-900 text-lg font-normal leading-relaxed">
-                      The Company
+                      {jobData?.data?.companyName}
                     </div>
                   </div>
                   <div className="self-stretch flex flex-col justify-start items-start gap-3">
                     <div className="self-stretch justify-start text-neutral-900 text-2xl font-medium leading-9">
-                      Business Development Intern
+                      {jobData?.data?.title}
                     </div>
                     <div className="size- px-1.5 py-0.5 bg-violet-500/10 rounded-[3px] inline-flex justify-start items-center gap-1 overflow-hidden">
                       <div className="justify-start text-violet-500 text-xs font-medium leading-none">
@@ -71,13 +92,16 @@ const JobDescription = () => {
                       <div className="w-3 h-px left-[2px] top-[5px] absolute bg-neutral-900/70" />
                     </div>
                     <div className="justify-start text-neutral-900/70 text-base font-normal leading-normal">
-                      29 min ago
+                      {timeAgo(jobData?.data?.createdAt)}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="size- px-5 py-2.5 bg-gray-900 rounded-3xl flex justify-center items-center gap-2.5">
+            <div
+              onClick={(e) => handleApply(e, jobData?.data?._id)}
+              className="size- px-5 py-2.5 bg-gray-900 rounded-3xl flex justify-center items-center gap-2.5"
+            >
               <div className="justify-start text-white text-sm font-medium capitalize">
                 Apply Now
               </div>
@@ -102,15 +126,7 @@ const JobDescription = () => {
                   <br />
                 </span>
                 <span class="text-neutral-900/70 text-base font-normal leading-normal">
-                  Job Overview:
-                  <br />
-                  Jayant Fitness is looking for a dynamic and results-driven
-                  Business Development Executive / Sales Executive to expand our
-                  client base in the corporate and real estate sectors. The
-                  ideal candidate will be responsible for generating leads,
-                  closing deals, and building long-term relationships with
-                  clients.
-                  <br />
+                  {jobData?.data?.description}
                 </span>
                 <span class="text-neutral-900/70 text-base font-bold leading-normal">
                   <br />
@@ -548,4 +564,4 @@ const JobDescription = () => {
   );
 };
 
-export default JobDescription;
+export default TrainerJobDescription;

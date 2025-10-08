@@ -82,7 +82,7 @@ export const useTrainerRegisterationStage4 = () => {
     onSuccess: (data) => {
       approve({
         type: "trainer",
-        applicantId: data?.data?.data?._id,
+        applicantId: data?.data?._id,
         applicantType: "trainer",
       });
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
