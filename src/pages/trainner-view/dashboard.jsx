@@ -10,9 +10,12 @@ import {
   useGetAllTrainings,
 } from "@/hooks/trainer/useTrainings";
 import { timeAgo } from "@/utils/commonFunctions";
+import useAuthStore from "@/stores/useAuthStore";
+import PendingApprove from "@/components/common/pending-approve";
 
 const JobSeekerDashboard = () => {
   const [formData, setFormData] = useState({});
+  const { user } = useAuthStore();
   const { data: trainerProgressData } = useGetTrainerProgress();
   const { data: allTrainingsData } = useGetAllTrainings();
   const { mutate: applyForTraining } = useApplyForTraining();
@@ -40,7 +43,7 @@ const JobSeekerDashboard = () => {
       <div className="flex w-full items-start justify-between">
         <div className="w-full flex flex-col gap-[31px]">
           <HeroProfile />
-          {trainerProgressData?.data?.signupProgress < 100 && (
+          {trainerProgressData?.data?.signupProgress < 100 ? (
             <div className="self-stretch p-10 bg-white rounded-2xl shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)] outline outline-offset-[-1px] outline-neutral-300 flex flex-col justify-start items-start gap-2.5">
               <div className="self-stretch inline-flex justify-start items-start gap-12">
                 <div className="inline-flex flex-col justify-center items-start gap-3.5">
@@ -90,7 +93,9 @@ const JobSeekerDashboard = () => {
                 </div>
               </div>
             </div>
-          )}
+          ) : user?.status === "pending" ? (
+            <PendingApprove />
+          ) : null}
           <div className="self-stretch inline-flex justify-start items-start gap-3.5">
             {/* <div className="flex-1 px-4 py-5 bg-color-gray-10 rounded-xl outline outline-1 outline-offset-[-1px] outline-stone-300/80 flex justify-center items-center gap-2.5">
               <div className="size-4 relative">
