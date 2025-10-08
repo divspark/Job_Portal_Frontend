@@ -49,18 +49,16 @@ export const formatIndianNumber = (num) => {
   }
 };
 export const formatToMonthYear = (dateString) => {
-  // Split "MM/YY" format
+  if (!dateString) return "Present"; // 🧠 handle empty case
   const [month, year] = dateString.split("/");
-
-  // Convert to full date: assume 1st day of month, and prepend "20" to year
   const fullDate = new Date(`20${year}-${month}-01`);
-
   return fullDate.toLocaleString("en-US", { month: "short", year: "numeric" });
 };
+
 export const getDurationBetweenDates = (startDateStr, endDateStr) => {
   const parseDate = (str) => {
+    if (!str) return new Date(); // 🧠 empty = current date
     if (/^\d{2}\/\d{2}$/.test(str)) {
-      // MM/YY format → convert to full date
       const [month, year] = str.split("/");
       return new Date(`20${year}-${month}-01`);
     }

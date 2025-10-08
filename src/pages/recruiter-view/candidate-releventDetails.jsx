@@ -16,44 +16,56 @@ import Navbar from "../../components/recruiter-view/navbar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-const experienceDetailSchema = z
+export const experienceDetailSchema = z
   .object({
     companyName: z.string().min(1, "Company name is required"),
+
     employmentType: z.string().optional(),
+
     startDate: z
       .string()
       .min(1, "Start date is required")
       .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Start date must be in MM/YY format"),
+
     endDate: z
       .string()
       .optional()
       .refine((val) => !val || /^(0[1-9]|1[0-2])\/\d{2}$/.test(val), {
         message: "End date must be in MM/YY format",
       }),
+
     currentlyWorking: z.boolean().optional(),
   })
-  .refine(
-    (data) => {
-      if (!data.endDate) return true;
+  // ✅ Rule 1: endDate is required if not currently working
+  .superRefine((data, ctx) => {
+    if (!data.currentlyWorking && !data.endDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endDate"],
+        message: "End date is required when not currently working",
+      });
+    }
+
+    // ✅ Rule 2: startDate must be <= endDate (if both exist)
+    if (data.startDate && data.endDate) {
       const parseDate = (str) => {
         const [month, year] = str.split("/").map(Number);
         const fullYear = year >= 50 ? 1900 + year : 2000 + year;
         return new Date(fullYear, month - 1);
       };
 
-      try {
-        const start = parseDate(data.startDate);
-        const end = parseDate(data.endDate);
-        return start <= end;
-      } catch {
-        return false;
+      const start = parseDate(data.startDate);
+      const end = parseDate(data.endDate);
+
+      if (start > end) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["startDate"],
+          message: "Start date must be before or equal to end date",
+        });
       }
-    },
-    {
-      message: "Start date must be before or equal to end date",
-      path: ["startDate"],
     }
-  );
+  });
 
 const formDataSchema = z.object({
   noticePeriod: z
