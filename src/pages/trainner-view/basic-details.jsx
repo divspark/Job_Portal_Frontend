@@ -71,7 +71,7 @@ export const basicDetailsSchema = z
     bankDetails: z.object({
       accountNumber: z.string().min(6, "Account number is required"),
       accountHolderName: z.string().min(1, "Account holder name is required"),
-      bankName: z.string().min(1, "Bank name is required"),
+      branchName: z.string().min(1, "Bank name is required"),
       ifscCode: z.string().regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code"),
     }),
 
@@ -122,6 +122,7 @@ const BasicDetails = () => {
     },
     cancelChequeOrPassbookImage: "",
   });
+  // console.log(formData);
   const [fileName, setFileName] = useState("");
   const { mutate, isPending } = useTrainerRegisterationStage1();
   const { mutate: UploadImage } = useUpload();
@@ -142,6 +143,7 @@ const BasicDetails = () => {
     if (formData.sameAs) {
       payload.permanentAddress = { ...formData.currentAddress };
     }
+    // console.log(payload, "payload");
     const isValid = validateFormData(basicDetailsSchema, payload);
     if (!isValid) return;
     mutate(payload);

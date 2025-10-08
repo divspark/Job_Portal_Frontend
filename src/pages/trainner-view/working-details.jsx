@@ -43,19 +43,29 @@ export const experienceSchema = z.object({
         ),
     })
     .refine(
-      (data) =>
-        new Date(data.endDate).getTime() >= new Date(data.startDate).getTime(),
+      (data) => {
+        const parseMMYY = (str) => {
+          if (!str) return null;
+          const [month, year] = str.split("/");
+          return new Date(`20${year}-${month}-01`);
+        };
+
+        const start = parseMMYY(data.startDate);
+        const end = parseMMYY(data.endDate);
+
+        // If endDate is optional (can be empty), skip comparison
+        if (!end) return true;
+
+        return end.getTime() >= start.getTime();
+      },
       {
         path: ["endDate"],
         message: "End date must be after start date",
       }
     ),
-
   relievingLetter: z.string().optional(), // can be file path or base64
 
-  expertiseAreas: z
-    .array(z.string().min(1))
-    .min(1, "Select at least one area of expertise"),
+  expertiseAreas: z.array(z.string().min(1)).optional(),
 });
 
 const WorkingDetails = () => {
@@ -93,8 +103,7 @@ const WorkingDetails = () => {
     mutate(formData);
   };
   const { data: profileProgress } = useGetTrainerProgress();
-  const { user } = useAuthStore();
-  console.log(user);
+  console.log(formData);
   return (
     <div className="w-full self-stretch px-[20px] py-[20px] lg:px-36 lg:py-[0px] lg:pb-[32px] inline-flex flex-col justify-start items-start gap-[18px] lg:gap-7">
       <Navbar onlySupport={true} />

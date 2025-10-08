@@ -92,30 +92,32 @@ const ResumeFiltering = ({
                             className="relative cursor-pointer w-[36px] h-[36px] "
                           >
                             <img
-                              src={item?.profilePicture}
-                              alt={item?.name}
+                              src={item?.profilePicture || item.applicantImage}
+                              alt={item?.name || item.applicantName}
                               className="h-full w-full rounded-[50px] object-cover"
                             />
                           </div>
                           <div className="flex flex-col">
                             <div className="self-stretch justify-start text-[#35353A] text-sm font-bold leading-tight">
-                              {item?.name || "N/A"}
+                              {item?.name || item.applicantName}
                             </div>
                             <div className="self-stretch justify-start text-[#6E6E71] text-xs font-normal leading-none">
-                              {item?.areaOfExpertise || "N/A"}
+                              {item?.areaOfExpertise || item.applicantRole}
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="px-[16px] py-[12px]">
                           <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
-                            {item?.skills?.join(", ") || "N/A"}
+                            {item?.skills?.join(", ") ||
+                              item.applicantSkills.join(", ") ||
+                              "N/A"}
                           </div>
                         </TableCell>
                         <TableCell className="px-[16px] py-[12px]">
                           <div className="self-stretch justify-start text-[#35353A] text-sm font-normal leading-tight">
                             {convertMonthsToYearsAndMonths(
-                              item?.totalExperience
-                            ) || "N/A"}
+                              item?.totalExperience || item.applicantExperience
+                            )}
                           </div>
                         </TableCell>
                         <TableCell className="px-[16px] py-[12px]">

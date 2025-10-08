@@ -158,8 +158,8 @@ const formSchema = z
   });
 
 const JobPosting = () => {
-  const [open1, setOpen1] = useState(false);
-  const [open2, setOpen2] = useState(false);
+  // const [open1, setOpen1] = useState(false);
+  // const [open2, setOpen2] = useState(false);
   const [formData, setFormData] = useState({
     jobTitle: "",
     jobType: "",
@@ -176,6 +176,7 @@ const JobPosting = () => {
     minimumEducation: "",
     englishLevel: "",
     regionalLanguageRequired: "",
+    regionalLanguages: [],
     preferredAgeRange: "",
     requiredSkills: [],
     salaryRange: {

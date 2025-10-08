@@ -63,6 +63,7 @@ const formDataSchema = z
 const QualificationDetails = () => {
   const [formData, setFormData] = useState({
     latestQualification: "",
+    latestQualificationName: "",
     joinReason: "",
     monthlyClosures: 0,
     jobSource: "",

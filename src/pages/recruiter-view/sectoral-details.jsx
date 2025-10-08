@@ -56,8 +56,6 @@ const SectoralDetails = () => {
     lastOrganization: {
       name: "",
       position: "",
-      employmentType: "",
-      startYear: 0,
     },
     permanentAddress: {
       address: "",

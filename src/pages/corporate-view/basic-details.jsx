@@ -89,6 +89,7 @@ const CorporateBasicDetails = () => {
       confirmPassword: "",
       websiteURL: "",
       companyType: "",
+      aboutCompany: "",
     },
     spocInformation: {
       fullName: "",

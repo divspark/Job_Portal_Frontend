@@ -21,8 +21,6 @@ import { ResumeSlateIcon } from "../../../utils/icon";
 const educationSchema = z
   .object({
     degree: z.string().min(1, "Degree is required"),
-    institution: z.string(),
-    studyType: z.string(),
     startDate: z
       .string()
       .min(1, "Start date is required")
@@ -139,13 +137,11 @@ const Index = () => {
     education: [
       {
         degree: "",
-        institution: "",
-        studyType: "",
         startDate: "",
         endDate: "",
       },
     ],
-    // currentWorkingStatus: "",
+    skills: [],
     resume: "",
   });
   const [fileName, setFileName] = useState("");

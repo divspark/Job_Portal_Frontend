@@ -105,18 +105,21 @@ const CandidateReleventDetails = () => {
     currentSalary: 0,
     currentIndustry: "",
     expectedSalary: 0,
+    variableCTC: 0,
     currentWorkingStatus: "",
     experienceDetails: [
       {
         companyName: "",
-        employmentType: "",
+        designation: "",
         startDate: "",
         endDate: "",
         currentlyWorking: false,
       },
     ],
-    variable: false,
+    variableTick: false,
+    acceptTerms: false,
   });
+  // console.log(formData)
   const { mutate, isPending } = useUpdateApplicant();
   const onSubmit = (e) => {
     const id = localStorage.getItem("seekerID");
@@ -212,7 +215,7 @@ const CandidateReleventDetails = () => {
                           ...prev,
                           currentWorkingStatus: "serving-notice-period",
                           experienceDetails: prev.experienceDetails.map(
-                            (item) => ({ ...item, currentlyWorking: false })
+                            (item) => ({ ...item, currentlyWorking: true })
                           ),
                         }))
                       }
@@ -268,7 +271,7 @@ const CandidateReleventDetails = () => {
                       key={index}
                       i={index}
                       formType={"experienceDetails"}
-                      disabled={item.currentlyWorking}
+                      disabled={formData.currentWorkingStatus === "working"}
                     />
                   ))}
                 </div>
@@ -417,10 +420,11 @@ const CandidateReleventDetails = () => {
                   onCheckedChange={() =>
                     setFormData((prev) => ({
                       ...prev,
-                      variable: !formData.variable,
+                      variableTick: !formData.variableTick,
+                      variableCTC: "",
                     }))
                   }
-                  checked={formData.variable}
+                  checked={formData.variableTick}
                   className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer"
                 />
                 <span className="text-xs font-medium">
@@ -428,22 +432,41 @@ const CandidateReleventDetails = () => {
                 </span>
               </div>
               <div
-                className={`w-1/2 ${formData.variable ? "block" : "hidden"}`}
+                className={`w-1/2 ${
+                  formData.variableTick ? "block" : "hidden"
+                }`}
               >
                 <Input
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      variableCTC: e.target.value,
+                    }))
+                  }
+                  value={formData.variableCTC}
+                  type={"number"}
                   placeholder="Enter Variable CTC"
                   className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
                 />
               </div>
               <div className="flex items-center gap-2">
-                <Checkbox className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer" />
+                <Checkbox
+                  onCheckedChange={() =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      acceptTerms: !formData.acceptTerms,
+                    }))
+                  }
+                  checked={formData.acceptTerms}
+                  className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer"
+                />
                 <span className="text-xs font-medium">
                   I accept the Terms & Conditions
                 </span>
               </div>
             </div>
-            <div className="self-stretch flex justify-between items-end gap-10">
-              <PrevButton link={"/recruiter/candidates/candidate-create"} />
+            <div className="self-stretch flex justify-end items-end gap-10">
+              {/* <PrevButton link={"/recruiter/candidates/candidate-create"} /> */}
               <ButtonComponent
                 type="submit"
                 color={"#6945ED"}

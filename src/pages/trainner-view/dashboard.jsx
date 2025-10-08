@@ -4,54 +4,77 @@ import { Link } from "react-router-dom";
 import HeroProfile from "../../components/recruiter-view/common/hero-profile";
 import Pagination from "../../components/common/pagination";
 import SearchComponent from "../../components/common/searchComponent";
+import { useGetTrainerProgress } from "@/hooks/trainer/useProfile";
 
 const JobSeekerDashboard = () => {
   const [formData, setFormData] = useState({});
+  const { data: trainerProgressData } = useGetTrainerProgress();
+  const nextStagePath =
+    trainerProgressData?.data?.currentStage === 2
+      ? "/trainer/profile-setup/education-details"
+      : trainerProgressData?.data?.currentStage === 3
+      ? "/trainer/profile-setup/working-details"
+      : trainerProgressData?.data?.currentStage === 4
+      ? "/trainer/profile-setup/certificate-details"
+      : "/trainer/dashboard";
+  console.log(trainerProgressData);
   return (
     <div className="w-full flex flex-col gap-[30px] ">
       <Navbar onlySupport={false} />
       <div className="flex w-full items-start justify-between">
         <div className="w-full flex flex-col gap-[31px]">
           <HeroProfile />
-          <div className="self-stretch p-10 bg-white rounded-2xl shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)] outline outline-offset-[-1px] outline-neutral-300 flex flex-col justify-start items-start gap-2.5">
-            <div className="self-stretch inline-flex justify-start items-start gap-12">
-              <div className="inline-flex flex-col justify-center items-start gap-3.5">
-                <div className="justify-start text-gray-900 text-6xl font-semibold leading-[64px]">
-                  50%
-                </div>
-                <div className="w-28 opacity-70 justify-start text-gray-900 text-base font-semibold">
-                  Of your profile is complete
-                </div>
-              </div>
-              <div className="flex-1 inline-flex flex-col justify-start items-start gap-4">
-                <div className="self-stretch justify-start text-gray-900 text-lg font-semibold leading-tight">
-                  Complete your profile!
-                </div>
-                <div className="self-stretch inline-flex justify-start items-start gap-2">
-                  <div className="flex-1 h-2 bg-lime-600 rounded-xl" />
-                  <div className="flex-1 h-2 bg-lime-600 rounded-xl" />
-                  <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-                  <div className="flex-1 h-2 bg-zinc-300 rounded-xl" />
-                </div>
-                <div className="self-stretch inline-flex justify-start items-center gap-12">
-                  <div className="flex-1 opacity-70 justify-start text-gray-900 text-base font-normal">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut.
+          {trainerProgressData?.data?.signupProgress < 100 && (
+            <div className="self-stretch p-10 bg-white rounded-2xl shadow-[6px_6px_54px_0px_rgba(0,0,0,0.05)] outline outline-offset-[-1px] outline-neutral-300 flex flex-col justify-start items-start gap-2.5">
+              <div className="self-stretch inline-flex justify-start items-start gap-12">
+                <div className="inline-flex flex-col justify-center items-start gap-3.5">
+                  <div className="justify-start text-gray-900 text-6xl font-semibold leading-[64px]">
+                    {trainerProgressData?.data?.signupProgress}%
                   </div>
-                  <Link
-                    to="/recruiter/profile-setup/sectoral-details"
-                    className="px-4 py-3.5 bg-neutral-800 rounded-md shadow-[0px_1px_4px_0px_rgba(25,33,61,0.08)] flex justify-center items-center gap-[3px]"
-                  >
-                    <div className="text-center justify-start text-white text-base font-semibold leading-tight">
-                      Proceed to Complete
+                  <div className="w-28 opacity-70 justify-start text-gray-900 text-base font-semibold">
+                    Of your profile is complete
+                  </div>
+                </div>
+                <div className="flex-1 inline-flex flex-col justify-start items-start gap-4">
+                  <div className="self-stretch justify-start text-gray-900 text-lg font-semibold leading-tight">
+                    Complete your profile!
+                  </div>
+                  <div className="self-stretch inline-flex justify-start items-start gap-2">
+                    {Array.from({
+                      length: trainerProgressData?.data?.totalStages,
+                    }).map((_, index) => (
+                      <div
+                        key={index}
+                        className={`flex-1 h-2 ${
+                          trainerProgressData?.data?.completedStages.includes(
+                            index + 1
+                          )
+                            ? "bg-lime-600"
+                            : "bg-zinc-300"
+                        } rounded-xl`}
+                      />
+                    ))}
+                  </div>
+                  <div className="self-stretch inline-flex justify-start items-center gap-12">
+                    <div className="flex-1 opacity-70 justify-start text-gray-900 text-base font-normal">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                      sed do eiusmod tempor incididunt ut labore et dolore magna
+                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                      ullamco laboris nisi ut.
                     </div>
-                  </Link>
+                    <Link
+                      to={nextStagePath}
+                      className="px-4 py-3.5 bg-neutral-800 rounded-md shadow-[0px_1px_4px_0px_rgba(25,33,61,0.08)] flex justify-center items-center gap-[3px]"
+                    >
+                      <div className="text-center justify-start text-white text-base font-semibold leading-tight">
+                        Proceed to Complete
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
           <div className="self-stretch inline-flex justify-start items-start gap-3.5">
             {/* <div className="flex-1 px-4 py-5 bg-color-gray-10 rounded-xl outline outline-1 outline-offset-[-1px] outline-stone-300/80 flex justify-center items-center gap-2.5">
               <div className="size-4 relative">
