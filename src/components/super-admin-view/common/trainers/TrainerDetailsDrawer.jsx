@@ -25,6 +25,8 @@ const TrainerDetailsDrawer = ({
   trainerId,
   onClose,
   onRevalidate,
+  buttonsLayout = "horizontal", // "horizontal" | "vertical"
+  approvalStatus,
 }) => {
   const [hasApprovalAction, setHasApprovalAction] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
@@ -209,65 +211,89 @@ const TrainerDetailsDrawer = ({
   // Render action buttons based on context
   const renderActionButtons = () => {
     if (context === "approvals") {
-      const approvalStatus =
-        displayTrainer?.approvalStatus || displayTrainer?.status;
+      const statusFromProps = approvalStatus;
+      const approvalStatusLocal =
+        statusFromProps ||
+        displayTrainer?.approvalStatus ||
+        displayTrainer?.status;
+      const normalizedStatus =
+        typeof approvalStatus === "string"
+          ? approvalStatusLocal.trim().toLowerCase()
+          : "";
+      const isApproved = normalizedStatus === "approved";
 
-      if (approvalStatus === "approved") {
-        return (
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-4">
-              <Button variant="black" onClick={handleEdit}>
-                Edit Trainer
+      const isVertical = buttonsLayout === "vertical";
+      return (
+        <div
+          className={`flex ${
+            isVertical ? "flex-col gap-3 w-full max-w-xs" : "items-center gap-4"
+          }`}
+        >
+          <Button
+            variant="gray"
+            onClick={handleEdit}
+            className={isVertical ? "w-full" : ""}
+          >
+            Edit Trainer
+          </Button>
+          {!isApproved ? (
+            <>
+              <Button
+                variant="purple"
+                onClick={handleApprove}
+                disabled={isApprovalLoading}
+                className={isVertical ? "w-full" : ""}
+              >
+                {isApprovalLoading ? "Processing..." : "Approve Trainer"}
               </Button>
+              <Button
+                variant="destructive"
+                onClick={handleRejectClick}
+                disabled={isApprovalLoading}
+                className={isVertical ? "w-full" : ""}
+              >
+                {isApprovalLoading ? "Processing..." : "Reject Trainer"}
+              </Button>
+              <Button
+                variant="black"
+                onClick={handleHoldClick}
+                disabled={isApprovalLoading}
+                className={isVertical ? "w-full" : ""}
+              >
+                {isApprovalLoading ? "Processing..." : "Hold Trainer"}
+              </Button>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2">
               <AdminStatusBadge status={approvalStatus} />
+              {approvalStatus === "rejected" &&
+                displayTrainer?.rejectionReason && (
+                  <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
+                    <strong>Rejection Reason:</strong>{" "}
+                    {displayTrainer.rejectionReason}
+                  </div>
+                )}
             </div>
-            {approvalStatus === "rejected" &&
-              displayTrainer?.rejectionReason && (
-                <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
-                  <strong>Rejection Reason:</strong>{" "}
-                  {displayTrainer.rejectionReason}
-                </div>
-              )}
-          </div>
-        );
-      }
-
-      if (!hasApprovalAction) {
-        return (
-          <div className="flex items-center gap-4">
-            <Button variant="black" onClick={handleEdit}>
-              Edit Trainer
-            </Button>
-            <Button
-              variant="purple"
-              onClick={handleApprove}
-              disabled={isApprovalLoading}
-            >
-              {isApprovalLoading ? "Processing..." : "Approve Trainer"}
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleRejectClick}
-              disabled={isApprovalLoading}
-            >
-              {isApprovalLoading ? "Processing..." : "Reject Trainer"}
-            </Button>
-            <Button
-              variant="black"
-              onClick={handleHoldClick}
-              disabled={isApprovalLoading}
-            >
-              {isApprovalLoading ? "Processing..." : "Hold Trainer"}
-            </Button>
-          </div>
-        );
-      }
+          )}
+        </div>
+      );
     }
 
+    const isVertical = buttonsLayout === "vertical";
     return (
-      <Button variant="purple" onClick={handleEdit}>
-        Edit Trainer
-      </Button>
+      <div
+        className={`flex ${
+          isVertical ? "flex-col gap-3 w-full max-w-xs" : "items-center gap-4"
+        }`}
+      >
+        <Button
+          variant="gray"
+          onClick={handleEdit}
+          className={isVertical ? "w-full" : ""}
+        >
+          Edit Trainer
+        </Button>
+      </div>
     );
   };
 

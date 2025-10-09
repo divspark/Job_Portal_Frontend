@@ -1,11 +1,9 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import {
   ClockIcon,
   DollarSignIcon,
   CalendarIcon,
-  SquarePenIcon,
   MapPinIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -15,11 +13,13 @@ import HoldReasonModal from "@/components/common/HoldReasonModal";
 import { useGetJobDetails } from "../../../../hooks/super-admin/useJob";
 import { formatApiError } from "../../../../utils/commonFunctions";
 import { useApprovals } from "../../../../hooks/super-admin/useApprovals";
+import ActionButtons from "../../shared/ActionButtons";
 
 const JobDetailsDrawer = ({
   jobId,
   context = "view", // "edit", "approval", "view"
   approvalId,
+  approvalStatus,
   onRevalidate,
   onClose,
 }) => {
@@ -27,7 +27,6 @@ const JobDetailsDrawer = ({
   const [showRejectionModal, setShowRejectionModal] = useState(false);
   const [showHoldModal, setShowHoldModal] = useState(false);
 
-  const isApprovalContext = context === "approval";
   const { data: jobData, isLoading, error } = useGetJobDetails(jobId);
 
   const {
@@ -119,103 +118,33 @@ const JobDetailsDrawer = ({
     );
   }
 
-  // Extract job data based on context
-  let job, approvalData, applicant;
-
-  if (isApprovalContext) {
-    if (!jobData?.data?.data) {
-      return (
-        <div className="min-h-full flex flex-col bg-white p-6">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-500">No job details found</div>
-          </div>
+  if (!jobData?.data?.data?.job) {
+    return (
+      <div className="min-h-full flex flex-col bg-white p-6">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg text-gray-500">No job details found</div>
         </div>
-      );
-    }
-    approvalData = jobData.data;
-    job = approvalData.data;
-    applicant = approvalData.applicant;
-  } else {
-    if (!jobData?.data?.data?.job) {
-      return (
-        <div className="min-h-full flex flex-col bg-white p-6">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-500">No job details found</div>
-          </div>
-        </div>
-      );
-    }
-    job = jobData.data.data.job;
+      </div>
+    );
   }
 
-  // Render buttons based on context
+  const job = jobData.data.data.job;
+
   const renderButtons = () => {
-    if (context === "approval") {
-      const isNotApproved = approvalData?.data?.status !== "approved";
-
-      if (isNotApproved) {
-        return (
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="purple"
-              onClick={handleApprove}
-              disabled={isLoadingApprovals}
-            >
-              {isLoadingApprovals ? "Processing..." : "Approve Job"}
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleRejectClick}
-              disabled={isLoadingApprovals}
-            >
-              {isLoadingApprovals ? "Processing..." : "Reject Job"}
-            </Button>
-            <Button
-              variant="black"
-              onClick={handleHoldClick}
-              disabled={isLoadingApprovals}
-            >
-              {isLoadingApprovals ? "Processing..." : "Hold Job"}
-            </Button>
-          </div>
-        );
-      } else {
-        return (
-          <div className="flex flex-col gap-2">
-            <Badge
-              className={`${
-                approvalData?.data?.status === "approved"
-                  ? "bg-green-100 text-green-800 hover:bg-green-200"
-                  : "bg-red-100 text-red-800 hover:bg-red-200"
-              } text-sm h-fit capitalize`}
-            >
-              {approvalData?.data?.status}
-            </Badge>
-            {approvalData?.data?.status === "rejected" &&
-              approvalData?.data?.rejectionReason && (
-                <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
-                  <strong>Rejection Reason:</strong>{" "}
-                  {approvalData.data.rejectionReason}
-                </div>
-              )}
-          </div>
-        );
-      }
-    }
-
-    // For all other contexts (edit, view), show edit button
     return (
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsEditDrawerOpen(true)}
-          className="flex items-center gap-2"
-        >
-          <SquarePenIcon className="w-4 h-4" />
-          Edit Job
-        </Button>
-      </div>
+      <ActionButtons
+        context={context}
+        onEdit={() => setIsEditDrawerOpen(true)}
+        onApprove={handleApprove}
+        onReject={handleRejectClick}
+        onHold={handleHoldClick}
+        isLoading={isLoadingApprovals}
+        entityName="Job"
+        editButtonVariant="outline"
+        editButtonSize="sm"
+        layout="vertical"
+        approvalStatus={approvalStatus || job?.approvalStatus || job?.status}
+      />
     );
   };
 
@@ -225,67 +154,72 @@ const JobDetailsDrawer = ({
     <div className="min-h-full flex flex-col bg-white p-6">
       {/* Header */}
       <div className="p-6 border-1 border-gray2 rounded-lg bg-white">
-        {/* Company Logo and Name */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full">
-            <img
-              src={job.postedBy?.companyLogo}
-              alt={job.postedBy?.companyName}
-              className="w-full h-full object-cover"
-            />
+        <div className="flex items-start justify-between gap-6">
+          <div className="flex-1 min-w-0">
+            {/* Company Logo and Name */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full">
+                <img
+                  src={job.postedBy?.companyLogo}
+                  alt={job.postedBy?.companyName}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-lg font-medium text-gray-900">
+                {job.postedBy?.companyName || "Company Name"}
+              </div>
+            </div>
+
+            {/* Job Title and Deadline */}
+            <div className="flex justify-between items-start mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {job.jobTitle}
+              </h1>
+              {job.applicationDeadline && (
+                <Badge className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
+                  Deadline:{" "}
+                  {new Date(job.applicationDeadline).toLocaleDateString(
+                    "en-GB",
+                    {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    }
+                  )}
+                </Badge>
+              )}
+            </div>
+
+            {/* Job Details Row */}
+            <div className="flex items-center gap-6 text-gray-600">
+              {job.jobType && (
+                <div className="flex items-center gap-2">
+                  <ClockIcon className="h-4 w-4" />
+                  <span className="text-sm">{job.jobType}</span>
+                </div>
+              )}
+              {job.experienceLevel && (
+                <div className="flex items-center gap-2">
+                  <MapPinIcon className="h-4 w-4" />
+                  <span className="text-sm">{job.experienceLevel}</span>
+                </div>
+              )}
+              {job.salaryRange && (
+                <div className="flex items-center gap-2">
+                  <DollarSignIcon className="h-4 w-4" />
+                  <span className="text-sm">{job.salaryRange}</span>
+                </div>
+              )}
+              {job.workingHours && (
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span className="text-sm">{job.workingHours}</span>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="text-lg font-medium text-gray-900">
-            {job.postedBy?.companyName || "Company Name"}
-          </div>
+          <div className="shrink-0">{renderButtons()}</div>
         </div>
-
-        {/* Job Title and Deadline */}
-        <div className="flex justify-between items-start mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">{job.jobTitle}</h1>
-          {job.applicationDeadline && (
-            <Badge className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-medium">
-              Deadline:{" "}
-              {new Date(job.applicationDeadline).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}
-            </Badge>
-          )}
-        </div>
-
-        {/* Job Details Row */}
-        <div className="flex items-center gap-6 text-gray-600">
-          {job.jobType && (
-            <div className="flex items-center gap-2">
-              <ClockIcon className="h-4 w-4" />
-              <span className="text-sm">{job.jobType}</span>
-            </div>
-          )}
-          {job.experienceLevel && (
-            <div className="flex items-center gap-2">
-              <MapPinIcon className="h-4 w-4" />
-              <span className="text-sm">{job.experienceLevel}</span>
-            </div>
-          )}
-          {job.salaryRange && (
-            <div className="flex items-center gap-2">
-              <DollarSignIcon className="h-4 w-4" />
-              <span className="text-sm">{job.salaryRange}</span>
-            </div>
-          )}
-          {job.workingHours && (
-            <div className="flex items-center gap-2">
-              <CalendarIcon className="h-4 w-4" />
-              <span className="text-sm">{job.workingHours}</span>
-            </div>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        {renderButtons() && (
-          <div className="flex justify-end">{renderButtons()}</div>
-        )}
       </div>
 
       {/* Content */}
@@ -452,8 +386,8 @@ const JobDetailsDrawer = ({
         )}
       </div>
 
-      {/* Edit Job Drawer - only for edit context */}
-      {context === "edit" && (
+      {/* Edit Job Drawer - for edit and approval contexts */}
+      {(context === "edit" || context === "approval") && (
         <EditJobDrawer
           isOpen={isEditDrawerOpen}
           onClose={() => setIsEditDrawerOpen(false)}

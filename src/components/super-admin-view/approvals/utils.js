@@ -19,11 +19,11 @@ export const approvalTabs = [
     name: "Recruiters",
     icon: null,
   },
-  {
-    id: "candidates",
-    name: "Candidates",
-    icon: null,
-  },
+  // {
+  //   id: "candidates",
+  //   name: "Candidates",
+  //   icon: null,
+  // },
 ];
 
 export const getApprovalFilters = (tabType, additionalOptions = {}) => {

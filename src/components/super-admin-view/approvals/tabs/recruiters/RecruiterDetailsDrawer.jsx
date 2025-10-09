@@ -185,12 +185,12 @@ const RecruiterDetails = ({
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <button
+                <Button
                   onClick={() => setShowEditDrawer(true)}
-                  className="p-2 bg-white rounded-lg flex justify-center items-center hover:bg-gray-50 transition-colors cursor-pointer border border-gray-200 gap-2"
+                  variant={"gray"}
                 >
-                  <Edit className="w-4 h-4" /> Edit Recruiter
-                </button>
+                  Edit Recruiter
+                </Button>
                 {areApprovalBtnsVisible && (
                   <>
                     {displayRecruiter.status !== "approved" ? (

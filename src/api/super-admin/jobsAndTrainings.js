@@ -31,5 +31,8 @@ export const updateTraining = ({ id, data }) =>
   api.put(`/admin/user-profile/${id}/profile`, data);
 
 // Application approval endpoints
-export const updateApplicationStatus = (applicationId, data) =>
+export const updateJobApplicationStatus = (applicationId, data) =>
   api.put(`/admin/job-applications/applications/${applicationId}/status`, data);
+
+export const updateTrainingApplicationStatus = (applicationId, data) =>
+  api.patch(`/admin/applications/${applicationId}/status`, data);

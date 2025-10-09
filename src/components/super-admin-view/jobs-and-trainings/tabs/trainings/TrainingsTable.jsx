@@ -272,11 +272,15 @@ const TrainingsTable = ({
                 ? selectedTraining?.trainingId
                 : selectedTraining?._id
             }
-            training={context === "approvals" ? selectedTraining : undefined}
             context={context}
             areApprovalBtnsVisible={context === "approvals"}
             approvalId={
               context === "approvals" ? selectedTraining?.id : undefined
+            }
+            approvalStatus={
+              context === "approvals"
+                ? selectedTraining?.approvalStatus
+                : undefined
             }
             onClose={() => setDrawerOpen(false)}
             onRevalidate={onRevalidate}

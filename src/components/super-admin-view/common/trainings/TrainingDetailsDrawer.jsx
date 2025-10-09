@@ -1,10 +1,8 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   ClockIcon,
   DollarSignIcon,
   CalendarIcon,
-  SquarePenIcon,
   MapPinIcon,
 } from "lucide-react";
 import { useState } from "react";
@@ -15,13 +13,14 @@ import { useApprovals } from "../../../../hooks/super-admin/useApprovals";
 import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
 import EditTrainingDrawer from "./EditTrainingDrawer";
+import ActionButtons from "../../shared/ActionButtons";
 
 const TrainingDetailsDrawer = ({
   trainingId,
-  training, // For approvals context
   context = "default", // "jobs-and-trainings", "approvals", "default"
   areApprovalBtnsVisible = false,
   approvalId,
+  approvalStatus,
   onClose,
   onRevalidate,
 }) => {
@@ -132,119 +131,47 @@ const TrainingDetailsDrawer = ({
     );
   }
 
-  // Determine which training data to use based on context
-  let displayTraining;
-  let displayApplicant;
-  let displayApprovalData;
-
-  if (context === "approvals") {
-    // For approvals: trainingData.data contains the approval data
-    const approvalData = trainingData?.data;
-    const detailedTraining = approvalData?.data;
-    const applicant = approvalData?.applicant;
-
-    if (!detailedTraining) {
-      return (
-        <div className="min-h-full flex flex-col bg-white p-6">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-500">
-              No training details found
-            </div>
-          </div>
+  if (!trainingData?.data?.data?.training) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white p-6">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg text-gray-500">No training details found</div>
         </div>
-      );
-    }
-
-    displayTraining = detailedTraining;
-    displayApplicant = applicant;
-    displayApprovalData = approvalData;
-  } else {
-    // For jobs-and-trainings context
-    if (!trainingData?.data?.data?.training) {
-      return (
-        <div className="min-h-screen flex flex-col bg-white p-6">
-          <div className="flex justify-center items-center h-64">
-            <div className="text-lg text-gray-500">
-              No training details found
-            </div>
-          </div>
-        </div>
-      );
-    }
-    displayTraining = trainingData.data.data.training;
+      </div>
+    );
   }
 
+  const displayTraining = trainingData.data.data.training;
+
   const renderActionButtons = () => {
-    if (context === "jobs-and-trainings") {
-      return (
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsEditDrawerOpen(true)}
-            className="flex items-center gap-2"
-          >
-            <SquarePenIcon className="w-4 h-4" />
-            Edit Training
-          </Button>
-        </div>
-      );
+    const isApprovalsContext =
+      context === "approvals" && areApprovalBtnsVisible;
+    const isJobsAndTrainingsContext = context === "jobs-and-trainings";
+
+    if (!isJobsAndTrainingsContext && !isApprovalsContext) {
+      return null;
     }
 
-    if (context === "approvals" && areApprovalBtnsVisible) {
-      // Show approval buttons in every case except approved
-      if (displayApprovalData?.status !== "approved") {
-        return (
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="purple"
-              onClick={handleApprove}
-              disabled={isApprovalActionLoading}
-            >
-              Approve Training
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleRejectClick}
-              disabled={isApprovalActionLoading}
-            >
-              Reject Training
-            </Button>
-            <Button
-              variant="black"
-              onClick={handleHoldClick}
-              disabled={isApprovalActionLoading}
-            >
-              Hold Training
-            </Button>
-          </div>
-        );
-      } else {
-        return (
-          <div className="flex flex-col gap-2">
-            <Badge
-              className={`${
-                displayApprovalData?.status === "approved"
-                  ? "bg-green-100 text-green-800 hover:bg-green-200"
-                  : "bg-red-100 text-red-800 hover:bg-red-200"
-              } text-sm h-fit capitalize`}
-            >
-              {displayApprovalData?.status}
-            </Badge>
-            {displayApprovalData?.status === "rejected" &&
-              displayApprovalData?.rejectionReason && (
-                <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
-                  <strong>Rejection Reason:</strong>{" "}
-                  {displayApprovalData.rejectionReason}
-                </div>
-              )}
-          </div>
-        );
-      }
-    }
-
-    // Default context - no buttons
-    return null;
+    return (
+      <ActionButtons
+        context={isApprovalsContext ? "approvals" : "other"}
+        onEdit={() => setIsEditDrawerOpen(true)}
+        onApprove={handleApprove}
+        onReject={handleRejectClick}
+        onHold={handleHoldClick}
+        isLoading={isApprovalActionLoading}
+        entityName="Training"
+        editButtonVariant="outline"
+        editButtonSize="sm"
+        showApprovalButtons={areApprovalBtnsVisible}
+        layout="vertical"
+        approvalStatus={
+          approvalStatus ||
+          displayTraining?.approvalStatus ||
+          displayTraining?.status
+        }
+      />
+    );
   };
 
   const renderTrainingContent = () => {
@@ -471,96 +398,98 @@ const TrainingDetailsDrawer = ({
     <div className="min-h-full flex flex-col bg-white p-6">
       {/* Header */}
       <div className="p-6 border-1 border-gray2 rounded-lg bg-white">
-        {/* Company Logo and Name */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-full">
-            <img
-              src={
-                displayTraining.companyLogo ||
-                displayTraining.postedBy?.companyLogo
-              }
-              alt={
-                displayTraining.company ||
-                displayTraining.postedBy?.companyName ||
-                displayApplicant?.name
-              }
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="text-lg font-medium text-gray-900">
-            {displayTraining.company ||
-              displayTraining.postedBy?.companyName ||
-              "Company Name"}
-          </div>
-        </div>
+        <div className="flex items-start justify-between gap-6">
+          <div className="flex-1 min-w-0">
+            {/* Company Logo and Name */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full">
+                <img
+                  src={
+                    displayTraining.companyLogo ||
+                    displayTraining.postedBy?.companyLogo
+                  }
+                  alt={
+                    displayTraining.company ||
+                    displayTraining.postedBy?.companyName ||
+                    "Company"
+                  }
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="text-lg font-medium text-gray-900">
+                {displayTraining.company ||
+                  displayTraining.postedBy?.companyName ||
+                  "Company Name"}
+              </div>
+            </div>
 
-        {/* Training Title and Status/Deadline */}
-        <div className="flex justify-between items-start mb-4">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {displayTraining.title}
-          </h1>
-          {context === "approvals"
-            ? (displayTraining.applicationsCount ||
-                displayTraining.candidates) && (
-                <Badge className="text-primary-purple bg-light-purple text-xs">
-                  {displayTraining.applicationsCount ||
-                    displayTraining.candidates}{" "}
-                  Applied
-                </Badge>
-              )
-            : displayTraining.status &&
-              displayTraining.status !== "pending" && (
-                <Badge
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    displayTraining.status === "active"
-                      ? "bg-success2 text-success1"
-                      : "bg-danger2 text-danger1"
-                  }`}
-                >
-                  {displayTraining.status?.charAt(0).toUpperCase() +
-                    displayTraining.status?.slice(1)}
-                </Badge>
+            {/* Training Title and Status/Deadline */}
+            <div className="flex justify-between items-start mb-4">
+              <h1 className="text-2xl font-bold text-gray-900">
+                {displayTraining.title}
+              </h1>
+              {context === "approvals"
+                ? (displayTraining.applicationsCount ||
+                    displayTraining.candidates) && (
+                    <Badge className="text-primary-purple bg-light-purple text-xs">
+                      {displayTraining.applicationsCount ||
+                        displayTraining.candidates}{" "}
+                      Applied
+                    </Badge>
+                  )
+                : displayTraining.status &&
+                  displayTraining.status !== "pending" && (
+                    <Badge
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        displayTraining.status === "active"
+                          ? "bg-success2 text-success1"
+                          : "bg-danger2 text-danger1"
+                      }`}
+                    >
+                      {displayTraining.status?.charAt(0).toUpperCase() +
+                        displayTraining.status?.slice(1)}
+                    </Badge>
+                  )}
+            </div>
+
+            {/* Training Details Row */}
+            <div className="flex items-center gap-6 text-gray-600">
+              {displayTraining.trainingMode && (
+                <div className="flex items-center gap-2">
+                  <ClockIcon className="h-4 w-4" />
+                  <span className="text-sm">
+                    {displayTraining.trainingMode}
+                  </span>
+                </div>
               )}
+              {displayTraining.subjectMatterExpertise && (
+                <div className="flex items-center gap-2">
+                  <MapPinIcon className="h-4 w-4" />
+                  <span className="text-sm">
+                    {displayTraining.subjectMatterExpertise}
+                  </span>
+                </div>
+              )}
+              {displayTraining.participantsPerBatch && (
+                <div className="flex items-center gap-2">
+                  <DollarSignIcon className="h-4 w-4" />
+                  <span className="text-sm">
+                    {displayTraining.participantsPerBatch} participants
+                  </span>
+                </div>
+              )}
+              {displayTraining.totalDurationDays && (
+                <div className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  <span className="text-sm">
+                    {displayTraining.totalDurationDays} days
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="shrink-0">{renderActionButtons()}</div>
         </div>
-
-        {/* Training Details Row */}
-        <div className="flex items-center gap-6 text-gray-600">
-          {displayTraining.trainingMode && (
-            <div className="flex items-center gap-2">
-              <ClockIcon className="h-4 w-4" />
-              <span className="text-sm">{displayTraining.trainingMode}</span>
-            </div>
-          )}
-          {displayTraining.subjectMatterExpertise && (
-            <div className="flex items-center gap-2">
-              <MapPinIcon className="h-4 w-4" />
-              <span className="text-sm">
-                {displayTraining.subjectMatterExpertise}
-              </span>
-            </div>
-          )}
-          {displayTraining.participantsPerBatch && (
-            <div className="flex items-center gap-2">
-              <DollarSignIcon className="h-4 w-4" />
-              <span className="text-sm">
-                {displayTraining.participantsPerBatch} participants
-              </span>
-            </div>
-          )}
-          {displayTraining.totalDurationDays && (
-            <div className="flex items-center gap-2">
-              <CalendarIcon className="h-4 w-4" />
-              <span className="text-sm">
-                {displayTraining.totalDurationDays} days
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        {renderActionButtons() && (
-          <div className="flex justify-end mt-6">{renderActionButtons()}</div>
-        )}
       </div>
 
       {/* Content */}
@@ -581,31 +510,6 @@ const TrainingDetailsDrawer = ({
           </p>
         )}
       </div>
-
-      {/* Applicant Information - Only for approvals context */}
-      {context === "approvals" && displayApplicant && (
-        <div className="p-6 border-1 border-gray2 rounded-lg mt-6">
-          <h4>About the Applicant</h4>
-          <div className="text-gray1 mt-4 space-y-2">
-            <p>
-              <strong>Name:</strong> {displayApplicant.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {displayApplicant.email}
-            </p>
-            <p>
-              <strong>Type:</strong> {displayApplicant.type}
-            </p>
-            <p>
-              <strong>Status:</strong> {displayApplicant.status}
-            </p>
-            <p>
-              <strong>Applied On:</strong>{" "}
-              {new Date(displayApprovalData.submittedAt).toLocaleDateString()}
-            </p>
-          </div>
-        </div>
-      )}
 
       {/* Rejection Reason Modal - Only for approvals context */}
       {context === "approvals" && (
@@ -629,8 +533,8 @@ const TrainingDetailsDrawer = ({
         />
       )}
 
-      {/* Edit Training Drawer - Only for jobs-and-trainings context */}
-      {context === "jobs-and-trainings" && (
+      {/* Edit Training Drawer - For jobs-and-trainings and approvals contexts */}
+      {(context === "jobs-and-trainings" || context === "approvals") && (
         <EditTrainingDrawer
           training={displayTraining}
           isOpen={isEditDrawerOpen}

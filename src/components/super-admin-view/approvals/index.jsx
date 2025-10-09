@@ -16,7 +16,7 @@ const Approvals = () => {
     jobTrainings: JobTrainingsTab,
     trainers: TrainersTabApprovals,
     recruiters: RecruitersTab,
-    candidates: CandidatesTabApprovals,
+    // candidates: CandidatesTabApprovals,
   };
 
   return (

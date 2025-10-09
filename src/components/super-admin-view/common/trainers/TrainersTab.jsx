@@ -22,33 +22,27 @@ const TrainersTab = ({
     context === "approvals" ? approvalsUIStore.trainers : null;
 
   // Local state for database context
-  const [filters, setFilters] = useState(() => {
-    if (context === "approvals") {
-      return (
-        approvalsStore?.filters || {
-          search: "",
-          status: "pending",
-          location: [],
-          experience: [],
-          skills: [],
-          dateFrom: null,
-          dateTo: null,
-        }
-      );
-    } else {
-      return {
-        search: "",
-        skills: [],
-        industry: [],
-        experience: [],
-        location: [],
-        status: "active",
-        sortBy: "createdAt",
-        sortOrder: "desc",
-      };
-    }
+  const [localFilters, setLocalFilters] = useState({
+    search: "",
+    skills: [],
+    industry: [],
+    experience: [],
+    location: [],
+    status: "active",
+    sortBy: "createdAt",
+    sortOrder: "desc",
   });
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const [localPage, setLocalPage] = useState(1);
+
+  // Use store values for approvals context, local state for database
+  const filters =
+    context === "approvals" ? approvalsStore?.filters : localFilters;
+  const currentPage =
+    context === "approvals" ? approvalsStore?.currentPage : localPage;
+  const setCurrentPage =
+    context === "approvals" ? approvalsStore?.setCurrentPage : setLocalPage;
+
   const [activeStatus, setActiveStatus] = useState(
     context === "approvals" ? "pending" : "active"
   );
@@ -177,13 +171,13 @@ const TrainersTab = ({
     if (context === "approvals" && approvalsStore) {
       approvalsStore.setFilters(newFormData);
     } else {
-      setFilters((prevFilters) => ({
+      setLocalFilters((prevFilters) => ({
         ...prevFilters,
         ...(typeof newFormData === "function"
           ? newFormData(prevFilters)
           : newFormData),
       }));
-      setCurrentPage(1); // Reset to first page when filtering
+      setLocalPage(1);
     }
   };
 
@@ -192,7 +186,7 @@ const TrainersTab = ({
     if (context === "approvals" && approvalsStore) {
       approvalsStore.clearFilters();
     } else {
-      setFilters({
+      setLocalFilters({
         search: "",
         skills: [],
         industry: [],
@@ -202,7 +196,7 @@ const TrainersTab = ({
         sortBy: "createdAt",
         sortOrder: "desc",
       });
-      setCurrentPage(1);
+      setLocalPage(1);
     }
   };
 

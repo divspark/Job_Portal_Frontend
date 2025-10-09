@@ -227,6 +227,9 @@ const JobsTable = ({
             jobId={isApprovalContext ? selectedJobId : selectedJob}
             context={isApprovalContext ? "approval" : "edit"}
             approvalId={isApprovalContext ? selectedJob?.id : undefined}
+            approvalStatus={
+              isApprovalContext ? selectedJob?.approvalStatus : undefined
+            }
             onClose={() => setDrawerOpen(false)}
             onRevalidate={onRevalidate}
           />

@@ -8,7 +8,11 @@ import { useApplicationApprovals } from "../../../../hooks/super-admin/useApplic
 import ApplicationActionModal from "../../../../components/common/ApplicationActionModal";
 import { toast } from "sonner";
 
-const ApplicationDetailsDrawer = ({ application, onRevalidate }) => {
+const ApplicationDetailsDrawer = ({
+  application,
+  applicationType,
+  onRevalidate,
+}) => {
   const [activeTab, setActiveTab] = useState("aboutCandidate");
   const [showActionModal, setShowActionModal] = useState(false);
   const [actionType, setActionType] = useState("approve");
@@ -27,7 +31,7 @@ const ApplicationDetailsDrawer = ({ application, onRevalidate }) => {
     handleApprove: approveApplication,
     handleReject: rejectApplication,
     handleHold,
-  } = useApplicationApprovals();
+  } = useApplicationApprovals(applicationType);
 
   const candidate = candidateDetails?.data;
 

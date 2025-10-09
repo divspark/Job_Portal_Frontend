@@ -9,10 +9,12 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { User } from "lucide-react";
 import ApplicationDetailsDrawer from "./ApplicationDetailsDrawer";
+import useApplicationsStore from "./zustand";
 
 import { useState } from "react";
 
 const ApplicationsTable = ({ paginatedApplications, onRevalidate }) => {
+  const { currentType } = useApplicationsStore();
   const [selectedApplicationId, setSelectedApplicationId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
@@ -157,6 +159,7 @@ const ApplicationsTable = ({ paginatedApplications, onRevalidate }) => {
           <div className="w-full h-full">
             <ApplicationDetailsDrawer
               application={selectedApplication}
+              applicationType={currentType}
               onRevalidate={onRevalidate}
             />
           </div>

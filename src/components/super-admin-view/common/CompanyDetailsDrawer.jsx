@@ -1,16 +1,15 @@
-import { Button } from "@/components/ui/button";
 import { Building2, Briefcase } from "lucide-react";
-import { Fragment, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CompanyDetailsTab from "./CompanyDetailsTab";
 import JobListingTab from "../database/tabs/companies/tabs/JobListingTab";
 import CompanyStats from "../database/tabs/companies/CompanyStats";
 import { useCompanyDetails } from "../../../hooks/super-admin/useCompanyDetails";
 import { useApprovals } from "@/hooks/super-admin/useApprovals";
-import { Badge } from "@/components/ui/badge";
 import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
 import EditCompanyDrawer from "./companies/EditCompanyDrawer";
 import { toast } from "sonner";
+import ActionButtons from "../shared/ActionButtons";
 
 const CompanyDetailsDrawer = ({
   companyId,
@@ -173,76 +172,24 @@ const CompanyDetailsDrawer = ({
   ];
 
   const renderActionButtons = () => {
-    if (context === "database") {
-      return (
-        <div className="space-y-3">
-          <Button
-            variant={"purple"}
-            className={"px-3 w-full"}
-            onClick={handleEditClick}
-          >
-            Edit Company
-          </Button>
-        </div>
-      );
-    } else if (context === "approvals") {
-      const approvalStatus = company?.status || displayCompany?.status;
+    const approvalStatus = company?.status || displayCompany?.status;
 
-      if (approvalStatus !== "approved") {
-        return (
-          <Fragment>
-            <Button
-              variant={"purple"}
-              className={"w-full"}
-              onClick={handleApprove}
-              disabled={isLoading}
-            >
-              {isLoading ? "Processing..." : "Approve Company"}
-            </Button>
-            <Button
-              variant={"destructive"}
-              className={"w-full"}
-              onClick={handleRejectClick}
-              disabled={isLoading}
-            >
-              {isLoading ? "Processing..." : "Reject Company"}
-            </Button>
-            <Button
-              variant={"black"}
-              className={"w-full"}
-              onClick={handleHoldClick}
-              disabled={isLoading}
-            >
-              {isLoading ? "Processing..." : "Hold Company"}
-            </Button>
-          </Fragment>
-        );
-      } else {
-        return (
-          <div className="flex flex-col gap-2">
-            <Badge
-              className={`${
-                approvalStatus === "approved"
-                  ? "bg-success2 text-success1"
-                  : approvalStatus === "rejected"
-                  ? "bg-danger2 text-danger1"
-                  : "bg-gray2 text-gray1"
-              } text-sm capitalize`}
-            >
-              {approvalStatus}
-            </Badge>
-            {approvalStatus === "rejected" &&
-              (company?.rejectionReason || displayCompany?.rejectionReason) && (
-                <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
-                  <strong>Rejection Reason:</strong>{" "}
-                  {company?.rejectionReason || displayCompany?.rejectionReason}
-                </div>
-              )}
-          </div>
-        );
-      }
-    }
-    return null;
+    return (
+      <ActionButtons
+        context={context}
+        onEdit={handleEditClick}
+        onApprove={handleApprove}
+        onReject={handleRejectClick}
+        onHold={handleHoldClick}
+        isLoading={isLoading}
+        approvalStatus={approvalStatus}
+        entityName="Company"
+        editButtonVariant="gray"
+        editButtonSize="sm"
+        layout="vertical"
+        className="w-full"
+      />
+    );
   };
 
   return (
@@ -346,8 +293,8 @@ const CompanyDetailsDrawer = ({
         />
       )}
 
-      {/* Edit Company Drawer - Only for database context */}
-      {context === "database" && (
+      {/* Edit Company Drawer - For database and approvals contexts */}
+      {(context === "database" || context === "approvals") && (
         <EditCompanyDrawer
           isOpen={showEditDrawer}
           onClose={handleEditClose}
