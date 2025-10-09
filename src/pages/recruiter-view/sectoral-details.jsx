@@ -33,8 +33,8 @@ const formSchema = z.object({
   lastOrganization: z.object({
     name: z.string().min(1, "Organization name is required"),
     position: z.string().min(1, "Position is required"),
-    employmentType: z.string().optional(),
-    startYear: z.number().int(),
+    // employmentType: z.string().optional(),
+    // startYear: z.number().int().optional(),
   }),
 
   relievingLetter: z
