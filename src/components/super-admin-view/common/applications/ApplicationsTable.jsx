@@ -9,6 +9,7 @@ import {
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { User } from "lucide-react";
 import CandidateDetailsDrawer from "../candidates/CandidateDetailsDrawer";
+import TrainerDetailsDrawer from "../trainers/TrainerDetailsDrawer";
 
 import { useState } from "react";
 
@@ -160,13 +161,25 @@ const ApplicationsTable = ({
               overflow-y-auto border-transparent bg-white [&>button.absolute]:hidden"
           >
             <div className="w-full h-full">
-              <CandidateDetailsDrawer
-                applicationId={selectedApplication._id}
-                candidateId={selectedApplication.applicantId}
-                applicationType={currentType}
-                onRevalidate={onRevalidate}
-                areApprovalBtnsVisible={true}
-              />
+              {currentType === "training" ? (
+                <TrainerDetailsDrawer
+                  trainerId={selectedApplication.applicantId}
+                  approvalId={selectedApplication._id}
+                  context="approvals"
+                  approvalStatus={selectedApplication.status}
+                  onRevalidate={onRevalidate}
+                  onClose={() => setDrawerOpen(false)}
+                  buttonsLayout="horizontal"
+                />
+              ) : (
+                <CandidateDetailsDrawer
+                  applicationId={selectedApplication._id}
+                  candidateId={selectedApplication.applicantId}
+                  applicationType={currentType}
+                  onRevalidate={onRevalidate}
+                  areApprovalBtnsVisible={true}
+                />
+              )}
             </div>
           </SheetContent>
         </Sheet>

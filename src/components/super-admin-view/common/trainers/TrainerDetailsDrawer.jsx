@@ -44,11 +44,11 @@ const TrainerDetailsDrawer = ({
     isLoading: isLoadingTrainerDetails,
     error: trainerDetailsError,
     refetch: refetchTrainerDetails,
-  } = useGetTrainerDetails(trainerId || trainer?._id || trainer?.id, {
-    enabled: !!(trainerId || trainer?._id || trainer?.id),
+  } = useGetTrainerDetails(trainerId, {
+    enabled: !!trainerId,
   });
 
-  const displayTrainer = trainerDetails?.data?.data || trainer;
+  const displayTrainer = trainerDetails?.data || trainer;
   const isLoading = isLoadingTrainerDetails;
   const error = trainerDetailsError;
 
