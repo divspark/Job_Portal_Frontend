@@ -14,6 +14,7 @@ import { validateFormData } from "../../utils/commonFunctions";
 
 import { z } from "zod";
 import ButtonComponent from "../../components/common/button";
+import { useDropDown } from "@/hooks/common/useDropDown";
 
 const jobSchema = z
   .object({
@@ -64,9 +65,7 @@ const jobSchema = z
       .min(1, "Specify if regional language is required"),
     regionalLanguages: z.array(z.string()).optional(),
     preferredAgeRange: z.string().optional(),
-    requiredSkills: z
-      .array(z.string({ required_error: "Skill name cannot be empty" }))
-      .min(1, "At least one skill is required"),
+    requiredSkills: z.array(z.any()).min(1, "At least one skill is required"),
     salaryRange: z.object({
       min: z
         .number({ required_error: "Minimum salary is required" })
@@ -209,6 +208,18 @@ const JobPosting = () => {
     noOfPositions: "",
   });
   const { mutate, isPending } = useCorporateJobPost();
+  const { data: skillOptions } = useDropDown("skills");
+  const updatedFields = jobController3.map((field) =>
+    field.name === "requiredSkills"
+      ? {
+          ...field,
+          options: skillOptions?.data?.values.map((skill) => ({
+            id: skill._id,
+            label: skill.label,
+          })),
+        }
+      : field
+  );
   const onSubmit = (e) => {
     e.preventDefault();
     const { isValid, errors } = validateFormData(jobSchema, formData);
@@ -227,6 +238,9 @@ const JobPosting = () => {
     booleanFields.forEach((field) => {
       payload[field] = formData[field] === "yes";
     });
+    if (formData.requiredSkills.length > 0) {
+      payload.requiredSkills = formData.requiredSkills.map((skill) => skill.id);
+    }
     mutate(payload);
   };
 
@@ -286,7 +300,7 @@ const JobPosting = () => {
               />
             )}
             <CommonForm
-              formControls={jobController3}
+              formControls={updatedFields}
               formData={formData}
               setFormData={setFormData}
               errors={errorMessage}

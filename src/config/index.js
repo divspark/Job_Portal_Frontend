@@ -458,6 +458,7 @@ export const candiadateCreationformControls = [
     label: "Phone Number",
     componentType: "phone",
     placeholder: "Ex. XXXXX XXXXX",
+    required:true
   },
   {
     name: "email",
@@ -475,6 +476,7 @@ export const candiadateCreationformControls = [
     componentType: "textarea",
     type: "text",
     width: "full",
+    required: true,
   },
   {
     row: [
@@ -485,6 +487,7 @@ export const candiadateCreationformControls = [
         componentType: "input",
         type: "text",
         width: "1/3",
+        required: true,
       },
       {
         name: "currentAddress.state",
@@ -493,6 +496,7 @@ export const candiadateCreationformControls = [
         componentType: "input",
         type: "text",
         width: "1/3",
+        required: true,
       },
       {
         name: "currentAddress.pincode",
@@ -501,6 +505,7 @@ export const candiadateCreationformControls = [
         componentType: "input",
         type: "text",
         width: "1/3",
+        required: true,
       },
     ],
   },
@@ -517,12 +522,16 @@ export const candiadateCreationformControls = [
     allowOther: true,
     showOtherInput: true,
     inlineOther: true,
+    required: true,
   },
   {
     name: "summary",
-    componentType: "textarea",
+    componentType: "textarea-count",
     placeholder: "Write a brief summary about the candidate",
     label: "Summary",
+    type: "text",
+    maxWords: 300,
+    required: true,
   },
   {
     name: "skills",
@@ -530,6 +539,7 @@ export const candiadateCreationformControls = [
     componentType: "multi-select",
     max: 30,
     options: [],
+    required: true,
   },
 ];
 export const highestQualification = [
@@ -539,6 +549,7 @@ export const highestQualification = [
     placeholder: "e.g B.Tech",
     componentType: "input",
     type: "text",
+    required: true,
   },
   {
     row: [

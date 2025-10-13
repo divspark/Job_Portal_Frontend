@@ -15,12 +15,13 @@ import { validateFormData } from "../../utils/commonFunctions";
 import ButtonComponent from "../../components/common/button";
 import { z } from "zod";
 import { useUpload } from "../../hooks/common/useUpload";
+import { useDropDown } from "@/hooks/common/useDropDown";
 
 const trainingSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
-    skills: z.array(z.string()).min(1, "At least one skill is required"),
+    skills: z.array(z.any()).min(1, "At least one skill is required"),
     trainingMode: z
       .string()
       .min(1, "Training mode is required")
@@ -52,7 +53,7 @@ const trainingSchema = z
       .min(1, "Sessions expected must be greater than 0"),
     travelRequired: z.string().min(1, "Travel required field is mandatory"),
     languagesFluent: z
-      .array(z.string())
+      .array(z.any())
       .min(1, "At least one fluent language is required"),
     participantsPerBatch: z
       .string({ invalid_type_error: "Participants per batch is required" })
@@ -118,6 +119,30 @@ const TrainningPosting = () => {
   });
   const { mutate, isPending, isError, error } = useCorporateTrainingPost();
   const { mutate: UploadImage } = useUpload();
+  const { data: skillOptions } = useDropDown("skills");
+  const { data: skillOptions2 } = useDropDown("languages");
+  const updatedFields = trainingController1.map((field) =>
+    field.name === "skills"
+      ? {
+          ...field,
+          options: skillOptions?.data?.values?.map((skill) => ({
+            id: skill._id,
+            label: skill.label,
+          })),
+        }
+      : field
+  );
+  const updatedFields2 = trainingController4.map((field) =>
+    field.name === "languagesFluent"
+      ? {
+          ...field,
+          options: skillOptions2?.data?.values?.map((language) => ({
+            id: language._id,
+            label: language.label,
+          })),
+        }
+      : field
+  );
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -146,6 +171,14 @@ const TrainningPosting = () => {
     booleanFields.forEach((field) => {
       payload[field] = formData[field] === "yes";
     });
+    if (formData.skills.length > 0) {
+      payload.skills = formData.skills.map((skill) => skill.id);
+    }
+    if (formData.languagesFluent.length > 0) {
+      payload.languagesFluent = formData.languagesFluent.map(
+        (language) => language.id
+      );
+    }
     setErrorMessage({});
     mutate(payload);
   };
@@ -193,7 +226,7 @@ const TrainningPosting = () => {
         <div className="flex-1 inline-flex flex-col justify-start items-start gap-10">
           <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
             <CommonForm
-              formControls={trainingController1}
+              formControls={updatedFields}
               formData={formData}
               setFormData={setFormData}
               handleUpload={handleUpload}
@@ -226,7 +259,7 @@ const TrainningPosting = () => {
           </div>
         </div>
         <div className="flex-1 inline-flex flex-col justify-start items-start gap-10">
-          <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
+          <div className="self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline-1 outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-4">
             <CommonForm
               formControls={trainingController3}
               formData={formData}
@@ -235,7 +268,7 @@ const TrainningPosting = () => {
               errors={errorMessage}
             />
             <CommonForm
-              formControls={trainingController4}
+              formControls={updatedFields2}
               formData={formData}
               setFormData={setFormData}
               handleUpload={handleUpload}

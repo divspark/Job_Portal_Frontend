@@ -13,100 +13,51 @@ import {
 import ButtonComponent from "../../common/button";
 import { useUpload } from "../../../hooks/common/useUpload";
 import { Input } from "../../ui/input";
-import { Label } from "../../ui/label";
-import { Textarea } from "../../ui/textarea";
-import { Checkbox } from "../../ui/checkbox";
 import { ResumeSlateIcon } from "../../../utils/icon";
+import Address from "@/components/common/address";
+import { useDropDown } from "@/hooks/common/useDropDown";
 
-const educationSchema = z
-  .object({
-    degree: z.string().min(1, "Degree is required"),
-    startDate: z
-      .string()
-      .min(1, "Start date is required")
-      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "Start date must be in MM/YY format"),
-    endDate: z
-      .string()
-      .min(1, "End date is required")
-      .regex(/^(0[1-9]|1[0-2])\/\d{2}$/, "End date must be in MM/YY format"),
-  })
-  .refine(
-    (data) => {
-      const parseDate = (str) => {
-        const [month, year] = str.split("/").map(Number);
-        const fullYear = year >= 50 ? 1900 + year : 2000 + year;
-        return new Date(fullYear, month - 1);
-      };
-
-      try {
-        const start = parseDate(data.startDate);
-        const end = parseDate(data.endDate);
-        return start <= end;
-      } catch {
-        return false;
-      }
-    },
-    {
-      message: "Start date must be before or equal to end date",
-      path: ["startDate"],
-    }
-  );
-
-const formDataSchema = z.object({
+const candidateProfileSchema = z.object({
   name: z.string().min(1, "Name is required"),
-
-  profilePicture: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.length === 0 || /^https?:\/\/\S+$/.test(val), {
-      message: "Profile picture must be a valid URL",
-    }),
-
+  profilePicture: z.string().optional(),
   phone: z.object({
-    number: z
-      .string()
-      .min(10, "Phone number must be 10 digits")
-      .max(10, "Phone number must be 10 digits")
-      .regex(/^\d+$/, "Phone number must contain only digits"),
+    number: z.string().min(1, "Phone number is required"),
     countryCode: z.string().min(1, "Country code is required"),
   }),
-
-  email: z.string().email("Email must be valid"),
+  email: z.string().min(1, "Email is required").email("Invalid email format"),
 
   currentAddress: z.object({
     address: z.string().min(1, "Current address is required"),
     city: z.string().min(1, "City is required"),
+    pincode: z.string().min(1, "Pincode is required"),
     state: z.string().min(1, "State is required"),
-    pincode: z
-      .string()
-      .min(6, "Pincode must be 6 digits")
-      .max(6, "Pincode must be 6 digits")
-      .regex(/^\d+$/, "Pincode must contain only digits"),
   }),
+
+  summary: z.string().min(1, "Summary is required"),
+
   permanentAddress: z.object({
     address: z.string().min(1, "Permanent address is required"),
     city: z.string().min(1, "City is required"),
     state: z.string().min(1, "State is required"),
-    pincode: z
-      .string()
-      .min(6, "Pincode must be 6 digits")
-      .max(6, "Pincode must be 6 digits")
-      .regex(/^\d+$/, "Pincode must contain only digits"),
+    pincode: z.string().min(1, "Pincode is required"),
   }),
 
   gender: z.string().min(1, "Gender is required"),
+  sameAs: z.boolean(),
 
   education: z
-    .array(educationSchema)
+    .array(
+      z.object({
+        degree: z.string().min(1, "Degree is required"),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      })
+    )
     .min(1, "At least one education record is required"),
 
-  // currentWorkingStatus: z.string().min(1, "Current working status is required"),
-  summary: z.string().min(1, "Summary is Required"),
+  skills: z.array(z.any()).min(1, "At least one skill is required"),
 
-  resume: z
-    .string()
-    .min(1, "Resume is Required")
-    .url("Resume must be a valid URL"),
+  resume: z.string().min(1, "Resume is required"),
 });
 
 const Index = () => {
@@ -145,9 +96,20 @@ const Index = () => {
     resume: "",
   });
   const [fileName, setFileName] = useState("");
-
   const { mutate, isPending } = useCreateApplicant();
   const { mutate: UploadImage } = useUpload();
+  const { data: skillOptions } = useDropDown("skills");
+  const updatedFields = candiadateCreationformControls.map((field) =>
+    field.name === "skills"
+      ? {
+          ...field,
+          options: skillOptions?.data?.values.map((skill) => ({
+            id: skill._id,
+            label: skill.label,
+          })),
+        }
+      : field
+  );
   const onSubmit = (e) => {
     e.preventDefault();
     localStorage.removeItem("seekerID");
@@ -165,8 +127,14 @@ const Index = () => {
         },
       };
     }
+    if (formData.skills.length > 0) {
+      payLoad.skills = formData.skills.map((skill) => skill.id);
+    }
 
-    const { isValid, errors } = validateFormData(formDataSchema, payLoad);
+    const { isValid, errors } = validateFormData(
+      candidateProfileSchema,
+      payLoad
+    );
     if (!isValid) {
       setFormErrors(errors);
       return;
@@ -175,6 +143,7 @@ const Index = () => {
     setFormErrors({});
     mutate(payLoad);
   };
+  console.log(formData, "formData");
   const handleUpload = (file, callback) => {
     UploadImage(file, {
       onSuccess: (data) => {
@@ -226,113 +195,14 @@ const Index = () => {
             <div className="self-stretch h-0 outline-1 outline-offset-[-0.50px] outline-neutral-200"></div>
             <div className="w-full">
               <CommonForm
-                formControls={candiadateCreationformControls}
+                formControls={updatedFields}
                 formData={formData}
                 setFormData={setFormData}
                 handleUpload={handleUpload}
                 errors={formErrors}
               />
             </div>
-            <div className="w-full flex flex-col gap-[18px]">
-              <div className="flex flex-col gap-[8px] relative">
-                <div className="absolute top-0 right-0 flex items-center gap-2">
-                  <Checkbox
-                    onCheckedChange={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        sameAs: !formData.sameAs,
-                      }))
-                    }
-                    className="data-[state=checked]:text-white data-[state=checked]:bg-[#6945ED] h-[16px] w-[16px] rounded-[2px] flex items-center justify-center cursor-pointer"
-                  />
-                  <span className="text-xs font-medium">
-                    Same as Current Address?
-                  </span>
-                </div>
-                <Label className="text-base text-[#20102B] font-semibold">
-                  Permanent Address
-                </Label>
-                <Textarea
-                  disabled={formData?.sameAs}
-                  value={
-                    formData?.sameAs
-                      ? formData?.currentAddress?.address
-                      : formData?.permanentAddress?.address
-                  }
-                  row={4}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      permanentAddress: {
-                        ...prev.permanentAddress,
-                        address: e.target.value,
-                      },
-                    }))
-                  }
-                  placeholder="Enter Permanent address"
-                  className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
-                />
-              </div>
-              <div className="flex gap-[8px] flex-wrap justify-end items-end">
-                <Input
-                  value={
-                    formData?.sameAs
-                      ? formData?.currentAddress?.city
-                      : formData?.permanentAddress?.city
-                  }
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      permanentAddress: {
-                        ...prev.permanentAddress,
-                        city: e.target.value,
-                      },
-                    }))
-                  }
-                  disabled={formData?.sameAs}
-                  placeholder="Enter City"
-                  className=" flex-1 placeholder:translate-y-[1px] text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
-                />
-                <Input
-                  value={
-                    formData?.sameAs
-                      ? formData?.currentAddress?.state
-                      : formData?.permanentAddress?.state
-                  }
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      permanentAddress: {
-                        ...prev.permanentAddress,
-                        state: e.target.value,
-                      },
-                    }))
-                  }
-                  disabled={formData?.sameAs}
-                  placeholder="Enter State"
-                  className="flex-1 placeholder:translate-y-[1px] text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
-                />
-                <Input
-                  value={
-                    formData?.sameAs
-                      ? formData?.currentAddress?.pincode
-                      : formData?.permanentAddress?.pincode
-                  }
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      permanentAddress: {
-                        ...prev.permanentAddress,
-                        pincode: e.target.value,
-                      },
-                    }))
-                  }
-                  disabled={formData?.sameAs}
-                  placeholder="Enter Pincode"
-                  className="flex-1 placeholder:translate-y-[1px] text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
-                />
-              </div>
-            </div>
+            <Address formData={formData} setFormData={setFormData} />
             <div className="w-full">
               {formData.education.map((item, index) => (
                 <CommonForm

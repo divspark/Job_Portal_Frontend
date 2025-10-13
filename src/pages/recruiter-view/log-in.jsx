@@ -20,7 +20,7 @@ const RecruiterLogin = () => {
   const { mutate, isPending, isError, error } = useLogin();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isValid = validateFormData(loginSchema, formData);
+    const { isValid ,errors} = validateFormData(loginSchema, formData);
     if (!isValid) return;
     mutate(formData);
   };

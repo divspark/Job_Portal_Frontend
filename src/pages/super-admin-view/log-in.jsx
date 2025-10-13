@@ -17,7 +17,7 @@ const SuperAdminLogin = () => {
   const { mutate, isPending, isError, error } = useLogin();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { isValid } = validateFormData(formData, loginSchema);
+    const { isValid } = validateFormData(loginSchema, formData);
     if (!isValid) return;
     mutate(formData);
   };
