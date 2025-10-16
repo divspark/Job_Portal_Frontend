@@ -92,7 +92,6 @@ function App() {
     }
   }, []);
   const { user } = useAuthStore();
-  // console.log(user);
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
