@@ -88,13 +88,17 @@ const Layout = () => {
     <main className="w-full min-h-screen flex flex-col lg:flex-row">
       <MobileNav />
       {/* desktop-view */}
-      <div className="lg:w-[calc(100%-calc(100%-327px))]">
-        <aside className="fixed top-[18px] left-[19px] hidden w-[308px] bg-[#060606] lg:flex flex-col overflow-hidden rounded-[16px]">
+      <div className="lg:w-[calc(100%-calc(100%-290px))]">
+        <aside className="fixed top-[18px] left-[19px] hidden w-[290px] bg-[#060606] lg:flex flex-col overflow-hidden rounded-[16px]">
           <div className="relative h-[90vh] w-full">
             <div className="flex-1 px-[18px] py-[24px] h-full flex flex-col gap-[35px] overflow-y-auto scrollbar-hide scroll-smooth">
               <div className="self-stretch pl-3 inline-flex justify-start items-center gap-7">
-                <div className="flex-1 justify-start text-white text-2xl font-medium capitalize">
-                  GHRIG{" "}
+                <div className="h-[46px] w-[100px] ">
+                  <img
+                    src="/ghrig_logo.png"
+                    alt="ghrig logo"
+                    className="object-cover w-full h-full"
+                  />
                 </div>
               </div>
               {/* Profile Card */}
@@ -114,7 +118,7 @@ const Layout = () => {
                   }
                 />
                 <div className="flex-1 inline-flex flex-col justify-center items-center gap-1.5">
-                  <div className="self-stretch text-center justify-start text-white text-md2 font-medium capitalize">
+                  <div className="self-stretch text-left justify-start text-white text-md2 font-medium capitalize">
                     {user?.name ||
                       user?.basicInformation?.companyName ||
                       `${user?.firstName} ${user?.lastName}`}
@@ -147,7 +151,7 @@ const Layout = () => {
                       <div className="flex items-center justify-center">
                         {item.icon}
                       </div>
-                      <div className="text-white text-md2 ">{item.name}</div>
+                      <div className="text-white text-md">{item.name}</div>
                     </Link>
                   );
                 })}

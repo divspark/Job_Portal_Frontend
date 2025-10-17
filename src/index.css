@@ -235,3 +235,13 @@ body {
     padding: 4px 0px;
   }
 }
+.border-gradient {
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    139.02deg,
+    #c7b8ff 0.87%,
+    #303255 49.02%,
+    #c7b8ff 97.66%
+  );
+  border-image-slice: 1;
+}
