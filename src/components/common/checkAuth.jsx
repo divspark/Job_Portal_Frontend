@@ -45,6 +45,7 @@ const CheckAuth = ({
     "/recruiter/profile-setup/basic-details",
     "/trainer/profile-setup/basic-details",
     // "/trainer/dashboard",
+    "/trainer/profile-setup/additional-details",
     "/corporate/profile-setup/basic-details",
     "/job-seeker/profile-setup/basic-details",
   ].includes(location.pathname);

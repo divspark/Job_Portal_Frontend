@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/common/scrollToTop";
 import CheckAuth from "./components/common/checkAuth";
-import DynamicCheckAuthWrapper from "./components/common/dynamicCheckAuthWrapper";
-
+import { motion } from "framer-motion";
 import Layout from "./components/recruiter-view/layout";
 import ProfileSetupLayout from "./components/recruiter-view/profile-setup-layout";
 
@@ -71,7 +70,6 @@ import SuperAdminMasterDataPage from "./pages/super-admin-view/master-data";
 import ApplicationsTab from "./components/super-admin-view/common/applications/ApplicationsTab";
 import TrainerDashboard from "./pages/trainner-view/dashboard";
 import TrainerJobDescription from "./pages/trainner-view/job-description";
-import TrainerSearch from "./pages/trainner-view/search";
 import { useGetTrainerProfile } from "./hooks/trainer/useProfile";
 import SuperAdminAuth from "./components/common/superAdminAuth";
 import Congratulation from "./pages/common/congratulation";
@@ -100,7 +98,91 @@ function App() {
       <ScrollToTop />
       <Routes>
         {/* Home redirect */}
-        <Route path="/" element={<div>Home</div>} />
+
+        <Route
+          path="/"
+          element={
+            <div className="relative min-h-screen flex flex-col items-center justify-center bg-[radial-gradient(56.26%_78.16%_at_50%_0%,_#DED6FF_1.9%,_#8E77E4_48.03%,_#141E2B_100%)] backdrop-blur-0 text-white overflow-hidden">
+              {/* Glow background */}
+              {/* <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.15)_0%,_rgba(0,0,0,0)_70%)]"></div> */}
+
+              {/* Heading */}
+              <motion.h1
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-4xl md:text-5xl font-bold text-center z-10"
+              >
+                Smarter Hiring, <br /> Stronger Careers
+              </motion.h1>
+
+              {/* Subtext */}
+              <p className="text-center text-gray-300 mt-4 max-w-xl z-10">
+                Mollit in laborum tempor Lorem incididunt irure. Aute ex ad
+                sunt.
+              </p>
+
+              {/* Search bar */}
+              <div className="flex items-center bg-white/10 backdrop-blur-md rounded-full px-4 py-2 mt-8 z-10 w-[90%] max-w-md border border-white/20">
+                <input
+                  type="text"
+                  placeholder="Enter skills / designations / companies"
+                  className="bg-transparent outline-none flex-1 text-white placeholder-gray-400"
+                />
+                <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded-full">
+                  Search
+                </button>
+              </div>
+
+              {/* Floating cards */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {/* Example card */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute top-[20%] left-[10%] backdrop-blur-md border-gradient rounded-xl p-6 w-50 h-[247px] shadow-[0px_4px_30.3px_0px_#0000001A] bg-[linear-gradient(35.34deg,_#161730_40.42%,_#6945ED_120.63%)]"
+                >
+                  <h3 className="font-semibold text-lg mb-1">Trainers</h3>
+                  <p className="text-sm text-gray-300">
+                    Upskill with expert-led programs
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute bottom-[25%] left-[15%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-48 shadow-lg"
+                >
+                  <h3 className="font-semibold text-lg mb-1">Job Seekers</h3>
+                  <p className="text-sm text-gray-300">
+                    Find jobs, track applications
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute bottom-[25%] right-[15%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-48 shadow-lg"
+                >
+                  <h3 className="font-semibold text-lg mb-1">Recruiters</h3>
+                  <p className="text-sm text-gray-300">
+                    Manage top talent efficiently
+                  </p>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute top-[20%] right-[10%] bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 w-48 shadow-lg"
+                >
+                  <h3 className="font-semibold text-lg mb-1">Referrers</h3>
+                  <p className="text-sm text-gray-300">
+                    Earn by referring candidates
+                  </p>
+                </motion.div>
+              </div>
+            </div>
+          }
+        />
 
         {/* Super Admin Home redirect */}
         <Route
@@ -358,7 +440,7 @@ function App() {
           <Route path="education-details" element={<TrainerEducation />} />
           <Route path="working-details" element={<TrainerWorking />} />
           <Route path="certificate-details" element={<TrainerCertificate />} />
-          {/* <Route path="additional-details" element={<TrainerAdditional />} /> */}
+          <Route path="additional-details" element={<TrainerAdditional />} />
         </Route>
 
         <Route

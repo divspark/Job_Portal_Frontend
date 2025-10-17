@@ -15,28 +15,28 @@ import {
 import { useLocation } from "react-router-dom";
 import ResumeViewer from "../../common/ResumeViewer";
 import { useUpdateStatusOfApplicant } from "@/hooks/corporate/useApplicant";
+import useJobSeekerProfileStore from "@/stores/useJobSeekerProfileStore";
 
 const CandidateProfile = ({ open, setOpen, applicantData }) => {
   const location = useLocation();
+  const { jobSeekerProfile } = useJobSeekerProfileStore();
   const [loadingId, setLoadingId] = useState(null);
   const {
     mutate: updateStatus,
     isSuccess,
     isPending,
-  } = useUpdateStatusOfApplicant();
+  } = useUpdateStatusOfApplicant(setOpen);
   const handleStatusUpdate = (status) => {
     setLoadingId(status);
     updateStatus({
-      id: applicantData?.data?._id,
+      id: jobSeekerProfile.id,
       status: status,
       notes: "",
       feedback: "",
       stage: "corporate_review",
     });
 
-    if (isSuccess) {
-      setOpen(false);
-    }
+    // setOpen(false);
   };
 
   return (

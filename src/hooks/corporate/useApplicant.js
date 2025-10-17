@@ -3,7 +3,7 @@ import {
   getApplicantsById,
   updateStatusOfApplicant,
 } from "@/api/corporate/applicant";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useGetApplicantById = (id) => {
@@ -15,12 +15,15 @@ export const useGetApplicantById = (id) => {
   });
 };
 
-export const useUpdateStatusOfApplicant = () => {
+export const useUpdateStatusOfApplicant = (setOpen) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["updateApplicantStatus"],
     mutationFn: updateStatusOfApplicant,
     onSuccess: () => {
       toast.success("Applicant status updated successfully");
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["candidatesByJobId"] });
     },
     onError: (error) => {
       toast.error(
@@ -29,7 +32,6 @@ export const useUpdateStatusOfApplicant = () => {
     },
   });
 };
-
 
 export const useGetApplicantCorporateDetails = () => {
   return useQuery({

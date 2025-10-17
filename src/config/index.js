@@ -458,7 +458,7 @@ export const candiadateCreationformControls = [
     label: "Phone Number",
     componentType: "phone",
     placeholder: "Ex. XXXXX XXXXX",
-    required:true
+    required: true,
   },
   {
     name: "email",
@@ -2078,6 +2078,116 @@ export const additionalDetailsJobSeeker = [
     ],
   },
 ];
+export const gigTrainingFormConfig = [
+  {
+    name: "gigTrainingReason",
+    label:
+      "Why do you want to proceed ahead with this Gig Training assignment?",
+    componentType: "textarea-count",
+    placeholder: "Enter your reason (max 30 words)",
+    maxWords: 30,
+    required: true,
+  },
+  {
+    name: "avgMonthlySessions",
+    label: "Average number of monthly sessions in your last work assignment",
+    componentType: "input",
+    type: "number",
+    placeholder: "Enter number of sessions",
+    required: true,
+  },
+  {
+    name: "opportunitySource",
+    label: "How did you come to know about this opportunity?",
+    componentType: "select",
+    placeholder: "Select one option",
+    options: [
+      { id: "socialMedia", label: "Social Media" },
+      { id: "friends", label: "Friends" },
+      { id: "jobPortal", label: "Job Portal" },
+      { id: "colleagues", label: "Colleagues" },
+      { id: "other", label: "Any other" },
+    ],
+    showOtherInput: true,
+    inlineOther: true,
+    required: true,
+  },
+  {
+    name: "fatherName",
+    label: "Father's Name",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your father's name",
+    required: true,
+  },
+  {
+    name: "motherName",
+    label: "Mother's Name",
+    componentType: "input",
+    type: "text",
+    placeholder: "Enter your mother's name",
+    required: true,
+  },
+  {
+    row: [
+      {
+        name: "name",
+        label: "Reference",
+        placeholder: "Enter Name",
+        componentType: "input",
+        type: "text",
+        required: true,
+      },
+      {
+        name: "contactNo",
+        label: "",
+        placeholder: "Contact No.",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "organization",
+        label: "",
+        placeholder: "Organisation",
+        componentType: "input",
+        type: "text",
+      },
+      {
+        name: "designation",
+        label: "",
+        placeholder: "Designation",
+        componentType: "input",
+        type: "text",
+      },
+    ],
+  },
+  {
+    name: "hasMedicalProblem",
+    label: "Any Medical Problem?",
+    componentType: "select",
+    placeholder: "Select one",
+    options: [
+      { id: "no", label: "No" },
+      { id: "yes", label: "Yes" },
+    ],
+    required: true,
+  },
+  {
+    name: "professionalAchievements",
+    label: "Any professional achievement you’d like to highlight?",
+    componentType: "textarea-count",
+    placeholder: "Enter your achievement (max 50 words)",
+    maxWords: 50,
+  },
+  {
+    name: "trainingPictures",
+    label: "Pictures of past training sessions",
+    componentType: "file",
+    accept: "image",
+    placeholder: "Upload images",
+  },
+];
+
 export const additionalDetailsJobSeeker2 = [
   {
     name: "willingTo6DayWork",

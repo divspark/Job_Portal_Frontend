@@ -21,8 +21,8 @@ const ResumeFiltering = ({
   setOpen2,
 }) => {
   const { setJobSeekerProfile } = useJobSeekerProfileStore();
-  const handleOpen = (i) => {
-    setJobSeekerProfile({ _id: i });
+  const handleOpen = (i, id) => {
+    setJobSeekerProfile({ _id: i, id });
     setOpen2(true);
   };
 
@@ -88,7 +88,9 @@ const ResumeFiltering = ({
                         </TableCell>
                         <TableCell className="px-[16px] py-[12px] flex gap-[10px]">
                           <div
-                            onClick={() => handleOpen(item.applicantId)}
+                            onClick={() =>
+                              handleOpen(item.applicantId, item._id)
+                            }
                             className="relative cursor-pointer w-[36px] h-[36px] "
                           >
                             <img
