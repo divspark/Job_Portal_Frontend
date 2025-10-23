@@ -15,6 +15,9 @@ const Index = ({
   handleSearch,
   ClearAll,
 }) => {
+  const buttonName = localStorage.getItem("seekerID")
+    ? "Update Candidate"
+    : "Create Candidate";
   return (
     <Fragment>
       <div className="w-full hidden lg:flex flex-col gap-[51px] justify-start items-start">
@@ -44,7 +47,7 @@ const Index = ({
                 className="px-5 py-4 bg-gray-900 rounded-3xl gap-2.5"
               >
                 <div className="justify-start text-white text-sm font-semibold leading-none">
-                  Create Candidate
+                  {buttonName}
                 </div>
               </Link>
             </div>

@@ -15,6 +15,7 @@ import { Checkbox } from "../../components/ui/checkbox";
 import Navbar from "../../components/recruiter-view/navbar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+// import { Button } from "@/components/ui/button";
 
 export const experienceDetailSchema = z
   .object({
@@ -36,8 +37,8 @@ export const experienceDetailSchema = z
 
     currentlyWorking: z.boolean().optional(),
   })
-  // ✅ Rule 1: endDate is required if not currently working
   .superRefine((data, ctx) => {
+    // ✅ Rule 1: End date required if not currently working
     if (!data.currentlyWorking && !data.endDate) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -46,10 +47,11 @@ export const experienceDetailSchema = z
       });
     }
 
-    // ✅ Rule 2: startDate must be <= endDate (if both exist)
+    // ✅ Rule 2: Start date must be before or equal to end date (if both exist)
     if (data.startDate && data.endDate) {
       const parseDate = (str) => {
         const [month, year] = str.split("/").map(Number);
+        // handle 2-digit years safely (00–49 → 2000–2049, 50–99 → 1950–1999)
         const fullYear = year >= 50 ? 1900 + year : 2000 + year;
         return new Date(fullYear, month - 1);
       };
@@ -67,28 +69,32 @@ export const experienceDetailSchema = z
     }
   });
 
-const formDataSchema = z.object({
+export const formDataSchema = z.object({
   noticePeriod: z
-    .number()
-    .min(0, "Notice period must be a non-negative number"),
+    .union([
+      z.number().min(0, "Notice period must be a non-negative number"),
+      z.null(),
+    ])
+    .optional(),
 
   totalExperience: z
-    .number()
+    .number({ required_error: "Total experience is required" })
     .min(0, "Total experience must be a non-negative number"),
 
   totalExperienceInMonth: z
-    .number()
+    .number({ required_error: "Total experience in months is required" })
     .min(0, "Total experience in months must be non-negative"),
 
   currentSalary: z
-    .number()
+    .number({ required_error: "Current salary is required" })
     .min(0, "Current salary must be a non-negative number"),
 
   expectedSalary: z
-    .number()
+    .number({ required_error: "Expected salary is required" })
     .min(0, "Expected salary must be a non-negative number"),
 
   currentIndustry: z.string().min(1, "Current Sector is required"),
+
   experienceDetails: z
     .array(experienceDetailSchema)
     .min(1, "At least one experience entry is required"),
@@ -99,7 +105,7 @@ const CandidateReleventDetails = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    noticePeriod: 0,
+    noticePeriod: null,
     totalExperience: "0",
     totalExperienceInMonth: "0",
     currentSalary: 0,
@@ -128,13 +134,13 @@ const CandidateReleventDetails = () => {
       totalExperience: Number(formData.totalExperience),
       totalExperienceInMonth: Number(formData.totalExperienceInMonth),
     };
-    const isValid = validateFormData(formDataSchema, payload);
+    const { isValid } = validateFormData(formDataSchema, payload);
     if (!isValid) return;
     mutate({ id, data: payload });
     queryClient.invalidateQueries({ queryKey: ["applicants"] });
   };
   useEffect(() => {
-    if (!localStorage.getItem("seekerID")) {
+    if (localStorage.getItem("seekerID")) {
       return navigate("/recruiter/candidates/candidate-create");
     }
     return setShowPage(true);
@@ -294,10 +300,12 @@ const CandidateReleventDetails = () => {
                   </div>
                 </div>
                 <div className="self-stretch inline-flex flex-wrap justify-start items-start gap-2">
-                  <div
+                  <button
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, noticePeriod: 0 }))
                     }
+                    type="button"
+                    disabled={formData?.currentWorkingStatus === "not-working"}
                     className={`max-sm:min-w-[150px] flex-1 h-11 px-4 py-2.5 bg-white rounded outline-1 ${
                       formData.noticePeriod === 0
                         ? "outline-[#6945ED]"
@@ -312,11 +320,13 @@ const CandidateReleventDetails = () => {
                     {formData.noticePeriod === 0 && (
                       <div className="w-2 h-2 bg-white rounded-full outline-4 outline-offset-[-2px] outline-[#6945ED]" />
                     )}
-                  </div>
-                  <div
+                  </button>
+                  <button
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, noticePeriod: 15 }))
                     }
+                    type="button"
+                    disabled={formData?.currentWorkingStatus === "not-working"}
                     className={`max-sm:min-w-[150px] flex-1 h-11 px-4 py-2.5 bg-white rounded outline-1 ${
                       formData.noticePeriod === 15
                         ? "outline-[#6945ED]"
@@ -331,11 +341,13 @@ const CandidateReleventDetails = () => {
                     {formData.noticePeriod === 15 && (
                       <div className="w-2 h-2 bg-white rounded-full outline-4 outline-offset-[-2px] outline-[#6945ED]" />
                     )}
-                  </div>
-                  <div
+                  </button>
+                  <button
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, noticePeriod: 30 }))
                     }
+                    type="button"
+                    disabled={formData?.currentWorkingStatus === "not-working"}
                     className={`max-sm:min-w-[150px] flex-1 h-11 px-4 py-2.5 bg-white rounded outline-1 ${
                       formData.noticePeriod === 30
                         ? "outline-[#6945ED]"
@@ -350,7 +362,7 @@ const CandidateReleventDetails = () => {
                     {formData.noticePeriod === 30 && (
                       <div className="w-2 h-2 bg-white rounded-full outline-4 outline-offset-[-2px] outline-[#6945ED]" />
                     )}
-                  </div>
+                  </button>
                   <div
                     onClick={() =>
                       setFormData((prev) => ({ ...prev, noticePeriod: 45 }))
@@ -399,6 +411,9 @@ const CandidateReleventDetails = () => {
                           noticePeriod: value,
                         }));
                       }}
+                      disabled={
+                        formData?.currentWorkingStatus === "not-working"
+                      }
                       className="w-full h-full pr-14 text-black text-base focus:outline-none focus-visible:ring-0 focus:border-0 rounded-[4px] py-[10px] px-[16px] placeholder:text-[#9B959F]"
                     />
                     <span className="absolute right-16 top-1/2 -translate-y-1/2 text-sm text-gray-600 pointer-events-none">
@@ -436,14 +451,19 @@ const CandidateReleventDetails = () => {
                 }`}
               >
                 <Input
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      variableCTC: e.target.value,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (
+                      value === "" ||
+                      (/^\d{0,3}$/.test(value) && Number(value) <= 999)
+                    ) {
+                      setFormData((prev) => ({ ...prev, variableCTC: value }));
+                    }
+                  }}
                   value={formData.variableCTC}
                   type={"number"}
+                  min={0}
+                  max={999}
                   placeholder="Enter Variable CTC"
                   className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
                 />

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommonForm from "../../common/form";
 import {
   candiadateCreationformControls,
@@ -16,6 +16,7 @@ import { Input } from "../../ui/input";
 import { ResumeSlateIcon } from "../../../utils/icon";
 import Address from "@/components/common/address";
 import { useDropDown } from "@/hooks/common/useDropDown";
+import { useNavigate } from "react-router-dom";
 
 const candidateProfileSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -47,11 +48,27 @@ const candidateProfileSchema = z.object({
 
   education: z
     .array(
-      z.object({
-        degree: z.string().min(1, "Degree is required"),
-        startDate: z.string().optional(),
-        endDate: z.string().optional(),
-      })
+      z
+        .object({
+          degree: z.string().min(1, "Degree is required"),
+          startDate: z.string().optional(),
+          endDate: z.string().optional(),
+        })
+        .refine(
+          (data) => {
+            if (!data.startDate || !data.endDate) return true; // allow empty
+
+            const [sMonth, sYear] = data.startDate.split("/").map(Number);
+            const [eMonth, eYear] = data.endDate.split("/").map(Number);
+
+            // Compare year first, then month
+            if (sYear < eYear) return true;
+            if (sYear === eYear && sMonth <= eMonth) return true;
+
+            return false;
+          },
+          { message: "Start date cannot be greater than end date" }
+        )
     )
     .min(1, "At least one education record is required"),
 
@@ -61,6 +78,7 @@ const candidateProfileSchema = z.object({
 });
 
 const Index = () => {
+  const navigate = useNavigate();
   const [formErrors, setFormErrors] = useState({});
   const [formData, setFormData] = useState({
     name: "",
@@ -171,6 +189,12 @@ const Index = () => {
     );
     setFileName("");
   };
+  useEffect(() => {
+    if (localStorage.getItem("seekerID")) {
+      navigate(`/recruiter/candidates/relevent-details`);
+    }
+  }, [navigate]);
+
   return (
     <div className="w-full self-stretch lg:px-36 lg:py-20 p-[20px] lg:pt-0 inline-flex flex-col justify-start items-end lg:gap-10 gap-[15px]">
       <div className="w-full inline-flex justify-start items-start gap-8">

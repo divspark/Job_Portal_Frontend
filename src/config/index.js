@@ -1,9 +1,9 @@
-import { max } from "date-fns";
+
 
 export const KycVerificationDetails = [
   {
     name: "cancelChequeOrPassbookImage",
-    label: "",
+    label: "Cancel Cheque Upload",
     placeholder: "Cancel Cheque Upload",
     componentType: "file",
     type: "file",
@@ -24,7 +24,7 @@ export const KycVerificationDetails = [
     componentType: "file",
     type: "file",
     accept: "image",
-    required: true,
+    // required: true,
   },
   {
     name: "aadharDetails.number",
@@ -41,7 +41,7 @@ export const KycVerificationDetails = [
     componentType: "file",
     type: "file",
     accept: "image",
-    required: true,
+    // required: true,
   },
   {
     name: "bankDetails.accountNumber",
@@ -265,7 +265,7 @@ export const sectoralFieldsForm = [
     componentType: "file",
     placeholder: "Upload relieving letter",
     accept: "pdf",
-    required: true,
+    // required: true,
   },
 
   {
@@ -333,7 +333,7 @@ export const sectoralFieldsForm2 = [
     componentType: "file",
     placeholder: "Upload supporting document",
     accept: "pdf",
-    required: true,
+    // required: true,
   },
 
   {
@@ -616,6 +616,7 @@ export const releventCandidateSalary = [
         placeholder: "e.g., 7.5 Lakhs",
         componentType: "input",
         type: "number",
+        max: true,
       },
       {
         name: "expectedSalary",
@@ -623,6 +624,7 @@ export const releventCandidateSalary = [
         placeholder: "e.g., 9 Lakhs",
         componentType: "input",
         type: "number",
+        max: true,
       },
     ],
   },
@@ -1006,44 +1008,26 @@ export const jobOpeningFilters = [
     ],
   },
   {
-    label: "Select Date",
-    componentType: "calendar",
-    placeholder: "Select Date",
-    name: "sortBy",
+    label: "Select Range",
+    componentType: "select",
+    placeholder: "Select Range",
+    options: [
+      {
+        id: "last week",
+        label: "Last Week",
+      },
+      { id: "last month", label: "Last Month" },
+      { id: "last 3 months", label: "Last 3 Months" },
+      { id: "last 6 months", label: "Last 6 Months" },
+    ],
   },
 ];
 export const CandidatesFilters = [
   {
-    label: "Application Date",
-    componentType: "calendar",
-    placeholder: "Application Date",
-    name: "sortBy",
-  },
-  {
     label: "Designation",
-    componentType: "multi-select",
+    componentType: "input",
     placeholder: "Choose Designation",
     name: "designation",
-    options: [
-      {
-        id: "active",
-        label: "Active",
-      },
-      { id: "ended", label: "Ended" },
-    ],
-  },
-  {
-    label: "Job Location",
-    componentType: "multi-select",
-    placeholder: "Enter City",
-    name: "jobLocation",
-    options: [
-      {
-        id: "active",
-        label: "Active",
-      },
-      { id: "ended", label: "Ended" },
-    ],
   },
   {
     label: "Gender Preference",
@@ -1059,10 +1043,10 @@ export const CandidatesFilters = [
     ],
   },
   {
-    label: "Current Organization",
+    label: "Current Sector",
     componentType: "multi-select",
-    placeholder: "Enter Current Organization",
-    name: "currentOrganisation",
+    placeholder: "Enter Sector",
+    name: "jobLocation",
     options: [
       {
         id: "active",
@@ -1070,6 +1054,13 @@ export const CandidatesFilters = [
       },
       { id: "ended", label: "Ended" },
     ],
+  },
+
+  {
+    label: "Last Organization",
+    componentType: "input",
+    placeholder: "Enter Last Organization",
+    name: "currentOrganisation",
   },
   {
     label: "Experience Level",
@@ -1078,36 +1069,33 @@ export const CandidatesFilters = [
     name: "experienceLevel",
     options: [
       {
-        id: "male",
-        label: "Male",
+        id: "0-1 year",
+        label: "0-1 year",
       },
-      { id: "female", label: "Female" },
-    ],
-  },
-  {
-    label: "Department/Functional Area",
-    componentType: "multi-select",
-    placeholder: "Enter Functional Area",
-    name: "departmentArea",
-    options: [
-      {
-        id: "active",
-        label: "Active",
-      },
-      { id: "ended", label: "Ended" },
+      { id: "1-2 year", label: "1-2 year" },
+      { id: "2-3 year", label: "2-3 years" },
+      { id: "3-4 year", label: "3-4 years" },
+      { id: "4-5 year", label: "4-5 years" },
+      { id: "5-7 year", label: "5-7 years" },
+      { id: "7-10 year", label: "7-10 years" },
+      { id: "10+ years", label: "10+ years" },
+      { id: "15+ years", label: "15+ years" },
     ],
   },
   {
     label: "Degree",
     componentType: "multi-select",
     placeholder: "Enter Degree",
-    name: "degree",
+    name: "departmentArea",
     options: [
       {
-        id: "active",
-        label: "Active",
+        id: "10th Pass",
+        label: "10th Pass",
       },
-      { id: "ended", label: "Ended" },
+      { id: "12th Pass", label: "12th Pass" },
+      { id: "Diploma", label: "Diploma" },
+      { id: "Graduation", label: "Graduation" },
+      { id: "Post Graduation", label: "Post Graduation" },
     ],
   },
   {
@@ -1128,19 +1116,6 @@ export const CandidatesFilters = [
         label: "Male",
       },
       { id: "female", label: "Female" },
-    ],
-  },
-  {
-    label: "Industry",
-    componentType: "multi-select",
-    placeholder: "Enter Industry",
-    name: "industry",
-    options: [
-      {
-        id: "active",
-        label: "Active",
-      },
-      { id: "ended", label: "Ended" },
     ],
   },
 ];

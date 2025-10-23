@@ -54,6 +54,7 @@ export default function FilterComponent({
                 [getControlItem.name]: event.target.value,
               })
             }
+            className="w-full font-medium border rounded-md px-[10px] py-[6px] text-sm flex items-center justify-between focus:outline-none focus-visible:ring-0 border-[#E2E2E2] focus:border-[#000]"
           />
         );
 
@@ -127,7 +128,7 @@ export default function FilterComponent({
               <Calendar
                 mode="single"
                 selected={isValidDate ? new Date(value) : undefined}
-                month={isValidDate ? new Date(value) : undefined}
+                defaultMonth={isValidDate ? new Date(value) : undefined}
                 captionLayout="dropdown"
                 onSelect={(date) => {
                   setFormData((prev) =>
