@@ -73,8 +73,8 @@ const Listing = ({
                   setOpen1={setOpen1}
                 />
               ))
-            ) : jobPosts?.trainings?.length > 0 ? (
-              jobPosts.trainings.map((item, i) => (
+            ) : jobPosts?.data?.length > 0 ? (
+              jobPosts.data.map((item, i) => (
                 <JobCard
                   key={i}
                   item={item}

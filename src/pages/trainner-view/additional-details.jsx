@@ -1,14 +1,7 @@
 import { useState } from "react";
 import CommonForm from "../../components/common/form";
 import Navbar from "../../components/recruiter-view/navbar";
-import {
-  additionalDetailsJobSeeker,
-  additionalDetailsJobSeeker2,
-  additionalDetailsJobSeeker3,
-  gigTrainingFormConfig,
-  gigTrainingFormControls,
-} from "../../config";
-import { Input } from "../../components/ui/input";
+import { gigTrainingFormConfig } from "../../config";
 import ButtonComponent from "../../components/common/button";
 
 const AdditionalDetails = () => {

@@ -13,7 +13,7 @@ const MatchesAndSubmission = () => {
       page: params.page ? parseInt(params.page) : 1,
       limit: 10,
       search: params.search || "",
-      showOnlyApplied: true,
+      showApplications: true,
     };
   });
   const [searchText, setSearchText] = useState("");

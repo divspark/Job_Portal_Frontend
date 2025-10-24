@@ -221,21 +221,21 @@ const CandidateProfile = ({ open, setOpen, applicantData }) => {
               <div className="inline-flex justify-start items-start gap-4">
                 <div className="px-5 py-2.5 rounded-3xl outline-1 outline-offset-[-1px] outline-black flex justify-start items-start gap-2.5">
                   <div className="justify-start text-black text-sm font-medium capitalize">
-                    Current CTC:{" "}
-                    {formatIndianNumber(applicantData?.data?.currentSalary)}
+                    Current CTC: {applicantData?.data?.currentSalary} LPA
                   </div>
                 </div>
                 <div className="px-5 py-2.5 rounded-3xl outline-1 outline-offset-[-1px] outline-[#6945ED] flex justify-start items-start gap-2.5">
                   <div className="justify-start text-[#6945ED] text-sm font-medium capitalize">
-                    Expected CTC:{" "}
-                    {formatIndianNumber(applicantData?.data?.expectedSalary)}
+                    Expected CTC: {applicantData?.data?.expectedSalary} LPA
                   </div>
                 </div>
-                <div className="px-5 py-2.5 rounded-3xl outline-1 outline-offset-[-1px] outline-black flex justify-start items-start gap-2.5">
-                  <div className="justify-start text-black text-sm font-medium capitalize">
-                    Notice Period: {applicantData?.data?.noticePeriod} Days
+                {applicantData?.data?.noticePeriod && (
+                  <div className="px-5 py-2.5 rounded-3xl outline-1 outline-offset-[-1px] outline-black flex justify-start items-start gap-2.5">
+                    <div className="justify-start text-black text-sm font-medium capitalize">
+                      Notice Period: {applicantData?.data?.noticePeriod} Days
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className="self-stretch flex flex-col justify-start items-start gap-2.5">
                 <div className="self-stretch justify-start text-neutral-900 text-base font-semibold leading-snug">
@@ -356,8 +356,8 @@ const CandidateProfile = ({ open, setOpen, applicantData }) => {
                         <tr className="border-b">
                           <td className="p-2 font-medium">Current Salary</td>
                           <td className="p-2">
-                            ₹
-                            {applicantData?.data?.currentSalary.toLocaleString()}
+                            {applicantData?.data?.currentSalary.toLocaleString()}{" "}
+                            LPA
                           </td>
                         </tr>
                       )}
@@ -365,8 +365,8 @@ const CandidateProfile = ({ open, setOpen, applicantData }) => {
                         <tr className="border-b">
                           <td className="p-2 font-medium">Expected Salary</td>
                           <td className="p-2">
-                            ₹
-                            {applicantData?.data?.expectedSalary.toLocaleString()}
+                            {applicantData?.data?.expectedSalary.toLocaleString()}{" "}
+                            LPA
                           </td>
                         </tr>
                       )}

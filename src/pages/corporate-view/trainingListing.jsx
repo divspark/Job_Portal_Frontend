@@ -97,7 +97,7 @@ const TrainingListing = () => {
       </Sheet>
       <Navbar onlySupport={false} />
       <CorporateListing
-        jobPosts={trainingPosts?.data}
+        jobPosts={trainingPosts}
         formData={filters}
         setFormData={setFilters}
         setOpen={setOpen}

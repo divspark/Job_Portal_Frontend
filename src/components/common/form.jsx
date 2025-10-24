@@ -48,16 +48,21 @@ export default function CommonForm({
       id: nameWithIndex,
       placeholder: getControlItem.placeholder,
       value,
-      onChange: (event) =>
+      onChange: (event) => {
+        const value = event.target.value;
+
+        // Allow only numbers up to 3 digits if max is true
+        if (getControlItem.max && value.length > 3) return;
+
         setFormData((prev) =>
           setNestedValue(
             prev,
             nameWithIndex,
-            getControlItem.type === "number"
-              ? Number(event.target.value)
-              : event.target.value
+            getControlItem.type === "number" ? Number(value) : value
           )
-        ),
+        );
+      },
+
       className: `flex placeholder:translate-y-[1px] items-center justify-center text-black text-base rounded-[4px] border py-[10px] px-[16px] placeholder:text-[#9B959F] ${
         errorMessage
           ? "border-red-500 focus:border-red-500"
