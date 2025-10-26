@@ -24,11 +24,11 @@ const Navbar = () => {
     <aside className="fixed top-[18px] left-[19px] hidden w-[308px] bg-[#060606] lg:flex flex-col overflow-hidden rounded-[16px]">
       <div className="relative h-[90vh] w-full">
         <div className="flex-1 px-[18px] py-[24px] h-full flex flex-col gap-[35px] overflow-y-auto scrollbar-hide scroll-smooth">
-          <div className="self-stretch pl-3 inline-flex justify-start items-center gap-3">
+          <div className="self-stretch inline-flex justify-start items-center gap-3">
             <img
               src="/ghrig_logo.png"
               alt="GHRIG Logo"
-              className="h-auto w-40 mx-auto"
+              className="h-auto w-40 mx-auto bg-white rounded-md px-4 py-1"
             />
           </div>
           <div className="inline-flex flex-col justify-start items-start gap-2.5">
