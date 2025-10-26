@@ -36,3 +36,8 @@ export const markAllNotificationsAsRead = async () => {
   const response = await api.patch("/notifications/mark-all-read");
   return response.data;
 };
+
+export const createNotification = async (notificationData) => {
+  const response = await api.post("/notifications", notificationData);
+  return response.data;
+};

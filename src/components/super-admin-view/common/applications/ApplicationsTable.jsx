@@ -207,7 +207,7 @@ const ApplicationsTable = ({
                   candidateId={selectedApplication.applicantId}
                   applicationType={currentType}
                   onRevalidate={onRevalidate}
-                  areApprovalBtnsVisible={true}
+                  context="application"
                 />
               )}
             </div>

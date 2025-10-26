@@ -1,14 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { DownloadIcon, YourImageIcon, YourPdfIcon } from "@/utils/icon";
 import { Link } from "react-router-dom";
-import { useApprovals } from "@/hooks/super-admin/useApprovals";
+import {
+  useApprovals,
+  useGetApprovalDetails,
+} from "@/hooks/super-admin/useApprovals";
 import { useRecruiterDetails } from "@/hooks/super-admin/useRecruiterDetails";
 import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
 import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
 import EditRecruiterDrawer from "../../../common/recruiters/EditRecruiterDrawer";
+import ActionButtons from "@/components/super-admin-view/shared/ActionButtons";
 import { useState } from "react";
 import { toast } from "sonner";
+import StatusReasonAlert from "@/components/common/StatusReasonAlert";
 import {
   Mail,
   User,
@@ -18,12 +23,14 @@ import {
   Briefcase,
   Stethoscope,
   LinkIcon,
+  UserIcon,
 } from "lucide-react";
 
 const RecruiterDetailsDrawer = ({
   recruiterId,
-  areApprovalBtnsVisible = false,
+  context = "other", // "approvals" or "other"
   approvalId,
+  approvalStatus,
   onClose,
   onRevalidate,
 }) => {
@@ -46,8 +53,16 @@ const RecruiterDetailsDrawer = ({
     enabled: !!recruiterId,
   });
 
+  const { data: approvalDetails } = useGetApprovalDetails(approvalId, {
+    enabled: !!approvalId && context === "approvals",
+  });
+
   // Get recruiter data from the hook response
   const displayRecruiter = recruiterDetails?.data?.recruiter;
+  const statusReason =
+    approvalDetails?.data?.reviewerNotes ||
+    displayRecruiter?.rejectionReason ||
+    displayRecruiter?.holdReason;
   const isLoading = isLoadingDetails;
   const error = detailsError;
 
@@ -180,11 +195,15 @@ const RecruiterDetailsDrawer = ({
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-6">
                 <div className="absolute -top-3 left-4">
-                  <img
-                    className="size-24 object-cover rounded-full outline-2 outline-white"
-                    src={displayRecruiter?.profileImage || "/person.png"}
-                    alt={displayRecruiter?.name}
-                  />
+                  {displayRecruiter?.profileImage ? (
+                    <img
+                      className="size-24 object-cover rounded-full outline-2 outline-white"
+                      src={displayRecruiter?.profileImage}
+                      alt={displayRecruiter?.name}
+                    />
+                  ) : (
+                    <UserIcon className="size-24 object-cover rounded-full outline-2 outline-white bg-gray-200 p-5 text-gray-600" />
+                  )}
                 </div>
                 <div className="flex flex-col gap-2 pl-24">
                   <div className="text-lg font-medium capitalize">
@@ -193,67 +212,30 @@ const RecruiterDetailsDrawer = ({
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <Button
-                  onClick={() => setShowEditDrawer(true)}
-                  variant={"gray"}
-                >
-                  Edit
-                </Button>
-                {areApprovalBtnsVisible && (
-                  <>
-                    {displayRecruiter.status !== "approved" ? (
-                      <>
-                        <Button
-                          variant={"purple"}
-                          onClick={handleApprove}
-                          disabled={isLoading}
-                        >
-                          {isLoading ? "Processing..." : "Approve"}
-                        </Button>
-                        {displayRecruiter.status !== "rejected" && (
-                          <Button
-                            variant={"destructive"}
-                            onClick={handleRejectClick}
-                            disabled={isLoading}
-                          >
-                            {isLoading ? "Processing..." : "Reject"}
-                          </Button>
-                        )}
-                        {displayRecruiter.status !== "hold" && (
-                          <Button
-                            variant={"black"}
-                            onClick={handleHoldClick}
-                            disabled={isLoading}
-                          >
-                            {isLoading ? "Processing..." : "Hold"}
-                          </Button>
-                        )}
-                      </>
-                    ) : (
-                      <div className="flex flex-col gap-2">
-                        <AdminStatusBadge status={displayRecruiter?.status} />
-                        {displayRecruiter?.status === "rejected" &&
-                          displayRecruiter?.rejectionReason && (
-                            <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs break-words">
-                              <strong>Rejection Reason:</strong>{" "}
-                              {displayRecruiter.rejectionReason}
-                            </div>
-                          )}
-                        {displayRecruiter?.status === "hold" &&
-                          displayRecruiter?.holdReason && (
-                            <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border max-w-xs break-words">
-                              <strong>Hold Reason:</strong>{" "}
-                              {displayRecruiter.holdReason}
-                            </div>
-                          )}
-                      </div>
-                    )}
-                  </>
-                )}
+                <ActionButtons
+                  context={context}
+                  onEdit={() => setShowEditDrawer(true)}
+                  onApprove={handleApprove}
+                  onReject={handleRejectClick}
+                  onHold={handleHoldClick}
+                  isLoading={isLoading}
+                  approvalStatus={approvalStatus || displayRecruiter?.status}
+                  entityName="Recruiter"
+                  editButtonVariant="gray"
+                  editButtonSize="sm"
+                />
               </div>
             </div>
           </div>
-          <div className="self-stretch inline-flex flex-col justify-start items-start gap-6 mt-8">
+
+          {/* Status Reason Display */}
+          <StatusReasonAlert
+            statusReason={statusReason}
+            status={approvalStatus || displayRecruiter?.status}
+            className="mt-8"
+          />
+
+          <div className="self-stretch inline-flex flex-col justify-start items-start gap-6 mt-4">
             <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
               Personal Information
             </div>
@@ -479,6 +461,14 @@ const RecruiterDetailsDrawer = ({
                       "Not Specified"}
                   </div>
                 </div>
+                <div className="self-stretch py-4 border-t border-b border-gray-200 flex flex-col lg:flex-row justify-start items-start lg:items-center gap-2 lg:gap-28">
+                  <div className="w-full lg:w-48 justify-start text-gray-500 text-sm font-normal leading-tight">
+                    Monthly Closures
+                  </div>
+                  <div className="w-full lg:w-48 justify-start text-neutral-900 text-sm font-normal leading-tight break-words">
+                    {displayRecruiter?.monthlyClosures || "Not Specified"}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="w-full lg:w-[48%] h-full inline-flex flex-col justify-start items-start gap-6 mt-6 lg:mt-0">
@@ -602,26 +592,80 @@ const RecruiterDetailsDrawer = ({
               </div>
             </div>
           </div>
+          <div className="self-stretch inline-flex flex-col justify-start items-start gap-6 mt-8">
+            <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
+              References
+            </div>
+            {displayRecruiter?.references &&
+            displayRecruiter?.references?.length > 0 ? (
+              <div className="w-full overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-gray-900">
+                        Name
+                      </th>
+                      <th className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-gray-900">
+                        Contact No
+                      </th>
+                      <th className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-gray-900">
+                        Organization
+                      </th>
+                      <th className="border border-gray-200 px-4 py-2 text-left text-sm font-semibold text-gray-900">
+                        Designation
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {displayRecruiter?.references?.map((ref, index) => (
+                      <tr key={index}>
+                        <td className="border border-gray-200 px-4 py-2 text-sm text-gray-600">
+                          {ref.name || "-"}
+                        </td>
+                        <td className="border border-gray-200 px-4 py-2 text-sm text-gray-600">
+                          {ref.contactNo || "-"}
+                        </td>
+                        <td className="border border-gray-200 px-4 py-2 text-sm text-gray-600">
+                          {ref.organization || "-"}
+                        </td>
+                        <td className="border border-gray-200 px-4 py-2 text-sm text-gray-600">
+                          {ref.designation || "-"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-gray-500 text-sm">
+                No references available
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Rejection Reason Modal */}
-      <RejectionReasonModal
-        isOpen={showRejectionModal}
-        onClose={() => setShowRejectionModal(false)}
-        onConfirm={handleReject}
-        isLoading={isLoading}
-        entityType="recruiter"
-      />
+      {/* Rejection Reason Modal - Only for approvals context */}
+      {context === "approvals" && (
+        <RejectionReasonModal
+          isOpen={showRejectionModal}
+          onClose={() => setShowRejectionModal(false)}
+          onConfirm={handleReject}
+          isLoading={isLoading}
+          entityType="recruiter"
+        />
+      )}
 
-      {/* Hold Reason Modal */}
-      <HoldReasonModal
-        isOpen={showHoldModal}
-        onClose={() => setShowHoldModal(false)}
-        onConfirm={handleHold}
-        isLoading={isLoading}
-        entityType="recruiter"
-      />
+      {/* Hold Reason Modal - Only for approvals context */}
+      {context === "approvals" && (
+        <HoldReasonModal
+          isOpen={showHoldModal}
+          onClose={() => setShowHoldModal(false)}
+          onConfirm={handleHold}
+          isLoading={isLoading}
+          entityType="recruiter"
+        />
+      )}
 
       {/* Edit Recruiter Drawer */}
       <EditRecruiterDrawer

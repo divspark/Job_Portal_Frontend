@@ -10,17 +10,21 @@ import {
   UserIcon,
 } from "lucide-react";
 import { useState } from "react";
-import { useApprovals } from "@/hooks/super-admin/useApprovals";
+import {
+  useApprovals,
+  useGetApprovalDetails,
+} from "@/hooks/super-admin/useApprovals";
 import { useApplicationApprovals } from "@/hooks/super-admin/useApplicationApprovals";
 import { useGetTrainerDetails } from "@/hooks/super-admin/useTrainers";
 import EditTrainerDrawer from "./EditTrainerDrawer";
 import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
 import AdminStatusBadge from "../../shared/AdminStatusBadge";
+import ActionButtons from "../../shared/ActionButtons";
 import { toast } from "sonner";
+import StatusReasonAlert from "@/components/common/StatusReasonAlert";
 
 const TrainerDetailsDrawer = ({
-  trainer,
   context = "other", // "database", "approvals", "application", or "other"
   approvalId,
   trainerId,
@@ -61,7 +65,12 @@ const TrainerDetailsDrawer = ({
     enabled: !!trainerId,
   });
 
-  const displayTrainer = trainerDetails?.data || trainer;
+  const { data: approvalDetails } = useGetApprovalDetails(approvalId, {
+    enabled: !!approvalId && context === "approvals",
+  });
+
+  const displayTrainer = trainerDetails?.data;
+  const statusReason = approvalDetails?.data?.reviewerNotes;
   const isLoading = isLoadingTrainerDetails;
   const error = trainerDetailsError;
 
@@ -192,18 +201,27 @@ const TrainerDetailsDrawer = ({
   }
 
   const pdfObject = {
-    "Adhaar Card": "aadharImage",
-    "PAN Card": "panCardImage",
-    "Cancel Cheque": "cancelledChequeImage",
+    "Adhaar Card": ["aadharImage", "kycDetails.aadharDetails.image"],
+    "PAN Card": ["panCardImage", "kycDetails.panDetails.image"],
+    "Cancel Cheque": [
+      "cancelledChequeImage",
+      "kycDetails.cancelChequeOrPassbookImage",
+    ],
     "Relieving Letter": "relievingLetter",
     Resume: "resume",
   };
 
   const pdfFiles = Object.entries(pdfObject).reduce(
-    (acc, [customKey, path]) => {
-      const value = path
-        .split(".")
-        .reduce((obj, key) => obj?.[key], displayTrainer);
+    (acc, [customKey, paths]) => {
+      const pathArray = Array.isArray(paths) ? paths : [paths];
+      let value = null;
+
+      for (const path of pathArray) {
+        value = path
+          .split(".")
+          .reduce((obj, key) => obj?.[key], displayTrainer);
+        if (value) break;
+      }
 
       if (Array.isArray(value) && value.length > 0) {
         value.forEach((doc, index) => {
@@ -217,98 +235,25 @@ const TrainerDetailsDrawer = ({
     {}
   );
 
-  // Render action buttons based on context
   const renderActionButtons = () => {
-    if (context === "approvals" || context === "application") {
-      const statusFromProps = approvalStatus;
-      const approvalStatusLocal =
-        statusFromProps ||
-        displayTrainer?.approvalStatus ||
-        displayTrainer?.status;
-      const normalizedStatus =
-        typeof approvalStatusLocal === "string"
-          ? approvalStatusLocal.trim().toLowerCase()
-          : "";
-      const isApproved = normalizedStatus === "approved";
-      const isRejected = normalizedStatus === "rejected";
-      const isHold = normalizedStatus === "hold";
-
-      const isVertical = buttonsLayout === "vertical";
-      return (
-        <div
-          className={`flex ${
-            isVertical ? "flex-col gap-3 w-full max-w-xs" : "items-center gap-4"
-          }`}
-        >
-          <Button
-            variant="gray"
-            onClick={handleEdit}
-            className={isVertical ? "w-full" : ""}
-          >
-            Edit
-          </Button>
-          {!isApproved ? (
-            <>
-              <Button
-                variant="purple"
-                onClick={handleApprove}
-                disabled={isApprovalLoading}
-                className={isVertical ? "w-full" : ""}
-              >
-                {isApprovalLoading ? "Processing..." : "Approve"}
-              </Button>
-              {!isRejected && (
-                <Button
-                  variant="destructive"
-                  onClick={handleRejectClick}
-                  disabled={isApprovalLoading}
-                  className={isVertical ? "w-full" : ""}
-                >
-                  {isApprovalLoading ? "Processing..." : "Reject"}
-                </Button>
-              )}
-              {!isHold && (
-                <Button
-                  variant="black"
-                  onClick={handleHoldClick}
-                  disabled={isApprovalLoading}
-                  className={isVertical ? "w-full" : ""}
-                >
-                  {isApprovalLoading ? "Processing..." : "Hold"}
-                </Button>
-              )}
-            </>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <AdminStatusBadge status={approvalStatus} />
-              {approvalStatus === "rejected" &&
-                displayTrainer?.rejectionReason && (
-                  <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
-                    <strong>Rejection Reason:</strong>{" "}
-                    {displayTrainer.rejectionReason}
-                  </div>
-                )}
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    const isVertical = buttonsLayout === "vertical";
     return (
-      <div
-        className={`flex ${
-          isVertical ? "flex-col gap-3 w-full max-w-xs" : "items-center gap-4"
-        }`}
-      >
-        <Button
-          variant="gray"
-          onClick={handleEdit}
-          className={isVertical ? "w-full" : ""}
-        >
-          Edit
-        </Button>
-      </div>
+      <ActionButtons
+        context={context}
+        onEdit={handleEdit}
+        onApprove={handleApprove}
+        onReject={handleRejectClick}
+        onHold={handleHoldClick}
+        isLoading={isApprovalLoading}
+        approvalStatus={
+          approvalStatus ||
+          displayTrainer?.approvalStatus ||
+          displayTrainer?.status
+        }
+        entityName="Trainer"
+        editButtonVariant="gray"
+        editButtonSize="sm"
+        layout={buttonsLayout}
+      />
     );
   };
 
@@ -335,9 +280,16 @@ const TrainerDetailsDrawer = ({
         </div>
       </div>
 
+      {/* Status Reason Display */}
+      <StatusReasonAlert
+        statusReason={statusReason}
+        status={approvalStatus}
+        className="mt-10 mx-6"
+      />
+
       {/* Personal Information */}
       <div className="p-6">
-        <h2 className="text-lg font-semibold mt-4">Personal Information</h2>
+        <h2 className="text-lg font-semibold">Personal Information</h2>
         <div className="grid grid-cols-4 gap-4 mt-4">
           <div className="p-4 rounded-lg border border-gray2">
             <div className="flex items-center gap-2 mb-2 text-sm">
@@ -361,7 +313,9 @@ const TrainerDetailsDrawer = ({
               displayTrainer.expertiseAreas.length > 0
                 ? displayTrainer.expertiseAreas.map((skill, index) => (
                     <span key={index} className="inline-block">
-                      {skill}
+                      {typeof skill === "object"
+                        ? skill.name || skill._id
+                        : skill}
                       {index < displayTrainer.expertiseAreas.length - 1 && (
                         <br />
                       )}
@@ -491,7 +445,11 @@ const TrainerDetailsDrawer = ({
               <span className="font-medium">
                 {displayTrainer?.expertiseAreas &&
                 displayTrainer.expertiseAreas.length > 0
-                  ? displayTrainer.expertiseAreas.join(", ")
+                  ? displayTrainer.expertiseAreas
+                      .map((area) =>
+                        typeof area === "object" ? area.name || area._id : area
+                      )
+                      .join(", ")
                   : "Not specified"}
               </span>
             </div>
@@ -675,23 +633,27 @@ const TrainerDetailsDrawer = ({
         onRevalidate={handleTrainerUpdate}
       />
 
-      {/* Rejection Reason Modal */}
-      <RejectionReasonModal
-        isOpen={showRejectionModal}
-        onClose={() => setShowRejectionModal(false)}
-        onConfirm={handleReject}
-        isLoading={isApprovalLoading}
-        entityType="trainer"
-      />
+      {/* Rejection Reason Modal - Only for approvals and application contexts */}
+      {(context === "approvals" || context === "application") && (
+        <RejectionReasonModal
+          isOpen={showRejectionModal}
+          onClose={() => setShowRejectionModal(false)}
+          onConfirm={handleReject}
+          isLoading={isApprovalLoading}
+          entityType="trainer"
+        />
+      )}
 
-      {/* Hold Reason Modal */}
-      <HoldReasonModal
-        isOpen={showHoldModal}
-        onClose={() => setShowHoldModal(false)}
-        onConfirm={handleHold}
-        isLoading={isApprovalLoading}
-        entityType="trainer"
-      />
+      {/* Hold Reason Modal - Only for approvals and application contexts */}
+      {(context === "approvals" || context === "application") && (
+        <HoldReasonModal
+          isOpen={showHoldModal}
+          onClose={() => setShowHoldModal(false)}
+          onConfirm={handleHold}
+          isLoading={isApprovalLoading}
+          entityType="trainer"
+        />
+      )}
     </div>
   );
 };

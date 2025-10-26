@@ -15,6 +15,8 @@ import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
 import { toast } from "sonner";
 import JobsTable from "../jobs/JobsTable";
+import StatusReasonAlert from "@/components/common/StatusReasonAlert";
+import ActionButtons from "@/components/super-admin-view/shared/ActionButtons";
 
 const CandidateDetailsDrawer = ({
   candidateId,
@@ -23,7 +25,6 @@ const CandidateDetailsDrawer = ({
   applicationType,
   context = "database",
   onRevalidate,
-  areApprovalBtnsVisible = false,
   onClose,
 }) => {
   const [activeTab, setActiveTab] = useState("aboutCandidate");
@@ -80,6 +81,12 @@ const CandidateDetailsDrawer = ({
   const displayCandidate = candidate?.data;
   const candidateStatus =
     context === "approvals" ? candidate?.status : displayCandidate?.status;
+  const statusReason =
+    context === "approvals"
+      ? approvalDetails?.data?.reviewerNotes ||
+        candidate?.rejectionReason ||
+        candidate?.holdReason
+      : undefined;
 
   const handleApprove = async () => {
     try {
@@ -231,73 +238,27 @@ const CandidateDetailsDrawer = ({
           </h3>
         </div>
         <div className="flex items-center gap-4">
-          {!areApprovalBtnsVisible && (
-            <Button
-              variant={"purple"}
-              className={"w-fit"}
-              onClick={() => setIsEditOpen(true)}
-            >
-              Edit Candidate
-            </Button>
-          )}
-          {areApprovalBtnsVisible && (
-            <>
-              <Button
-                variant={"gray"}
-                onClick={() => setIsEditOpen(true)}
-                disabled={isApprovalLoading}
-              >
-                Edit
-              </Button>
-              {candidateStatus !== "approved" ? (
-                <>
-                  <Button
-                    variant={"purple"}
-                    onClick={handleApprove}
-                    disabled={isApprovalLoading}
-                  >
-                    {isApprovalLoading ? "Processing..." : "Approve"}
-                  </Button>
-                  {candidateStatus !== "rejected" && (
-                    <Button
-                      variant={"destructive"}
-                      onClick={handleRejectClick}
-                      disabled={isApprovalLoading}
-                    >
-                      {isApprovalLoading ? "Processing..." : "Reject"}
-                    </Button>
-                  )}
-                  {candidateStatus !== "hold" && (
-                    <Button
-                      variant={"black"}
-                      onClick={handleHoldClick}
-                      disabled={isApprovalLoading}
-                    >
-                      {isApprovalLoading ? "Processing..." : "Hold"}
-                    </Button>
-                  )}
-                </>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  <AdminStatusBadge status={candidateStatus} />
-                  {candidateStatus === "rejected" &&
-                    candidate?.rejectionReason && (
-                      <div className="text-xs text-red-600 bg-red-50 p-2 rounded border max-w-xs">
-                        <strong>Rejection Reason:</strong>{" "}
-                        {candidate.rejectionReason}
-                      </div>
-                    )}
-                  {candidateStatus === "hold" && candidate?.holdReason && (
-                    <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded border max-w-xs">
-                      <strong>Hold Reason:</strong> {candidate.holdReason}
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+          <ActionButtons
+            context={context}
+            onEdit={() => setIsEditOpen(true)}
+            onApprove={handleApprove}
+            onReject={() => setShowRejectionModal(true)}
+            onHold={() => setShowHoldModal(true)}
+            isLoading={isApprovalLoading}
+            entityName="Application"
+            approvalStatus={candidateStatus}
+            editButtonVariant="gray"
+            editButtonSize="sm"
+          />
         </div>
       </div>
+
+      {/* Status Reason Display */}
+      <StatusReasonAlert
+        statusReason={statusReason}
+        status={candidateStatus}
+        className="px-6 mb-6"
+      />
 
       <div className="px-6">
         {/* Tab Navigation */}
@@ -330,13 +291,11 @@ const CandidateDetailsDrawer = ({
         </div>
       </div>
 
-      {!areApprovalBtnsVisible && (
-        <EditCandidateDrawer
-          isOpen={isEditOpen}
-          onClose={() => setIsEditOpen(false)}
-          candidate={candidate}
-        />
-      )}
+      <EditCandidateDrawer
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        candidate={candidate}
+      />
 
       <RejectionReasonModal
         isOpen={showRejectionModal}

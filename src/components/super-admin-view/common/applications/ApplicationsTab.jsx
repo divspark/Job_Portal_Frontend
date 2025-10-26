@@ -9,14 +9,14 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { MoveLeftIcon } from "lucide-react";
 import ErrorDisplay from "@/components/common/ErrorDisplay";
 
-const ApplicationsTab = ({
-  title = "Applications",
-  isBackBtnEnabled = false,
-}) => {
+const ApplicationsTab = ({ isBackBtnEnabled = false }) => {
   const navigate = useNavigate();
   const { id: jobId } = useParams();
   const [searchParams] = useSearchParams();
   const type = searchParams.get("type");
+
+  const title =
+    type === "training" ? "Training applications" : "Job applications";
 
   const [filters, setFilters] = useState({
     search: "",

@@ -205,15 +205,7 @@ function App() {
           />
           <Route
             path="jobs-and-trainings/:id/candidates"
-            element={
-              <ApplicationsTab title="Job Applications" isBackBtnEnabled />
-            }
-          />
-          <Route
-            path="jobs-and-trainings/training/:id/candidates"
-            element={
-              <ApplicationsTab title="Training Applications" isBackBtnEnabled />
-            }
+            element={<ApplicationsTab isBackBtnEnabled />}
           />
           <Route path="approvals" element={<SuperAdminApprovals />} />
           <Route

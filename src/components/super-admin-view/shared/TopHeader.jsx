@@ -28,7 +28,7 @@ const TopHeader = () => {
         </div>
 
         <div
-          className="cursor-pointer p-3 rounded-full border border-gray-700 flex items-center gap-2"
+          className="relative cursor-pointer p-3 rounded-full border border-gray-700 flex items-center gap-2"
           onClick={() => setNotificationDrawerOpen(true)}
         >
           <NotificationIcon className="w-5 h-5" strokeWidth={1.5} />

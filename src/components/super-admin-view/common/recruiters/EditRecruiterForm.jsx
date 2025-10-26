@@ -2,12 +2,28 @@ import { useState, useEffect } from "react";
 import CommonForm from "../../../common/form";
 import ButtonComponent from "../../../common/button";
 import { useUploadFile } from "../../../../hooks/super-admin/useUploadFile";
-import { INDUSTRIES } from "@/constants/super-admin";
+import { useGetDropdownValues } from "../../../../hooks/super-admin/useDropdowns";
 
 const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
   const [formData, setFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutate: uploadFile } = useUploadFile();
+  const { data: dropdownData } = useGetDropdownValues("industries");
+
+  const sectorOptions =
+    dropdownData?.data?.values?.map((item) => ({
+      id: item.value,
+      label: item.label,
+    })) || [];
+
+  const { data: expertiseDropdownData } =
+    useGetDropdownValues("expertise-area");
+
+  const expertiseOptions =
+    expertiseDropdownData?.data?.values?.map((item) => ({
+      id: item.value,
+      label: item.label,
+    })) || [];
 
   const basicInfoFields = [
     {
@@ -127,6 +143,13 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
 
   const documentsFields = [
     {
+      name: "documents.resume",
+      label: "Resume",
+      placeholder: "Upload Resume",
+      componentType: "file",
+      accept: "pdf",
+    },
+    {
       name: "documents.panCard",
       label: "PAN Card",
       placeholder: "Upload PAN Card",
@@ -169,7 +192,7 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
       label: "Sectoral Specialization",
       componentType: "multi-select",
       max: 3,
-      options: INDUSTRIES,
+      options: sectorOptions,
     },
     {
       name: "totalExperience",
@@ -180,14 +203,10 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
     },
     {
       name: "experienceLevel",
-      label: "Expertise in",
+      label: "Experience in",
       componentType: "multi-select",
       max: 3,
-      options: [
-        { id: "frontline", label: "Frontline Hirings" },
-        { id: "midlevel", label: "Mid Level Hirings" },
-        { id: "senior", label: "Senior Level Hirings" },
-      ],
+      options: expertiseOptions,
     },
     {
       name: "lastOrganization.name",
@@ -209,6 +228,13 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
       componentType: "input",
       type: "url",
       placeholder: "Enter LinkedIn URL",
+    },
+    {
+      name: "monthlyClosures",
+      label: "Monthly Closures",
+      componentType: "input",
+      type: "number",
+      placeholder: "Enter monthly closures",
     },
   ];
 
@@ -314,6 +340,7 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
           pincode: "",
         },
         documents: recruiter.documents || {
+          resume: "",
           panCard: "",
           aadharCard: "",
           cancelledCheque: "",
@@ -346,6 +373,8 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
             accountType: "",
           },
         },
+        monthlyClosures: recruiter.monthlyClosures || "",
+        references: recruiter.references || [],
       });
     }
   }, [recruiter]);
@@ -373,24 +402,27 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
-      phoneNumber:
-        formData.phone?.countryCode && formData.phone?.number
-          ? `${formData.phone.countryCode}${formData.phone.number}`
-          : undefined,
-      profilePicture: formData.profileImage,
+      phone: formData.phone || {
+        number: "",
+        countryCode: "+91",
+      },
+      profileImage: formData.profileImage,
       location:
         formData.currentAddress?.city && formData.currentAddress?.state
           ? `${formData.currentAddress.city}, ${formData.currentAddress.state}`
           : formData.currentAddress?.city || formData.currentAddress?.state,
-      companyName: formData.lastOrganization?.name,
-      position: formData.lastOrganization?.position,
-      experience: formData.totalExperience,
-      skills: formData.experienceLevel || [],
-      specializations:
+      lastOrganization: {
+        name: formData.lastOrganization?.name,
+        position: formData.lastOrganization?.position,
+      },
+      totalExperience: formData.totalExperience,
+      experienceLevel: formData.experienceLevel || [],
+      sectorSpecialization:
         formData.sectorSpecialization?.map((item) =>
-          typeof item === "string" ? item : item.name || item.label
+          typeof item === "string" ? item : item.id || item.value
         ) || [],
       linkedinProfile: formData.linkedinProfile,
+      monthlyClosures: formData.monthlyClosures,
     };
 
     // Add current address details
@@ -425,6 +457,11 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
     // Add KYC and bank details
     if (formData.kycDetails) {
       payload.kycDetails = formData.kycDetails;
+    }
+
+    // Add references
+    if (formData.references && formData.references.length > 0) {
+      payload.references = formData.references;
     }
 
     return payload;
@@ -541,6 +578,132 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
                 handleUpload={handleUpload}
               />
             </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                References
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    references: [
+                      ...prev.references,
+                      {
+                        name: "",
+                        contactNo: "",
+                        organization: "",
+                        designation: "",
+                      },
+                    ],
+                  }));
+                }}
+                className="px-3 py-1 bg-primary-purple text-white text-sm rounded-full hover:bg-primary-purple/80"
+              >
+                + Add Reference
+              </button>
+            </div>
+            {formData.references && formData.references.length > 0 ? (
+              <div className="space-y-4">
+                {formData.references.map((ref, index) => (
+                  <div
+                    key={index}
+                    className="p-4 border border-gray-200 rounded-lg space-y-3"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="text-sm font-semibold text-gray-700">
+                        Reference #{index + 1}
+                      </h4>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            references: prev.references.filter(
+                              (_, i) => i !== index
+                            ),
+                          }));
+                        }}
+                        className="px-2 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        placeholder="Name"
+                        value={ref.name || ""}
+                        onChange={(e) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            references: prev.references.map((r, i) =>
+                              i === index ? { ...r, name: e.target.value } : r
+                            ),
+                          }));
+                        }}
+                        className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:border-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Contact No"
+                        value={ref.contactNo || ""}
+                        onChange={(e) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            references: prev.references.map((r, i) =>
+                              i === index
+                                ? { ...r, contactNo: e.target.value }
+                                : r
+                            ),
+                          }));
+                        }}
+                        className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:border-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Organization"
+                        value={ref.organization || ""}
+                        onChange={(e) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            references: prev.references.map((r, i) =>
+                              i === index
+                                ? { ...r, organization: e.target.value }
+                                : r
+                            ),
+                          }));
+                        }}
+                        className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:border-blue-500"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Designation"
+                        value={ref.designation || ""}
+                        onChange={(e) => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            references: prev.references.map((r, i) =>
+                              i === index
+                                ? { ...r, designation: e.target.value }
+                                : r
+                            ),
+                          }));
+                        }}
+                        className="w-full px-3 py-2 border border-gray-200 rounded text-sm focus:outline-none focus:border-blue-500"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-gray-500 text-sm">
+                No references added yet
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end space-x-4 pt-6">

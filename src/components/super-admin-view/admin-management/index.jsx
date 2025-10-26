@@ -70,7 +70,7 @@ const SuperAdminAdminManagement = () => {
   return (
     <div className="w-full space-y-6 flex-1">
       {/* Header */}
-      <div className="flex justify-between items-center border-b pb-4 border-gray-200">
+      <div className="flex justify-between items-center border-b py-4 border-gray-200">
         <div>
           <h1 className="text-xl font-bold text-gray-900">Admin Management</h1>
         </div>
