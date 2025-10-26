@@ -30,14 +30,14 @@ const RecruitersTable = ({
     setDrawerOpen(true);
   };
 
-  const colSpan = showStatusColumn ? 8 : 7;
+  const colSpan = showStatusColumn ? 9 : 7;
 
   return (
     <>
       <div className="bg-white rounded-lg border overflow-hidden">
         <div className="overflow-x-auto">
           <div
-            className={showStatusColumn ? "min-w-[1200px]" : "min-w-[1000px]"}
+            className={showStatusColumn ? "min-w-[1400px]" : "min-w-[1000px]"}
           >
             <Table>
               <TableHeader>
@@ -53,18 +53,35 @@ const RecruitersTable = ({
                     Email
                   </TableHead>
                   <TableHead className="min-w-[150px] font-semibold">
-                    Phone
+                    Contact Number
                   </TableHead>
                   <TableHead className="min-w-[150px] font-semibold">
                     Company
                   </TableHead>
-                  <TableHead className="min-w-[120px] font-semibold">
-                    Candidates
-                  </TableHead>
-                  {showStatusColumn && (
-                    <TableHead className="min-w-[120px] font-semibold">
-                      Status
-                    </TableHead>
+                  {showStatusColumn ? (
+                    <>
+                      <TableHead className="min-w-[150px] font-semibold">
+                        Sector
+                      </TableHead>
+                      <TableHead className="min-w-[200px] font-semibold">
+                        Expertise
+                      </TableHead>
+                      <TableHead className="min-w-[120px] font-semibold">
+                        Posted Date
+                      </TableHead>
+                      <TableHead className="min-w-[120px] font-semibold">
+                        Status
+                      </TableHead>
+                    </>
+                  ) : (
+                    <>
+                      <TableHead className="min-w-[120px] font-semibold">
+                        Candidates Created
+                      </TableHead>
+                      <TableHead className="min-w-[120px] font-semibold">
+                        Last Updated
+                      </TableHead>
+                    </>
                   )}
                 </TableRow>
               </TableHeader>
@@ -130,17 +147,35 @@ const RecruitersTable = ({
                         <TableCell className="text-gray-700">
                           {recruiter.company || "N/A"}
                         </TableCell>
-                        <TableCell className="text-gray-700">
-                          {recruiter.candidatesCount || 0}
-                        </TableCell>
-                        {showStatusColumn && (
-                          <TableCell>
-                            <AdminStatusBadge
-                              status={
-                                recruiter.approvalStatus || recruiter.jobStatus
-                              }
-                            />
-                          </TableCell>
+                        {showStatusColumn ? (
+                          <>
+                            <TableCell className="text-gray-700">
+                              {recruiter.sectorSpecialization || "N/A"}
+                            </TableCell>
+                            <TableCell className="text-gray-700">
+                              {recruiter.experienceLevel || "N/A"}
+                            </TableCell>
+                            <TableCell className="text-gray-700">
+                              {recruiter.postedDate || "N/A"}
+                            </TableCell>
+                            <TableCell>
+                              <AdminStatusBadge
+                                status={
+                                  recruiter.approvalStatus ||
+                                  recruiter.jobStatus
+                                }
+                              />
+                            </TableCell>
+                          </>
+                        ) : (
+                          <>
+                            <TableCell className="text-gray-700">
+                              {recruiter.candidatesCount || 0}
+                            </TableCell>
+                            <TableCell className="text-gray-700">
+                              {recruiter.lastUpdated || "N/A"}
+                            </TableCell>
+                          </>
                         )}
                       </TableRow>
                     );

@@ -117,6 +117,8 @@ const JobsTab = ({ context = "database" }) => {
           experience: job.experienceLevel || "-",
           experienceLevel: job.experienceLevel || "-",
           industry: job.industry || "-",
+          sector: job.sector || job.industry || "-",
+          noOfPositions: job.noOfPositions || "-",
           postedDate: approval.createdAt,
           createdAt: approval.createdAt,
           approvalStatus: approval.status,

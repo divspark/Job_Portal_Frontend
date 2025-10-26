@@ -41,27 +41,36 @@ const TrainersTable = ({
     <>
       <div className="bg-white rounded-lg border overflow-hidden">
         <div className="overflow-x-auto">
-          <div className="min-w-[1100px]">
+          <div className="min-w-[1400px]">
             <Table className="table-fixed">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[40px] font-semibold"></TableHead>
                   <TableHead className="w-[160px] font-semibold">ID</TableHead>
-                  <TableHead className="w-[320px] font-semibold">
+                  <TableHead className="w-[280px] font-semibold">
                     Name
                   </TableHead>
-                  <TableHead className="w-[180px] font-semibold">
-                    Industry
+                  <TableHead className="w-[200px] font-semibold">
+                    Email
                   </TableHead>
                   <TableHead className="w-[180px] font-semibold">
-                    Skills
+                    Contact Number
                   </TableHead>
-                  <TableHead className="w-[100px] font-semibold">
-                    Experience
+                  <TableHead className="w-[180px] font-semibold">
+                    Sector
                   </TableHead>
                   <TableHead className="w-[120px] font-semibold">
-                    Last Updated
+                    Experience
                   </TableHead>
+                  {context === "approvals" ? (
+                    <TableHead className="w-[140px] font-semibold">
+                      Posted Date
+                    </TableHead>
+                  ) : (
+                    <TableHead className="w-[140px] font-semibold">
+                      Last updated
+                    </TableHead>
+                  )}
                   {showStatusColumn && (
                     <TableHead className="w-[120px] font-semibold">
                       Status
@@ -93,7 +102,7 @@ const TrainersTable = ({
                       >
                         {trainer._id}
                       </TableCell>
-                      <TableCell className="w-[320px] max-w-[320px]">
+                      <TableCell className="w-[280px] max-w-[280px]">
                         <div className="flex items-center gap-3">
                           {trainer.profileImage ? (
                             <img
@@ -113,14 +122,20 @@ const TrainersTable = ({
                             >
                               {trainer.name || "N/A"}
                             </span>
-                            <span
-                              className="text-sm text-gray-500 truncate"
-                              title={trainer.email || "N/A"}
-                            >
-                              {trainer.email || "N/A"}
-                            </span>
                           </div>
                         </div>
+                      </TableCell>
+                      <TableCell
+                        className="w-[200px] max-w-[200px] truncate"
+                        title={trainer.email || "N/A"}
+                      >
+                        {trainer.email || "N/A"}
+                      </TableCell>
+                      <TableCell
+                        className="w-[180px] max-w-[180px] truncate"
+                        title={trainer.contact || trainer.phone || "N/A"}
+                      >
+                        {trainer.contact || trainer.phone || "N/A"}
                       </TableCell>
                       <TableCell
                         className="w-[180px] max-w-[180px] truncate"
@@ -140,28 +155,22 @@ const TrainersTable = ({
                               .join(", ")
                           : trainer.industryExperience || "N/A"}
                       </TableCell>
-                      <TableCell
-                        className="w-[180px] max-w-[180px] truncate"
-                        title={
-                          Array.isArray(trainer.expertiseAreas)
-                            ? trainer.expertiseAreas
-                                .map((area) => area.name || area._id)
-                                .join(", ")
-                            : trainer.expertiseAreas || "N/A"
-                        }
-                      >
-                        {Array.isArray(trainer.expertiseAreas)
-                          ? trainer.expertiseAreas
-                              .map((area) => area.name || area._id)
-                              .join(", ")
-                          : trainer.expertiseAreas || "N/A"}
-                      </TableCell>
-                      <TableCell className="w-[100px]">
+                      <TableCell className="w-[120px]">
                         {trainer.totalYearOfExperience || ""}
                       </TableCell>
-                      <TableCell className="w-[120px]">
-                        {getRelativeTime(trainer.updatedAt)}
-                      </TableCell>
+                      {context === "approvals" ? (
+                        <TableCell className="w-[140px]">
+                          {trainer.submittedAt
+                            ? getRelativeTime(trainer.submittedAt)
+                            : trainer.createdAt
+                            ? getRelativeTime(trainer.createdAt)
+                            : "N/A"}
+                        </TableCell>
+                      ) : (
+                        <TableCell className="w-[140px]">
+                          {getRelativeTime(trainer.updatedAt)}
+                        </TableCell>
+                      )}
                       {showStatusColumn && (
                         <TableCell className="w-[120px]">
                           <AdminStatusBadge
@@ -174,7 +183,7 @@ const TrainersTable = ({
                 ) : (
                   <TableRow>
                     <TableCell
-                      colSpan={showStatusColumn ? 8 : 7}
+                      colSpan={showStatusColumn ? 9 : 8}
                       className="text-center py-8"
                     >
                       <div className="flex flex-col items-center justify-center space-y-2">

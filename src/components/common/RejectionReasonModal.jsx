@@ -26,6 +26,7 @@ const RejectionReasonModal = ({
     }
     onConfirm(rejectionReason.trim());
     setRejectionReason("");
+    onClose();
   };
 
   const handleClose = () => {

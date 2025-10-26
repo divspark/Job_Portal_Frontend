@@ -48,23 +48,33 @@ const ApplicationsTable = ({
               <TableHeader>
                 <TableRow>
                   <TableHead className="min-w-[40px] font-semibold"></TableHead>
-                  <TableHead className="min-w-[80px] font-semibold">
-                    ID
+                  <TableHead className="min-w-[280px] font-semibold">
+                    Applicant Info
                   </TableHead>
-                  <TableHead className="min-w-[250px] font-semibold">
-                    Applicant
-                  </TableHead>
-                  <TableHead className="min-w-[120px] font-semibold">
-                    Source
-                  </TableHead>
-                  <TableHead className="min-w-[220px] font-semibold">
-                    Recruiter Details
-                  </TableHead>
+                  {currentType === "job" ? (
+                    <>
+                      <TableHead className="min-w-[120px] font-semibold">
+                        Source
+                      </TableHead>
+                      <TableHead className="min-w-[220px] font-semibold">
+                        Recruiter Details
+                      </TableHead>
+                    </>
+                  ) : (
+                    <>
+                      <TableHead className="min-w-[120px] font-semibold">
+                        Sector
+                      </TableHead>
+                      <TableHead className="min-w-[220px] font-semibold">
+                        Expertise in
+                      </TableHead>
+                    </>
+                  )}
                   <TableHead className="min-w-[150px] font-semibold">
                     Status by Admin
                   </TableHead>
                   <TableHead className="min-w-[150px] font-semibold">
-                    Status by Corporate
+                    Status by corporate
                   </TableHead>
                   <TableHead className="min-w-[100px] font-semibold">
                     Experience
@@ -94,7 +104,6 @@ const ApplicationsTable = ({
                           className="w-4 h-4 text-primary-purple border-2 border-gray-300 focus:ring-2 focus:ring-primary-purple/50 focus:ring-offset-0 cursor-pointer appearance-none rounded-full checked:bg-primary-purple checked:border-primary-purple relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:bg-white before:rounded-full before:opacity-0 checked:before:opacity-100"
                         />
                       </TableCell>
-                      <TableCell>{application._id}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
@@ -113,22 +122,61 @@ const ApplicationsTable = ({
                               {application.applicantName || "N/A"}
                             </span>
                             <span className="text-sm text-gray-500">
-                              {application.applicantRole || "N/A"}
+                              {application.applicantId || "N/A"}
                             </span>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{application.source || "N/A"}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium text-gray-900">
-                            {application.recruiterInfo?.name || "Not coming"}
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            {application.recruiterInfo?.email || "Not coming"}
-                          </span>
-                        </div>
-                      </TableCell>
+                      {currentType === "job" ? (
+                        <>
+                          <TableCell>{application.source || "N/A"}</TableCell>
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span className="font-medium text-gray-900">
+                                {application.recruiterInfo?.name || "N/A"}
+                              </span>
+                              <span className="text-sm text-gray-500">
+                                {application.recruiterId ||
+                                  application.recruiterInfo?._id ||
+                                  "N/A"}
+                              </span>
+                            </div>
+                          </TableCell>
+                        </>
+                      ) : (
+                        <>
+                          <TableCell>
+                            {application.applicant?.sectorSpecialization
+                              ? Array.isArray(
+                                  application.applicant.sectorSpecialization
+                                )
+                                ? application.applicant.sectorSpecialization
+                                    .map((sector) =>
+                                      typeof sector === "object"
+                                        ? sector.name || sector._id
+                                        : sector
+                                    )
+                                    .join(", ")
+                                : application.applicant.sectorSpecialization
+                              : "N/A"}
+                          </TableCell>
+                          <TableCell>
+                            {application.applicant?.expertiseAreas
+                              ? Array.isArray(
+                                  application.applicant.expertiseAreas
+                                )
+                                ? application.applicant.expertiseAreas
+                                    .map((area) =>
+                                      typeof area === "object"
+                                        ? area.name || area._id
+                                        : area
+                                    )
+                                    .join(", ")
+                                : application.applicant.expertiseAreas
+                              : "N/A"}
+                          </TableCell>
+                        </>
+                      )}
                       <TableCell>
                         {application.status ? (
                           <AdminStatusBadge status={application.status} />
@@ -208,6 +256,7 @@ const ApplicationsTable = ({
                   applicationType={currentType}
                   onRevalidate={onRevalidate}
                   context="application"
+                  applicationStatus={selectedApplication.status}
                 />
               )}
             </div>

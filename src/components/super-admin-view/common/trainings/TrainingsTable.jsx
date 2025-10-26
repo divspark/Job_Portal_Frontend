@@ -87,19 +87,31 @@ const TrainingsTable = ({
     <>
       <div className="bg-white rounded-lg border overflow-hidden">
         <div className="w-full overflow-x-auto">
-          <table className="w-full caption-bottom text-sm min-w-[1240px]">
+          <table className="w-full caption-bottom text-sm min-w-[800px]">
             <thead className="[&_tr]:border-b">
               <tr className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors">
                 <th className={thClass}></th>
                 <th className={thClass}>ID</th>
                 <th className={thClass}>Name</th>
-                <th className={thClass}>Applied Time</th>
-                <th className={thClass}>Company</th>
-                <th className={thClass}>Candidates</th>
-                <th className={thClass}>Location</th>
-                <th className={thClass}>Experience</th>
-                <th className={thClass}>Status</th>
-                {!isApprovalContext && <th className={thClass}>Actions</th>}
+                {isApprovalContext && (
+                  <>
+                    <th className={thClass}>Company</th>
+                    <th className={thClass}>Location</th>
+                    <th className={thClass}>Posted Date</th>
+                    <th className={thClass}>Status</th>
+                  </>
+                )}
+                {!isApprovalContext && (
+                  <>
+                    <th className={thClass}>Posted Date</th>
+                    <th className={thClass}>Company</th>
+                    <th className={thClass}>Candidates</th>
+                    <th className={thClass}>Location</th>
+                    <th className={thClass}>Experience</th>
+                    <th className={thClass}>Status</th>
+                    <th className={thClass}>Actions</th>
+                  </>
+                )}
               </tr>
             </thead>
             <tbody className="[&_tr:last-child]:border-0">
@@ -138,30 +150,47 @@ const TrainingsTable = ({
                       <td className="p-2 align-middle whitespace-nowrap font-medium">
                         {training.title || "N/A"}
                       </td>
-                      <td className="p-2 align-middle whitespace-nowrap">
-                        {formatDate(createdAt)}
-                      </td>
-                      <td className="p-2 align-middle whitespace-nowrap"></td>
-                      <td className="p-2 align-middle whitespace-nowrap"></td>
-                      <td className="p-2 align-middle whitespace-nowrap">
-                        {training.trainingMode || "N/A"}
-                      </td>
-                      <td className="p-2 align-middle whitespace-nowrap">
-                        {training.minimumExperience || "N/A"}
-                      </td>
-                      <td className="p-2 align-middle whitespace-nowrap">
-                        {getStatusBadge(status)}
-                      </td>
-                      {!isApprovalContext && (
-                        <td className="p-2 align-middle whitespace-nowrap">
-                          <button
-                            className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
-                            onClick={(e) => handleViewDetails(training, e)}
-                          >
-                            View Details
-                            <MoveUpRightIcon className="w-3 h-3" />
-                          </button>
-                        </td>
+                      {isApprovalContext ? (
+                        <>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {training.company || "N/A"}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {training.trainingMode || "N/A"}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {formatDate(createdAt)}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {getStatusBadge(status)}
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {formatDate(createdAt)}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap"></td>
+                          <td className="p-2 align-middle whitespace-nowrap"></td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {training.trainingMode || "N/A"}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {training.minimumExperience || "N/A"}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            {getStatusBadge(status)}
+                          </td>
+                          <td className="p-2 align-middle whitespace-nowrap">
+                            <button
+                              className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
+                              onClick={(e) => handleViewDetails(training, e)}
+                            >
+                              View Details
+                              <MoveUpRightIcon className="w-3 h-3" />
+                            </button>
+                          </td>
+                        </>
                       )}
                     </tr>
                   );
@@ -169,7 +198,7 @@ const TrainingsTable = ({
               ) : (
                 <tr>
                   <td
-                    colSpan={isApprovalContext ? 9 : 10}
+                    colSpan={isApprovalContext ? 7 : 10}
                     className="p-2 align-middle whitespace-nowrap text-center py-8"
                   >
                     <div className="flex flex-col items-center justify-center space-y-2">

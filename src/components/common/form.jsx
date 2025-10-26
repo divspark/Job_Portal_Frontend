@@ -401,6 +401,7 @@ export default function CommonForm({
             {...commonInputProps}
             id={getControlItem.id || getControlItem.name}
             rows={4}
+            disabled={getControlItem.disabled || false}
           />
         );
       case "time":

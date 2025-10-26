@@ -17,7 +17,6 @@ const CompaniesTable = ({
   paginatedCompanies,
   context = "database", // "database" or "approvals"
   onRevalidate,
-  handleDeleteCompany,
 }) => {
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -37,7 +36,10 @@ const CompaniesTable = ({
   };
 
   const getCompanyId = (company) => {
-    return context === "approvals" ? company.id : company._id;
+    if (context === "approvals") {
+      return company._id;
+    }
+    return company._id;
   };
 
   const renderStatusColumn = () => {
@@ -51,7 +53,7 @@ const CompaniesTable = ({
 
     return (
       <TableCell>
-        <AdminStatusBadge status={company.approvalStatus} />
+        <AdminStatusBadge status={company.status} />
       </TableCell>
     );
   };
@@ -65,13 +67,13 @@ const CompaniesTable = ({
       <CompanyDetailsDrawer
         companyId={
           context === "approvals"
-            ? selectedCompany?.companyId
+            ? selectedCompany?.data?._id
             : selectedCompany?._id
         }
         context={context}
-        approvalId={context === "approvals" ? selectedCompany?.id : undefined}
+        approvalId={context === "approvals" ? selectedCompany?._id : undefined}
         approvalStatus={
-          context === "approvals" ? selectedCompany?.approvalStatus : undefined
+          context === "approvals" ? selectedCompany?.status : undefined
         }
         onClose={() => setDrawerOpen(false)}
         onRevalidate={onRevalidate}
@@ -88,20 +90,44 @@ const CompaniesTable = ({
               <TableHead className="w-[40px] font-semibold"></TableHead>
               <TableHead className="w-[160px] font-semibold">ID</TableHead>
               <TableHead className="w-[200px] font-semibold">Name</TableHead>
-              <TableHead className="w-[140px] font-semibold">
-                Industry
-              </TableHead>
-              <TableHead className="w-[240px] font-semibold">Contact</TableHead>
-              <TableHead className="w-[100px] font-semibold">
-                Jobs Posted
-              </TableHead>
-              <TableHead className="w-[120px] font-semibold">
-                Location
-              </TableHead>
-              <TableHead className="w-[120px] font-semibold">
-                Last Updated
-              </TableHead>
-              {renderStatusColumn()}
+              {context === "approvals" ? (
+                <>
+                  <TableHead className="w-[140px] font-semibold">
+                    Company Type
+                  </TableHead>
+                  <TableHead className="w-[200px] font-semibold">
+                    Email
+                  </TableHead>
+                  <TableHead className="w-[160px] font-semibold">
+                    Contact Number
+                  </TableHead>
+                  <TableHead className="w-[120px] font-semibold">
+                    Location
+                  </TableHead>
+                  <TableHead className="w-[120px] font-semibold">
+                    Posted Date
+                  </TableHead>
+                  {renderStatusColumn()}
+                </>
+              ) : (
+                <>
+                  <TableHead className="w-[140px] font-semibold">
+                    Sector
+                  </TableHead>
+                  <TableHead className="w-[240px] font-semibold">
+                    Contact
+                  </TableHead>
+                  <TableHead className="w-[100px] font-semibold">
+                    Total Posts
+                  </TableHead>
+                  <TableHead className="w-[120px] font-semibold">
+                    Location
+                  </TableHead>
+                  <TableHead className="w-[120px] font-semibold">
+                    Last Updated
+                  </TableHead>
+                </>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -138,61 +164,129 @@ const CompaniesTable = ({
                     className="w-[200px] max-w-[200px] truncate"
                     title={
                       context === "approvals"
-                        ? company?.fullCompanyData?.basicInformation
-                            ?.companyName || "-"
+                        ? company?.data?.basicInformation?.companyName || "-"
                         : company?.companyName || "-"
                     }
                   >
                     {context === "approvals"
-                      ? company?.fullCompanyData?.basicInformation
-                          ?.companyName || "-"
+                      ? company?.data?.basicInformation?.companyName || "-"
                       : company?.companyName || "-"}
                   </TableCell>
-                  <TableCell
-                    className="w-[140px] max-w-[140px] truncate"
-                    title={
-                      context === "approvals"
-                        ? company.fullCompanyData?.basicInformation
-                            ?.companyType || "-"
-                        : company.industryType || "-"
-                    }
-                  >
-                    {context === "approvals"
-                      ? company.fullCompanyData?.basicInformation
-                          ?.companyType || "-"
-                      : company.industryType || "-"}
-                  </TableCell>
-                  <TableCell className="w-[240px] max-w-[240px]">
-                    <div className="flex flex-col gap-2">
-                      {company?.spocContact?.countryCode &&
-                        company?.spocContact?.number && (
+                  {context === "approvals" ? (
+                    <>
+                      <TableCell
+                        className="w-[140px] max-w-[140px] truncate"
+                        title={
+                          company?.data?.basicInformation?.companyType || "-"
+                        }
+                      >
+                        {company?.data?.basicInformation?.companyType || "-"}
+                      </TableCell>
+                      <TableCell
+                        className="w-[200px] max-w-[200px] truncate"
+                        title={
+                          company?.data?.basicInformation?.companyEmail || "-"
+                        }
+                      >
+                        {company?.data?.basicInformation?.companyEmail || "-"}
+                      </TableCell>
+                      <TableCell className="w-[160px] max-w-[160px]">
+                        {company?.data?.basicInformation
+                          ?.companyContactNumber ? (
                           <span
                             className="block truncate"
-                            title={`${company?.spocContact?.countryCode}-${company?.spocContact?.number}`}
+                            title={`${company?.data?.basicInformation?.companyContactNumber?.countryCode}-${company?.data?.basicInformation?.companyContactNumber?.number}`}
                           >
-                            {company?.spocContact?.countryCode}-
-                            {company?.spocContact?.number}
+                            {
+                              company?.data?.basicInformation
+                                ?.companyContactNumber?.countryCode
+                            }
+                            -
+                            {
+                              company?.data?.basicInformation
+                                ?.companyContactNumber?.number
+                            }
                           </span>
+                        ) : (
+                          "-"
                         )}
-                      <span
-                        className="block truncate"
-                        title={company.email || "-"}
+                      </TableCell>
+                      <TableCell
+                        className="w-[120px] max-w-[120px] truncate"
+                        title={
+                          company?.data?.basicInformation?.address?.city ||
+                          company?.data?.basicInformation?.address?.state ||
+                          "-"
+                        }
                       >
-                        {company.email || "-"}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="w-[100px]">
-                    {company?.jobsPosted}
-                  </TableCell>
-                  <TableCell
-                    className="w-[220px] max-w-[220px] truncate"
-                    title={company.location || "-"}
-                  >
-                    {company.location || "-"}
-                  </TableCell>
-                  <TableCell>{getRelativeTime(company.lastUpdated)}</TableCell>
-                  {renderStatusCell(company)}
+                        {context === "database"
+                          ? company?.location || "-"
+                          : `${company?.data?.city}, ${company?.data?.state}` ||
+                            "-"}
+                      </TableCell>
+                      <TableCell className="w-[120px]">
+                        {company.submittedAt
+                          ? getRelativeTime(company.submittedAt)
+                          : "-"}
+                      </TableCell>
+                      {renderStatusCell(company)}
+                    </>
+                  ) : (
+                    <>
+                      <TableCell
+                        className="w-[140px] max-w-[140px] truncate"
+                        title={
+                          company?.companyDetails?.industryType ||
+                          company?.industryType ||
+                          "-"
+                        }
+                      >
+                        {company?.companyDetails?.industryType ||
+                          company?.industryType ||
+                          "-"}
+                      </TableCell>
+                      <TableCell className="w-[240px] max-w-[240px]">
+                        <div className="flex flex-col gap-2">
+                          <span
+                            className="block truncate"
+                            title={`${company?.contactNumber?.countryCode}-${company?.contactNumber?.number}`}
+                          >
+                            {company?.contactNumber?.countryCode}-
+                            {company?.contactNumber?.number}
+                          </span>
+                          <span
+                            className="block truncate"
+                            title={
+                              company?.email ||
+                              company?.basicInformation?.companyEmail ||
+                              "-"
+                            }
+                          >
+                            {company?.email ||
+                              company?.basicInformation?.companyEmail ||
+                              "-"}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="w-[100px]">
+                        {company?.jobsPosted}
+                      </TableCell>
+                      <TableCell
+                        className="w-[120px] max-w-[120px] truncate"
+                        title={company?.location || "-"}
+                      >
+                        {context === "database"
+                          ? company?.location || "-"
+                          : `${company?.data?.city}, ${company?.data?.state}` ||
+                            "-"}
+                      </TableCell>
+                      <TableCell className="w-[120px]">
+                        {company.updatedAt
+                          ? getRelativeTime(company.updatedAt)
+                          : "-"}
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               ))
             ) : (

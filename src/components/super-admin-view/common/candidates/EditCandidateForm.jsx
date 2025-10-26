@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CommonForm from "@/components/common/form";
 import ButtonComponent from "@/components/common/button";
 import { useUploadFile } from "@/hooks/super-admin/useUploadFile";
+import { useGetDropdownValues } from "@/hooks/super-admin/useDropdowns";
 import {
   editCandidateBasicDetails,
   editCandidateWorkExperience,
@@ -23,6 +24,13 @@ const EditCandidateForm = ({ candidate, onSave, onClose }) => {
   const [educationEntries, setEducationEntries] = useState([{}]);
   const [certificationEntries, setCertificationEntries] = useState([{}]);
   const { mutate: uploadFile } = useUploadFile();
+
+  const { data: skillsDropdownData } = useGetDropdownValues("skills");
+  const skillsOptions =
+    skillsDropdownData?.data?.values?.map((item) => ({
+      id: item.value,
+      label: item.label,
+    })) || [];
 
   useEffect(() => {
     if (!candidate) return;
@@ -74,9 +82,7 @@ const EditCandidateForm = ({ candidate, onSave, onClose }) => {
 
       // Working Details Summary
       totalExperience: candidate?.totalExperience || "",
-      skillSet: Array.isArray(candidate?.skills)
-        ? (candidate?.skills).join(", ")
-        : candidate?.skills || "",
+      skillSet: Array.isArray(candidate?.skills) ? candidate?.skills : [],
 
       // Role & Expertise
       roleLookingFor: candidate?.roleLookingFor || "",
@@ -293,13 +299,15 @@ const EditCandidateForm = ({ candidate, onSave, onClose }) => {
 
       // Skills mapping
       if (payload.skillSet) {
-        if (typeof payload.skillSet === "string") {
+        if (Array.isArray(payload.skillSet)) {
+          backendPayload.skills = payload.skillSet.map((skill) =>
+            typeof skill === "string" ? skill : skill.id || skill.value
+          );
+        } else if (typeof payload.skillSet === "string") {
           backendPayload.skills = payload.skillSet
             .split(",")
             .map((skill) => skill.trim())
             .filter((skill) => skill.length > 0);
-        } else if (Array.isArray(payload.skillSet)) {
-          backendPayload.skills = payload.skillSet;
         }
       }
 
@@ -400,12 +408,22 @@ const EditCandidateForm = ({ candidate, onSave, onClose }) => {
               Professional Experience Summary
             </h3>
             <div className="space-y-4">
-              <CommonForm
-                formControls={editCandidateWorkExperienceSummary}
-                formData={formData}
-                setFormData={setFormData}
-                handleUpload={handleUpload}
-              />
+              {editCandidateWorkExperienceSummary.map((control) => {
+                const finalControl =
+                  control.name === "skillSet"
+                    ? { ...control, options: skillsOptions }
+                    : control;
+
+                return (
+                  <CommonForm
+                    key={control.name}
+                    formControls={[finalControl]}
+                    formData={formData}
+                    setFormData={setFormData}
+                    handleUpload={handleUpload}
+                  />
+                );
+              })}
             </div>
           </div>
 

@@ -26,6 +26,7 @@ const HoldReasonModal = ({
     }
     onConfirm(holdReason.trim());
     setHoldReason("");
+    onClose();
   };
 
   const handleClose = () => {

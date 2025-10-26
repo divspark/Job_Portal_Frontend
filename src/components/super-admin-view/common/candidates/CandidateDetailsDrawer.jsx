@@ -19,6 +19,7 @@ import StatusReasonAlert from "@/components/common/StatusReasonAlert";
 import ActionButtons from "@/components/super-admin-view/shared/ActionButtons";
 
 const CandidateDetailsDrawer = ({
+  applicationStatus,
   candidateId,
   approvalId,
   applicationId,
@@ -146,10 +147,6 @@ const CandidateDetailsDrawer = ({
     }
   };
 
-  const handleRejectClick = () => {
-    setShowRejectionModal(true);
-  };
-
   const handleHold = async (holdReason) => {
     try {
       if (applicationId) {
@@ -179,9 +176,7 @@ const CandidateDetailsDrawer = ({
     }
   };
 
-  const handleHoldClick = () => {
-    setShowHoldModal(true);
-  };
+  console.log(applicationStatus);
 
   const tabs = [
     {
@@ -246,7 +241,7 @@ const CandidateDetailsDrawer = ({
             onHold={() => setShowHoldModal(true)}
             isLoading={isApprovalLoading}
             entityName="Application"
-            approvalStatus={candidateStatus}
+            approvalStatus={applicationStatus}
             editButtonVariant="gray"
             editButtonSize="sm"
           />
