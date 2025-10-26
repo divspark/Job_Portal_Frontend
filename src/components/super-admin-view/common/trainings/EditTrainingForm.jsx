@@ -5,7 +5,6 @@ import FieldError from "@/components/common/FieldError";
 import { validateFormData } from "@/utils/commonFunctions";
 import { z } from "zod";
 import { toast } from "sonner";
-import { PlusIcon, XIcon } from "lucide-react";
 import ButtonComponent from "@/components/common/button";
 import {
   EXPERIENCE_LEVELS,
@@ -13,11 +12,11 @@ import {
   SESSION_FREQUENCIES,
 } from "@/constants/super-admin";
 import { useDropDown } from "@/hooks/common/useDropDown";
+import { useGetDropdownValues } from "@/hooks/super-admin/useDropdowns";
 
 const editTrainingSchema = z.object({
   title: z.string().optional(),
   description: z.string().optional(),
-  responsibilities: z.array(z.string()).optional(),
   minimumExperience: z.string().optional(),
   trainingMode: z.string().optional(),
   sessionFrequency: z.string().optional(),
@@ -27,7 +26,6 @@ const editTrainingSchema = z.object({
   subjectMatterExpertise: z.string().optional(),
   qualificationsRequired: z.string().optional(),
   travelRequired: z.boolean().optional(),
-  contactEmail: z.string().email().optional().or(z.literal("")),
   requiredSkills: z.array(z.string()).optional(),
   languagesFluent: z.array(z.string()).optional(),
   sessionsExpected: z.number().optional(),
@@ -59,13 +57,6 @@ const trainingBasicInfo = [
     placeholder: "Enter training description",
     componentType: "textarea",
     rows: 4,
-  },
-  {
-    name: "responsibilities",
-    label: "Key Responsibilities",
-    placeholder: "Enter key responsibility",
-    componentType: "input",
-    type: "text",
   },
 ];
 
@@ -176,9 +167,9 @@ const trainingAdditionalInfo = [
   {
     name: "requiredSkills",
     label: "What skills should the trainer have?",
-    placeholder: "Enter required skills separated by commas",
-    componentType: "textarea",
-    rows: 2,
+    componentType: "multi-select",
+    max: 10,
+    options: [],
   },
   {
     name: "languagesFluent",
@@ -186,13 +177,6 @@ const trainingAdditionalInfo = [
     placeholder: "Enter languages separated by commas",
     componentType: "textarea",
     rows: 2,
-  },
-  {
-    name: "contactEmail",
-    label: "Contact Email",
-    placeholder: "Enter contact email",
-    componentType: "input",
-    type: "email",
   },
 ];
 
@@ -240,10 +224,17 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
       label: item.label,
     })) || [];
 
+  const { data: expertiseDropdownData } =
+    useGetDropdownValues("expertise-area");
+  const expertiseOptions =
+    expertiseDropdownData?.data?.values?.map((item) => ({
+      id: item.value,
+      label: item.label,
+    })) || [];
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    responsibilities: "",
     minimumExperience: "",
     trainingMode: "",
     sessionFrequency: "",
@@ -257,8 +248,7 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
     studyMaterialsProvided: false,
     demoSessionBeforeConfirming: false,
     recommendationsFromPastClients: false,
-    contactEmail: "",
-    requiredSkills: "",
+    requiredSkills: [],
     languagesFluent: "",
     currentAddress: "",
     city: "",
@@ -266,46 +256,16 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
     pincode: "",
   });
 
-  const [responsibilitiesList, setResponsibilitiesList] = useState([]);
-  const [currentResponsibility, setCurrentResponsibility] = useState("");
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  const handleFieldChange = (fieldName, value) => {
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
-    if (fieldErrors[fieldName]) {
-      setFieldErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[fieldName];
-        return newErrors;
-      });
-    }
-  };
-
-  const addResponsibility = () => {
-    if (currentResponsibility.trim()) {
-      setResponsibilitiesList((prev) => [
-        ...prev,
-        currentResponsibility.trim(),
-      ]);
-      setCurrentResponsibility("");
-    }
-  };
-
-  const removeResponsibility = (index) => {
-    setResponsibilitiesList((prev) => prev.filter((_, i) => i !== index));
-  };
-
   useEffect(() => {
     if (training) {
-      // Clear any existing field errors when loading training data
       setFieldErrors({});
 
       setFormData({
         title: training.title || "",
         description: training.description || "",
-        responsibilities: "",
         minimumExperience: training.minimumExperience || "",
         trainingMode: training.trainingMode || "",
         sessionFrequency: training.sessionFrequency || "",
@@ -327,10 +287,9 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
         recommendationsFromPastClients:
           training.recommendationsFromPastClients === true ||
           training.recommendationsFromPastClients === "true",
-        contactEmail: training.contactEmail || "",
         requiredSkills: Array.isArray(training.requiredSkills)
-          ? training.requiredSkills.join(", ")
-          : training.requiredSkills || "",
+          ? training.requiredSkills
+          : [],
         languagesFluent: Array.isArray(training.languagesFluent)
           ? training.languagesFluent.join(", ")
           : training.languagesFluent || "",
@@ -339,12 +298,6 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
         state: training.postedBy?.state || "",
         pincode: training.postedBy?.pincode || "",
       });
-
-      if (Array.isArray(training.responsibilities)) {
-        setResponsibilitiesList(training.responsibilities);
-      } else if (training.responsibilities) {
-        setResponsibilitiesList([training.responsibilities]);
-      }
     }
   }, [training]);
 
@@ -361,13 +314,10 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
 
       const payload = {
         ...restFormData,
-        responsibilities:
-          responsibilitiesList.length > 0 ? responsibilitiesList : undefined,
-        requiredSkills: formData.requiredSkills
-          ? formData.requiredSkills
-              .split(",")
-              .map((skill) => skill.trim())
-              .filter((skill) => skill)
+        requiredSkills: Array.isArray(formData.requiredSkills)
+          ? formData.requiredSkills.map((skill) =>
+              typeof skill === "string" ? skill : skill.id || skill.value
+            )
           : [],
         languagesFluent: formData.languagesFluent
           ? formData.languagesFluent
@@ -453,76 +403,16 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
               Training Basic Information
             </h3>
             <div className="space-y-4">
-              {trainingBasicInfo.map((control) => {
-                if (control.name === "responsibilities") {
-                  return (
-                    <div key={control.name} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        {control.label}
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder={control.placeholder}
-                          value={currentResponsibility}
-                          onChange={(e) =>
-                            setCurrentResponsibility(e.target.value)
-                          }
-                          onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              addResponsibility();
-                            }
-                          }}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                        <ButtonComponent
-                          type="button"
-                          color="#6945ED"
-                          buttonText="Add"
-                          onClick={addResponsibility}
-                          className="flex items-center gap-2"
-                        >
-                          <PlusIcon className="w-4 h-4" />
-                        </ButtonComponent>
-                      </div>
-                      {responsibilitiesList.length > 0 && (
-                        <div className="mt-2 space-y-2">
-                          {responsibilitiesList.map((responsibility, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md border"
-                            >
-                              <span className="text-sm text-gray-700">
-                                {responsibility}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => removeResponsibility(idx)}
-                                className="text-red-500 hover:text-red-700 focus:outline-none"
-                              >
-                                <XIcon className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <FieldError error={fieldErrors[control.name]} />
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={control.name} className="flex flex-col gap-2">
-                      <CommonForm
-                        formControls={[control]}
-                        formData={formData}
-                        setFormData={setFormData}
-                      />
-                      <FieldError error={fieldErrors[control.name]} />
-                    </div>
-                  );
-                }
-              })}
+              {trainingBasicInfo.map((control) => (
+                <div key={control.name} className="flex flex-col gap-2">
+                  <CommonForm
+                    formControls={[control]}
+                    formData={formData}
+                    setFormData={setFormData}
+                  />
+                  <FieldError error={fieldErrors[control.name]} />
+                </div>
+              ))}
             </div>
           </div>
 
@@ -602,16 +492,23 @@ const EditTrainingForm = ({ training, onClose, onSave }) => {
               {/* Other fields */}
               {trainingAdditionalInfo
                 .filter((control) => control.componentType !== "checkbox")
-                .map((control) => (
-                  <div key={control.name} className="flex flex-col gap-2">
-                    <CommonForm
-                      formControls={[control]}
-                      formData={formData}
-                      setFormData={setFormData}
-                    />
-                    <FieldError error={fieldErrors[control.name]} />
-                  </div>
-                ))}
+                .map((control) => {
+                  const finalControl =
+                    control.name === "requiredSkills"
+                      ? { ...control, options: expertiseOptions }
+                      : control;
+
+                  return (
+                    <div key={control.name} className="flex flex-col gap-2">
+                      <CommonForm
+                        formControls={[finalControl]}
+                        formData={formData}
+                        setFormData={setFormData}
+                      />
+                      <FieldError error={fieldErrors[control.name]} />
+                    </div>
+                  );
+                })}
             </div>
           </div>
 

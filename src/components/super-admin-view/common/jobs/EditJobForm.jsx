@@ -4,7 +4,6 @@ import ButtonComponent from "../../../common/button";
 import FieldError from "../../../common/FieldError";
 import { z } from "zod";
 import { toast } from "sonner";
-import { PlusIcon, XIcon } from "lucide-react";
 import { useGetDropdownValues } from "../../../../hooks/super-admin/useDropdowns";
 import {
   JOB_TYPES,
@@ -36,13 +35,6 @@ const jobBasicInfo = [
     placeholder: "Enter job description",
     componentType: "textarea",
     rows: 4,
-  },
-  {
-    name: "keyResponsibilities",
-    label: "Key Responsibilities",
-    placeholder: "Enter key responsibility",
-    componentType: "input",
-    type: "text",
   },
 ];
 
@@ -143,10 +135,10 @@ const jobAdditionalInfo = [
   },
   {
     name: "requiredSkills",
-    label: "Required Skills (comma separated)",
-    placeholder: "Enter required skills separated by commas",
-    componentType: "textarea",
-    rows: 2,
+    label: "Required Skills",
+    componentType: "multi-select",
+    max: 10,
+    options: [],
   },
   {
     name: "spocName",
@@ -229,7 +221,6 @@ const editJobSchema = z.object({
   jobTitle: z.string().optional(),
   jobType: z.string().optional(),
   jobDescription: z.string().optional(),
-  keyResponsibilities: z.array(z.string()).optional(),
   minimumEducation: z.string().optional(),
   experienceLevel: z.string().optional(),
   modeOfWork: z.string().optional(),
@@ -242,7 +233,6 @@ const editJobSchema = z.object({
   genderPreference: z.string().optional(),
   regionalLanguageRequired: z.boolean().optional(),
   requiredSkills: z.array(z.string()).optional(),
-  contactEmail: z.string().optional(), // Removed email validation since BE accepts any string
 });
 
 const EditJobForm = ({ job, onClose, onSave }) => {
@@ -250,7 +240,6 @@ const EditJobForm = ({ job, onClose, onSave }) => {
     jobTitle: "",
     jobType: "",
     jobDescription: "",
-    keyResponsibilities: "",
     minimumEducation: "",
     experienceLevel: "",
     modeOfWork: "",
@@ -262,7 +251,7 @@ const EditJobForm = ({ job, onClose, onSave }) => {
     workingHours: "",
     genderPreference: "",
     regionalLanguageRequired: false,
-    requiredSkills: "",
+    requiredSkills: [],
     spocName: "",
     spocNumber: "",
     workingDays: "",
@@ -286,13 +275,18 @@ const EditJobForm = ({ job, onClose, onSave }) => {
       label: item.label,
     })) || [];
 
-  const [keyResponsibilitiesList, setKeyResponsibilitiesList] = useState([]);
-  const [currentResponsibility, setCurrentResponsibility] = useState("");
+  // Fetch expertise area dropdown values
+  const { data: expertiseDropdownData } =
+    useGetDropdownValues("expertise-area");
+  const expertiseOptions =
+    expertiseDropdownData?.data?.values?.map((item) => ({
+      id: item.value,
+      label: item.label,
+    })) || [];
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
 
-  // Clear field error when user starts typing
   const handleFieldChange = (fieldNameOrUpdater, value) => {
     // Handle both function updater and direct field updates
     if (typeof fieldNameOrUpdater === "function") {
@@ -334,30 +328,12 @@ const EditJobForm = ({ job, onClose, onSave }) => {
     }
   };
 
-  // Add responsibility to the list
-  const addResponsibility = () => {
-    if (currentResponsibility.trim()) {
-      setKeyResponsibilitiesList((prev) => [
-        ...prev,
-        currentResponsibility.trim(),
-      ]);
-      setCurrentResponsibility("");
-    }
-  };
-
-  // Remove responsibility from the list
-  const removeResponsibility = (index) => {
-    setKeyResponsibilitiesList((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // Populate form with job data
   useEffect(() => {
     if (job) {
       setFormData({
         jobTitle: job.jobTitle || job.title || "",
         jobType: job.jobType || "",
         jobDescription: job.jobDescription || job.description || "",
-        keyResponsibilities: "",
         minimumEducation: job.minimumEducation || "",
         experienceLevel: job.experienceLevel || "",
         modeOfWork: job.modeOfWork || "",
@@ -370,8 +346,8 @@ const EditJobForm = ({ job, onClose, onSave }) => {
         genderPreference: job.genderPreference || "",
         regionalLanguageRequired: job.regionalLanguageRequired || false,
         requiredSkills: Array.isArray(job.requiredSkills)
-          ? job.requiredSkills.join(", ")
-          : job.requiredSkills || "",
+          ? job.requiredSkills
+          : [],
         spocName: job.spocName || "",
         spocNumber: job.spocNumber || "",
         workingDays: job.workingDays || "",
@@ -384,13 +360,6 @@ const EditJobForm = ({ job, onClose, onSave }) => {
         walkInTime: job.walkInTime || "",
         walkInAddress: job.walkInAddress || "",
       });
-
-      // Populate responsibilities list
-      if (Array.isArray(job.keyResponsibilities)) {
-        setKeyResponsibilitiesList(job.keyResponsibilities);
-      } else if (job.keyResponsibilities) {
-        setKeyResponsibilitiesList([job.keyResponsibilities]);
-      }
     }
   }, [job]);
 
@@ -402,18 +371,12 @@ const EditJobForm = ({ job, onClose, onSave }) => {
       // Clear previous errors
       setFieldErrors({});
 
-      // Prepare payload with responsibilities
       const payload = {
         ...formData,
-        keyResponsibilities:
-          keyResponsibilitiesList.length > 0
-            ? keyResponsibilitiesList
-            : undefined,
-        requiredSkills: formData.requiredSkills
-          ? formData.requiredSkills
-              .split(",")
-              .map((skill) => skill.trim())
-              .filter((skill) => skill)
+        requiredSkills: Array.isArray(formData.requiredSkills)
+          ? formData.requiredSkills.map((skill) =>
+              typeof skill === "string" ? skill : skill.id || skill.value
+            )
           : undefined,
       };
 
@@ -448,78 +411,16 @@ const EditJobForm = ({ job, onClose, onSave }) => {
               Job Basic Information
             </h3>
             <div className="space-y-4">
-              {jobBasicInfo.map((control, index) => {
-                if (control.name === "keyResponsibilities") {
-                  return (
-                    <div key={control.name} className="flex flex-col gap-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        {control.label}
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder={control.placeholder}
-                          value={currentResponsibility}
-                          onChange={(e) =>
-                            setCurrentResponsibility(e.target.value)
-                          }
-                          onKeyPress={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              addResponsibility();
-                            }
-                          }}
-                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                        <ButtonComponent
-                          type="button"
-                          color="#6945ED"
-                          buttonText="Add"
-                          onClick={addResponsibility}
-                          className="flex items-center gap-2"
-                        >
-                          <PlusIcon className="w-4 h-4" />
-                        </ButtonComponent>
-                      </div>
-                      {keyResponsibilitiesList.length > 0 && (
-                        <div className="mt-2 space-y-2">
-                          {keyResponsibilitiesList.map(
-                            (responsibility, idx) => (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md border"
-                              >
-                                <span className="text-sm text-gray-700">
-                                  {responsibility}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() => removeResponsibility(idx)}
-                                  className="text-red-500 hover:text-red-700 focus:outline-none"
-                                >
-                                  <XIcon className="w-4 h-4" />
-                                </button>
-                              </div>
-                            )
-                          )}
-                        </div>
-                      )}
-                      <FieldError error={fieldErrors[control.name]} />
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={control.name} className="flex flex-col gap-2">
-                      <CommonForm
-                        formControls={[control]}
-                        formData={formData}
-                        setFormData={handleFieldChange}
-                      />
-                      <FieldError error={fieldErrors[control.name]} />
-                    </div>
-                  );
-                }
-              })}
+              {jobBasicInfo.map((control, index) => (
+                <div key={control.name} className="flex flex-col gap-2">
+                  <CommonForm
+                    formControls={[control]}
+                    formData={formData}
+                    setFormData={handleFieldChange}
+                  />
+                  <FieldError error={fieldErrors[control.name]} />
+                </div>
+              ))}
             </div>
           </div>
 
@@ -619,11 +520,16 @@ const EditJobForm = ({ job, onClose, onSave }) => {
                   control.name === "walkInAddress";
                 const isDisabled = isWalkInField && !formData.isWalkInInterview;
 
-                // Update englishLevel control with dynamic options
-                const updatedControl =
-                  control.name === "englishLevel"
-                    ? { ...control, options: languageProficiencyOptions }
-                    : control;
+                // Update controls with dynamic options
+                let updatedControl = control;
+                if (control.name === "englishLevel") {
+                  updatedControl = {
+                    ...control,
+                    options: languageProficiencyOptions,
+                  };
+                } else if (control.name === "requiredSkills") {
+                  updatedControl = { ...control, options: expertiseOptions };
+                }
 
                 return (
                   <div key={control.name} className="flex flex-col gap-2">

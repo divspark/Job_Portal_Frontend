@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Briefcase, Eye } from "lucide-react";
+import { Briefcase, MoveUpRightIcon } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -106,6 +106,18 @@ const JobsTable = ({
     return isApprovalContext ? job.postedDate : job.createdAt;
   };
 
+  const getNoOfPositions = (job) => {
+    return isApprovalContext
+      ? job.noOfPositions || "-"
+      : job.noOfPositions || "-";
+  };
+
+  const getSector = (job) => {
+    return isApprovalContext
+      ? job.sector || "-"
+      : job.sector || job.industry || "-";
+  };
+
   return (
     <>
       <div className="bg-white rounded-lg border overflow-hidden h-full flex flex-col">
@@ -114,17 +126,27 @@ const JobsTable = ({
             <TableHeader>
               <TableRow className="bg-gray-50">
                 <TableHead className="text-center w-12">Select</TableHead>
-                <TableHead>Job ID</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead>Posted Date</TableHead>
-                <TableHead>Company</TableHead>
-                {!isApprovalContext && <TableHead>Candidates</TableHead>}
-                <TableHead>Location</TableHead>
-                {isApprovalContext && <TableHead>Industry</TableHead>}
-                <TableHead>Experience</TableHead>
-                <TableHead>Status</TableHead>
-                {!isApprovalContext && (
-                  <TableHead className="text-center">Actions</TableHead>
+                <TableHead>ID</TableHead>
+                {isApprovalContext ? (
+                  <>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>No of positions</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Posted Date</TableHead>
+                    <TableHead>Status</TableHead>
+                  </>
+                ) : (
+                  <>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Company</TableHead>
+                    <TableHead>Sector</TableHead>
+                    <TableHead>Candidates</TableHead>
+                    <TableHead>Location</TableHead>
+                    <TableHead>Posted Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
+                  </>
                 )}
               </TableRow>
             </TableHeader>
@@ -147,42 +169,49 @@ const JobsTable = ({
                       />
                     </TableCell>
                     <TableCell>{getJobId(job)}</TableCell>
-                    <TableCell className="font-medium">
-                      {getJobTitle(job)}
-                    </TableCell>
-                    <TableCell>{formatDate(getPostedDate(job))}</TableCell>
-                    <TableCell>{getCompany(job)}</TableCell>
-                    {!isApprovalContext && (
-                      <TableCell>{/* Candidates field */}</TableCell>
-                    )}
-                    <TableCell>{getLocation(job)}</TableCell>
-                    {isApprovalContext && <TableCell>{job.industry}</TableCell>}
-                    <TableCell>{getExperience(job)}</TableCell>
-                    <TableCell>
-                      {isApprovalContext ? (
-                        <AdminStatusBadge status={job.approvalStatus} />
-                      ) : (
-                        getStatusBadge(job.status)
-                      )}
-                    </TableCell>
-
-                    {!isApprovalContext && (
-                      <TableCell className="text-center">
-                        <button
-                          onClick={(e) => handleViewDetails(job, e)}
-                          className="view-details-btn inline-flex items-center px-3 py-1 text-sm cursor-pointer text-primary-purple hover:text-primary-purple-dark transition-colors"
-                        >
-                          <Eye className="h-4 w-4 mr-1" />
-                          View Details
-                        </button>
-                      </TableCell>
+                    {isApprovalContext ? (
+                      <>
+                        <TableCell className="font-medium">
+                          {getJobTitle(job)}
+                        </TableCell>
+                        <TableCell>{getCompany(job)}</TableCell>
+                        <TableCell>{getNoOfPositions(job)}</TableCell>
+                        <TableCell>{getLocation(job)}</TableCell>
+                        <TableCell>{formatDate(getPostedDate(job))}</TableCell>
+                        <TableCell>
+                          <AdminStatusBadge status={job.approvalStatus} />
+                        </TableCell>
+                      </>
+                    ) : (
+                      <>
+                        <TableCell className="font-medium">
+                          {getJobTitle(job)}
+                        </TableCell>
+                        <TableCell>{getCompany(job)}</TableCell>
+                        <TableCell>{getSector(job)}</TableCell>
+                        <TableCell>
+                          {job.candidatesCount || job.totalApplicants || "-"}
+                        </TableCell>
+                        <TableCell>{getLocation(job)}</TableCell>
+                        <TableCell>{formatDate(getPostedDate(job))}</TableCell>
+                        <TableCell>{getStatusBadge(job.status)}</TableCell>
+                        <TableCell className="text-center">
+                          <button
+                            onClick={(e) => handleViewDetails(job, e)}
+                            className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
+                          >
+                            View Details
+                            <MoveUpRightIcon className="w-3 h-3" />
+                          </button>
+                        </TableCell>
+                      </>
                     )}
                   </TableRow>
                 ))
               ) : (
                 <TableRow className="h-full">
                   <TableCell
-                    colSpan={isApprovalContext ? 9 : 10}
+                    colSpan={isApprovalContext ? 8 : 10}
                     className="h-full"
                   >
                     <div className="flex flex-col items-center justify-center h-full min-h-[400px]">

@@ -241,10 +241,9 @@ export const editCandidateWorkExperienceSummary = [
   {
     name: "skillSet",
     label: "Skills",
-    componentType: "input",
-    type: "text",
-    placeholder:
-      "Enter skills separated by commas (e.g., JavaScript, React, Node.js)",
+    componentType: "multi-select",
+    max: 10,
+    options: [],
     required: false,
   },
 ];

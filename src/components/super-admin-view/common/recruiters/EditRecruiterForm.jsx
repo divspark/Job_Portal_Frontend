@@ -236,6 +236,12 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
       type: "number",
       placeholder: "Enter monthly closures",
     },
+    {
+      name: "whyYouWantToJoin",
+      label: "Why do you want to join?",
+      componentType: "textarea",
+      placeholder: "Enter your reason for wanting to join",
+    },
   ];
 
   const additionalInfoFields = [
@@ -254,10 +260,26 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
       placeholder: "Enter Mother's Name",
     },
     {
+      name: "isMedicalProblem",
+      label: "Do you have any medical problem?",
+      componentType: "selection",
+      options: [
+        { id: "yes", label: "Yes" },
+        { id: "no", label: "No" },
+      ],
+    },
+    {
       name: "medicalProblemDetails",
       label: "Medical Problem Details",
       componentType: "textarea",
-      placeholder: "Enter medical problem details or leave blank if none",
+      placeholder: "Enter medical problem details",
+      disabled: !(formData.isMedicalProblem === "yes"),
+    },
+    {
+      name: "howDidYouKnowAboutThisJob",
+      label: "How did you know about this job?",
+      componentType: "textarea",
+      placeholder: "Enter how you came to know about this job",
     },
   ];
 
@@ -318,6 +340,9 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
 
   useEffect(() => {
     if (recruiter) {
+      const medicalDetails = recruiter.medicalProblemDetails || "";
+      const hasMedicalProblem = medicalDetails && medicalDetails.length > 0;
+
       setFormData({
         firstName: recruiter.firstName || "",
         lastName: recruiter.lastName || "",
@@ -357,7 +382,8 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
         latestQualification: recruiter.latestQualification || "",
         fatherName: recruiter.fatherName || "",
         motherName: recruiter.motherName || "",
-        medicalProblemDetails: recruiter.medicalProblemDetails || "",
+        isMedicalProblem: hasMedicalProblem ? "yes" : "no",
+        medicalProblemDetails: medicalDetails,
         kycDetails: recruiter.kycDetails || {
           panDetails: {
             number: "",
@@ -375,6 +401,8 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
         },
         monthlyClosures: recruiter.monthlyClosures || "",
         references: recruiter.references || [],
+        whyYouWantToJoin: recruiter.whyYouWantToJoin || "",
+        howDidYouKnowAboutThisJob: recruiter.howDidYouKnowAboutThisJob || "",
       });
     }
   }, [recruiter]);
@@ -450,8 +478,19 @@ const EditRecruiterForm = ({ recruiter, onSave, onClose }) => {
     if (formData.motherName) {
       payload.motherName = formData.motherName;
     }
-    if (formData.medicalProblemDetails) {
+    if (
+      formData.medicalProblemDetails &&
+      formData.medicalProblemDetails.trim()
+    ) {
       payload.medicalProblemDetails = formData.medicalProblemDetails;
+    }
+    if (formData.howDidYouKnowAboutThisJob) {
+      payload.howDidYouKnowAboutThisJob = formData.howDidYouKnowAboutThisJob;
+    }
+
+    // Add whyYouWantToJoin to professional details
+    if (formData.whyYouWantToJoin) {
+      payload.whyYouWantToJoin = formData.whyYouWantToJoin;
     }
 
     // Add KYC and bank details

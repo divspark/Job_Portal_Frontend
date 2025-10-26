@@ -208,6 +208,7 @@ const ApplicationsTable = ({
                   applicationType={currentType}
                   onRevalidate={onRevalidate}
                   context="application"
+                  applicationStatus={selectedApplication.status}
                 />
               )}
             </div>

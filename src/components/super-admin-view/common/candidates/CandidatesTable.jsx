@@ -198,6 +198,7 @@ const CandidatesTable = ({
               approvalId={approvalIdForDrawer}
               context={context}
               onRevalidate={onRevalidate}
+              areApprovalBtnsVisible={context === "approvals"}
               onClose={() => setDrawerOpen(false)}
             />
           </div>

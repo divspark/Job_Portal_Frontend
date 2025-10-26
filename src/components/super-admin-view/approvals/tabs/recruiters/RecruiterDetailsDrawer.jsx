@@ -24,7 +24,9 @@ import {
   Stethoscope,
   LinkIcon,
   UserIcon,
+  Info,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const RecruiterDetailsDrawer = ({
   recruiterId,
@@ -235,7 +237,12 @@ const RecruiterDetailsDrawer = ({
             className="mt-8"
           />
 
-          <div className="self-stretch inline-flex flex-col justify-start items-start gap-6 mt-4">
+          <div
+            className={cn(
+              "self-stretch inline-flex flex-col justify-start items-start gap-6",
+              statusReason ? "mt-4" : "mt-8"
+            )}
+          >
             <div className="justify-start text-gray-900 text-xl font-semibold leading-tight">
               Personal Information
             </div>
@@ -469,6 +476,14 @@ const RecruiterDetailsDrawer = ({
                     {displayRecruiter?.monthlyClosures || "Not Specified"}
                   </div>
                 </div>
+                <div className="self-stretch py-4 border-b border-gray-200 flex flex-col lg:flex-row justify-start items-start lg:items-center gap-2 lg:gap-28">
+                  <div className="w-full lg:w-48 justify-start text-gray-500 text-sm font-normal leading-tight">
+                    Why do you want to join?
+                  </div>
+                  <div className="w-full lg:w-48 justify-start text-neutral-900 text-sm font-normal leading-tight break-words">
+                    {displayRecruiter?.whyYouWantToJoin || "Not specified"}
+                  </div>
+                </div>
               </div>
             </div>
             <div className="w-full lg:w-[48%] h-full inline-flex flex-col justify-start items-start gap-6 mt-6 lg:mt-0">
@@ -503,7 +518,7 @@ const RecruiterDetailsDrawer = ({
                   </div>
                 </div>
 
-                <div className="col-start-1 col-end-3 flex flex-col gap-[12px] p-[16px]  w-full h-[115px] rounded-[8px] border-[#CFD1E8] border-[1px]">
+                <div className="flex flex-col gap-[12px] p-[16px] w-full rounded-[8px] border-[#CFD1E8] border-[1px]">
                   <div>
                     <Stethoscope className="w-5 h-5 text-[#0D0F1C]" />
                   </div>
@@ -516,6 +531,21 @@ const RecruiterDetailsDrawer = ({
                       !displayRecruiter?.medicalProblemDetails
                         ? "None"
                         : displayRecruiter?.medicalProblemDetails}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-[12px] p-[16px] w-full rounded-[8px] border-[#CFD1E8] border-[1px]">
+                  <div>
+                    <Info className="w-5 h-5 text-[#0D0F1C]" />
+                  </div>
+                  <div className="flex flex-col gap-[12px]">
+                    <div className="font-medium text-md text-[#0D0F1C]">
+                      How did you know about this job?
+                    </div>
+                    <div className="font-normal text-base text-[#61758A]">
+                      {displayRecruiter?.howDidYouKnowAboutThisJob ||
+                        "Not specified"}
                     </div>
                   </div>
                 </div>
