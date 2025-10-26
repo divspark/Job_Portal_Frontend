@@ -46,7 +46,7 @@ const CandidatesTable = ({
     return candidate.approvalStatus || candidate.jobStatus;
   };
 
-  const colSpan = showStatusColumn ? 7 : 6;
+  const colSpan = showStatusColumn ? 8 : 7;
 
   return (
     <>
@@ -55,11 +55,12 @@ const CandidatesTable = ({
           <TableHeader className="sticky top-0 bg-white z-10 border-b">
             <TableRow>
               <TableHead className="w-[40px] font-semibold"></TableHead>
-              <TableHead className="w-[160px] font-semibold">ID</TableHead>
-              <TableHead className="w-[300px] font-semibold">
-                Candidate Name
+              <TableHead className="w-[160px] font-semibold">Id</TableHead>
+              <TableHead className="w-[250px] font-semibold">Name</TableHead>
+              <TableHead className="w-[200px] font-semibold">Email</TableHead>
+              <TableHead className="w-[180px] font-semibold">
+                Contact Number
               </TableHead>
-              <TableHead className="w-[200px] font-semibold">Skills</TableHead>
               <TableHead className="w-[140px] font-semibold">
                 Experience
               </TableHead>
@@ -97,50 +98,25 @@ const CandidatesTable = ({
                   >
                     {candidate?._id || "N/A"}
                   </TableCell>
-                  <TableCell className="w-[300px] max-w-[300px]">
-                    <div className="flex items-center gap-3">
-                      {candidate?.profilePicture ? (
-                        <img
-                          src={candidate.profilePicture}
-                          alt={`${candidate?.name} avatar`}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                          <User className="h-5 w-5 text-gray-400" />
-                        </div>
-                      )}
-                      <div className="flex flex-col min-w-0">
-                        <span
-                          className="font-medium text-gray-900 truncate"
-                          title={candidate?.name || "N/A"}
-                        >
-                          {candidate?.name || "N/A"}
-                        </span>
-                        {candidate?.roleLookingFor && (
-                          <span
-                            className="text-sm text-gray-500 truncate"
-                            title={candidate.roleLookingFor}
-                          >
-                            {candidate.roleLookingFor}
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                  <TableCell className="w-[250px] max-w-[250px]">
+                    <span
+                      className="font-medium text-gray-900"
+                      title={candidate?.name || "N/A"}
+                    >
+                      {candidate?.name || "N/A"}
+                    </span>
                   </TableCell>
                   <TableCell
                     className="w-[200px] max-w-[200px] truncate"
-                    title={
-                      Array.isArray(candidate?.skills) &&
-                      candidate.skills.length > 0
-                        ? candidate.skills.join(", ")
-                        : "N/A"
-                    }
+                    title={candidate?.email || "N/A"}
                   >
-                    {Array.isArray(candidate?.skills) &&
-                    candidate.skills.length > 0
-                      ? candidate.skills.join(", ")
-                      : "N/A"}
+                    {candidate?.email || "N/A"}
+                  </TableCell>
+                  <TableCell
+                    className="w-[180px] max-w-[180px] truncate"
+                    title={candidate?.contactNumber || "N/A"}
+                  >
+                    {candidate?.contactNumber || "N/A"}
                   </TableCell>
                   <TableCell className="w-[140px]">
                     {(candidate?.totalExperience !== undefined ||

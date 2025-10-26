@@ -140,6 +140,8 @@ const TrainingsTab = ({ context = "database" }) => {
           trainer: training.trainer?.name || "N/A",
           category: training.category || "N/A",
           duration: training.duration || "N/A",
+          company:
+            training.postedBy?.companyName || training.postedBy?.name || "N/A",
           createdAt: approval.createdAt,
           approvalStatus: approval.status,
         };

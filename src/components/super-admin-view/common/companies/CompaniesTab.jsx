@@ -67,7 +67,6 @@ const CompaniesTab = ({ context = "database" }) => {
     setCurrentPage(1);
   };
 
-  // Database context uses React Query hook
   const {
     data: databaseData,
     isLoading: databaseLoading,
@@ -88,7 +87,6 @@ const CompaniesTab = ({ context = "database" }) => {
     sortOrder: filters.sortOrder,
   });
 
-  // Approvals context uses React Query hook
   const {
     data: approvalsData,
     isLoading: approvalsLoading,
@@ -105,90 +103,26 @@ const CompaniesTab = ({ context = "database" }) => {
     sortOrder: filters.sortOrder || "desc",
   });
 
-  // Process database data
-  const processDatabaseData = (data) => {
-    const corporates = data?.data?.corporates || [];
+  // Get raw data based on context
+  const approvalsCompanies = isApprovalsContext
+    ? approvalsData?.data?.approvals || []
+    : [];
 
-    return corporates.map((company) => ({
-      ...company,
-      lastUpdated: company.updatedAt
-        ? new Date(company.updatedAt).toISOString().split("T")[0]
-        : "-",
-    }));
-  };
-
-  // Process approvals data
-  const processApprovalsData = (data) => {
-    if (!data?.data?.approvals) return { companies: [], pagination: {} };
-
-    const approvals = data.data.approvals;
-    const pagination = data.data.pagination || {};
-
-    const companies = approvals.map((approval) => {
-      const companyData = approval.data || {};
-      const basicInfo = companyData.basicInformation || {};
-      const spocInfo = companyData.spocInformation || {};
-      const address = basicInfo.address || {};
-
-      return {
-        id: approval._id,
-        companyId: companyData._id,
-        name: basicInfo.companyName || "N/A",
-        email: basicInfo.companyEmail || "N/A",
-        contact: basicInfo.companyContactNumber
-          ? `${basicInfo.companyContactNumber.countryCode} ${basicInfo.companyContactNumber.number}`
-          : "N/A",
-        industry: basicInfo.companyType || "N/A",
-        location: address.city || address.state || address.country || "-",
-        jobs: companyData.jobsPosted || "-",
-        status: approval.status || "pending",
-        approvalStatus: approval.status || "pending",
-        joinedDate: companyData.createdAt
-          ? new Date(companyData.createdAt).toISOString().split("T")[0]
-          : "N/A",
-        lastUpdated: companyData.updatedAt
-          ? new Date(companyData.updatedAt).toISOString().split("T")[0]
-          : "N/A",
-        _id: approval._id,
-        type: approval.type,
-        applicantId: approval.applicantId,
-        applicantType: approval.applicantType,
-        submittedAt: approval.submittedAt,
-        version: approval.version,
-        isActive: approval.isActive,
-        createdAt: approval.createdAt,
-        updatedAt: approval.updatedAt,
-        fullCompanyData: companyData,
-        spocName: spocInfo.fullName || "N/A",
-        spocEmail: spocInfo.email || "N/A",
-        spocContact: spocInfo.contactNumber
-          ? `${spocInfo.contactNumber.countryCode} ${spocInfo.contactNumber.number}`
-          : "N/A",
-        companyLogo: basicInfo.companyLogo || "",
-        websiteURL: basicInfo.websiteURL || "",
-      };
-    });
-
-    return { companies, pagination };
-  };
-
-  // Get computed data based on context
-  const { companies: approvalsCompanies, pagination: approvalsPagination } =
-    isApprovalsContext
-      ? processApprovalsData(approvalsData)
-      : { companies: [], pagination: {} };
+  const databaseCompanies = !isApprovalsContext
+    ? databaseData?.data?.corporates || []
+    : [];
 
   const paginatedCompanies = isApprovalsContext
     ? approvalsCompanies
-    : processDatabaseData(databaseData);
+    : databaseCompanies;
+
+  const approvalsPagination = isApprovalsContext
+    ? approvalsData?.data?.pagination || {}
+    : {};
 
   const totalPages = isApprovalsContext
     ? Math.ceil((approvalsPagination?.totalApprovals || 0) / 10)
     : databaseData?.data?.pagination?.totalPages || 0;
-
-  const filteredCount = isApprovalsContext
-    ? approvalsPagination?.totalApprovals || 0
-    : databaseData?.data?.pagination?.total || 0;
 
   const isLoading = isApprovalsContext ? approvalsLoading : databaseLoading;
   const hasError = isApprovalsContext ? approvalsError : databaseError;
@@ -281,7 +215,6 @@ const CompaniesTab = ({ context = "database" }) => {
             <CompaniesTable
               paginatedCompanies={paginatedCompanies}
               context={context}
-              handleDeleteCompany={null}
               onRevalidate={() => {}}
             />
           </div>

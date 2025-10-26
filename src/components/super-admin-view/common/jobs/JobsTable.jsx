@@ -83,7 +83,7 @@ const JobsTable = ({
   };
 
   const getJobId = (job) => {
-    return isApprovalContext ? job.id : job._id.slice(-8);
+    return isApprovalContext ? job.id : job._id;
   };
 
   const getJobTitle = (job) => {
@@ -143,6 +143,7 @@ const JobsTable = ({
                     <TableHead>Sector</TableHead>
                     <TableHead>Candidates</TableHead>
                     <TableHead>Location</TableHead>
+                    <TableHead>Experience</TableHead>
                     <TableHead>Posted Date</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-center">Actions</TableHead>
@@ -193,6 +194,7 @@ const JobsTable = ({
                           {job.candidatesCount || job.totalApplicants || "-"}
                         </TableCell>
                         <TableCell>{getLocation(job)}</TableCell>
+                        <TableCell>{getExperience(job)}</TableCell>
                         <TableCell>{formatDate(getPostedDate(job))}</TableCell>
                         <TableCell>{getStatusBadge(job.status)}</TableCell>
                         <TableCell className="text-center">
@@ -211,7 +213,7 @@ const JobsTable = ({
               ) : (
                 <TableRow className="h-full">
                   <TableCell
-                    colSpan={isApprovalContext ? 8 : 10}
+                    colSpan={isApprovalContext ? 8 : 11}
                     className="h-full"
                   >
                     <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
