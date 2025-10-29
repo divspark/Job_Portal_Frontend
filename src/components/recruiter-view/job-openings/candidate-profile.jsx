@@ -38,7 +38,7 @@ const CandidateProfile = ({ open, setOpen, applicantData }) => {
 
     // setOpen(false);
   };
-  console.log(jobSeekerProfile, "jobSeekerProfile");
+  // console.log(jobSeekerProfile, "jobSeekerProfile");
 
   return (
     <Fragment>

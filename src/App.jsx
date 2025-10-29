@@ -57,6 +57,7 @@ import TrainerEducation from "./pages/trainner-view/education-details";
 import TrainerWorking from "./pages/trainner-view/working-details";
 import TrainerCertificate from "./pages/trainner-view/certificate-details";
 import TrainerAdditional from "./pages/trainner-view/additional-details";
+import TrainerProfile from "./pages/trainner-view/profile";
 
 // Super Admin Pages
 import SuperAdminLogin from "./pages/super-admin-view/log-in";
@@ -450,6 +451,7 @@ function App() {
           <Route path="dashboard" element={<TrainerDashboard />} />
           <Route path="dashboard/:id" element={<TrainerJobDescription />} />
           <Route path="faq" element={<Faq />} />
+          <Route path="profile" element={<TrainerProfile />} />
         </Route>
 
         {/* Super Admin Auth and Setup */}
