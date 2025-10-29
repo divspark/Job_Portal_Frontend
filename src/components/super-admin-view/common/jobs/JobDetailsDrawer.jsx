@@ -155,6 +155,16 @@ const JobDetailsDrawer = ({
 
   const job = jobData.data.job;
 
+  const formatSalaryRange = (salaryRange) => {
+    if (!salaryRange) return null;
+    const { min, max, currency = "INR" } = salaryRange;
+    if (min && max) {
+      return `${currency === "INR" ? "₹" : currency} ${min} - ${max} LPA`;
+    }
+
+    return null;
+  };
+
   const renderButtons = () => {
     return (
       <ActionButtons
@@ -227,12 +237,14 @@ const JobDetailsDrawer = ({
                   <span className="text-sm">{job.experienceLevel}</span>
                 </div>
               )}
-              {job.salaryRange && (
-                <div className="flex items-center gap-2">
-                  <DollarSignIcon className="h-4 w-4" />
-                  <span className="text-sm">{job.salaryRange}</span>
-                </div>
-              )}
+
+              <div className="flex items-center gap-2">
+                <DollarSignIcon className="h-4 w-4" />
+                <span className="text-sm">
+                  {formatSalaryRange(job.salaryRange) || "-"}
+                </span>
+              </div>
+
               {job.workingHours && (
                 <div className="flex items-center gap-2">
                   <CalendarIcon className="h-4 w-4" />
@@ -335,14 +347,15 @@ const JobDetailsDrawer = ({
                   </span>
                 </li>
               )}
-              {job.salaryRange && (
-                <li className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="text-gray-700">
-                    <strong>Salary:</strong> {job.salaryRange}
-                  </span>
-                </li>
-              )}
+
+              <li className="flex items-start gap-2">
+                <span className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>
+                <span className="text-gray-700">
+                  <strong>Salary:</strong>{" "}
+                  {formatSalaryRange(job.salaryRange) || "-"}
+                </span>
+              </li>
+
               {job.workingHours && (
                 <li className="flex items-start gap-2">
                   <span className="w-2 h-2 bg-gray-400 rounded-full mt-2 flex-shrink-0"></span>

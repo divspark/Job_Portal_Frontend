@@ -27,7 +27,7 @@ export class ErrorHandler {
   }
 
   static handleMutationSuccess(data, defaultMessage) {
-    const message = data?.message || defaultMessage;
+    const message = defaultMessage || data?.message;
     const now = Date.now();
 
     if (
