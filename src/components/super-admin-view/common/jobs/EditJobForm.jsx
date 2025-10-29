@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import CommonForm from "../../../common/form";
 import ButtonComponent from "../../../common/button";
 import FieldError from "../../../common/FieldError";
-import { z } from "zod";
 import { toast } from "sonner";
 import { useGetDropdownValues } from "../../../../hooks/super-admin/useDropdowns";
 import {
@@ -119,11 +118,22 @@ const jobDetails = [
     ],
   },
   {
-    name: "salaryRange",
-    label: "Salary Range",
-    placeholder: "e.g. ₹50,000 - ₹75,000",
-    componentType: "input",
-    type: "text",
+    row: [
+      {
+        name: "minSalary",
+        label: "Min Salary (LPA)",
+        placeholder: "e.g. 4",
+        componentType: "input",
+        type: "number",
+      },
+      {
+        name: "maxSalary",
+        label: "Max Salary (LPA)",
+        placeholder: "e.g. 6",
+        componentType: "input",
+        type: "number",
+      },
+    ],
   },
 ];
 
@@ -228,7 +238,8 @@ const EditJobForm = ({ job, onClose, onSave }) => {
     officeLocation: "",
     city: "",
     state: "",
-    salaryRange: "",
+    minSalary: "",
+    maxSalary: "",
     workingHours: "",
     genderPreference: "",
     regionalLanguageRequired: false,
@@ -321,7 +332,8 @@ const EditJobForm = ({ job, onClose, onSave }) => {
         officeLocation: job.officeLocation || job.location || "",
         city: job.city || "",
         state: job.state || "",
-        salaryRange: job.salaryRange || "",
+        minSalary: job.salaryRange?.min || "",
+        maxSalary: job.salaryRange?.max || "",
         workingHours: job.workingHours || "",
         genderPreference: job.genderPreference || "",
         regionalLanguageRequired: job.regionalLanguageRequired || false,
@@ -355,6 +367,17 @@ const EditJobForm = ({ job, onClose, onSave }) => {
         ...formData,
         requiredSkills: formData.requiredSkills.map((skill) => skill.id) || [],
       };
+
+      if (formData.minSalary && formData.maxSalary) {
+        payload.salaryRange = {
+          min: parseFloat(formData.minSalary),
+          max: parseFloat(formData.maxSalary),
+          currency: "INR",
+        };
+      }
+
+      delete payload.minSalary;
+      delete payload.maxSalary;
 
       // Remove empty/undefined values to keep payload clean
       Object.keys(payload).forEach((key) => {

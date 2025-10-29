@@ -181,17 +181,12 @@ export const useApprovals = () => {
 
     console.log("Approval result:", result);
 
-    if (approvalDetailsBeforeReview) {
-      try {
-        console.log(
-          "Creating notification with details:",
-          approvalDetailsBeforeReview
-        );
-        await createNotificationForApproval(approvalDetailsBeforeReview, user);
-      } catch (error) {
-        console.error("Failed to send notification:", error);
-      }
-    }
+    console.log(
+      "Creating notification for approval:",
+      approvalDetailsBeforeReview,
+      user
+    );
+    await createNotificationForApproval(approvalDetailsBeforeReview, user);
 
     return result;
   };
