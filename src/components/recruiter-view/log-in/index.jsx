@@ -16,6 +16,13 @@ const Index = ({
     <div className="flex max-sm:flex-col max-sm:gap-[40px] justify-between p-[20px] pt-[60px] max-sm:p-[24px] max-sm:pt-[100px] w-full pb-[90px] items-center">
       <div className="w-1/2 max-sm:w-full lg:flex lg:items-center lg:justify-end lg:pr-[100px]">
         <div className="w-full max-w-[554px] bg-neutral-50 rounded-tl-[28.91px] rounded-tr-[28.91px] flex flex-col gap-[25px] p-[20px] lg:p-[47px]">
+          <div className="self-stretch inline-flex justify-start items-center gap-3">
+            <img
+              src="/ghrig_logo.png"
+              alt="GHRIG Logo"
+              className="h-auto w-40 mx-auto bg-white rounded-md px-4 py-1"
+            />
+          </div>
           <div className="flex flex-col gap-0">
             <div className="text-black text-base">WELCOME BACK</div>
             <div className="text-black text-3xl font-medium">

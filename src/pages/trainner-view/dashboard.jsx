@@ -200,7 +200,7 @@ const JobSeekerDashboard = () => {
               </div>
             </div> */}
           </div>
-          <div className="size- inline-flex justify-start items-start gap-8">
+          {/* <div className="size- inline-flex justify-start items-start gap-8">
             <div className="size- px-5 py-2.5 rounded-3xl outline-1 outline-offset-[-1px] outline-neutral-400 flex justify-center items-center gap-2.5">
               <div className="justify-start text-neutral-400 text-sm font-medium capitalize">
                 Applied Jobs
@@ -211,9 +211,9 @@ const JobSeekerDashboard = () => {
                 Saved Jobs
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="justify-start text-neutral-900 text-lg font-semibold leading-tight">
-            Recommended jobs
+            Recommended Trainings
           </div>
           {allTrainingsData?.data?.trainings?.map((item) => (
             <JobCard key={item._id} item={item} handleApply={handleApply} />
