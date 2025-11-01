@@ -2,7 +2,7 @@ import { TrainersTable } from "./index";
 import Pagination from "../../../common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
 import FilterComponent from "../../../common/filterComponent";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useGetAllTrainers } from "@/hooks/super-admin/useTrainers";
 import { useGetApprovalsTrainers } from "@/hooks/super-admin/useApprovals";
 import useApprovalsUIStore from "../../../../stores/useApprovalsUIStore";
@@ -13,6 +13,7 @@ import {
 import StatusTabs from "../../approvals/common/StatusTabs";
 import ErrorDisplay from "@/components/common/ErrorDisplay";
 import { useDebounce } from "@/hooks/common/useDebounce";
+import dayjs from "dayjs";
 
 const TrainersTab = ({
   context = "database", // "database" or "approvals"
@@ -128,79 +129,59 @@ const TrainersTab = ({
     enabled: context === "approvals",
   });
 
-  // Process approvals data
-  const processApprovalsData = (data) => {
-    if (!data?.data?.approvals) return { trainers: [], pagination: {} };
-
-    const approvals = data.data.approvals;
-    const pagination = data.data.pagination || {};
-
-    const trainers = approvals.map((approval) => {
-      const trainer = approval.data || {};
-      return {
-        id: approval._id,
-        trainerId: trainer._id,
-        name:
-          trainer.firstName && trainer.lastName
-            ? `${trainer.firstName} ${trainer.lastName}`
-            : trainer.name || "N/A",
-        email: trainer.email || "N/A",
-        contact: trainer.phoneNumber || "N/A",
-        skills: trainer.skills?.length > 0 ? trainer.skills.join(", ") : "N/A",
-        industry: trainer.industry || "N/A",
-        industryExperience: trainer.industryExperience || "N/A",
-        expertiseAreas: trainer.expertiseAreas || "N/A",
-        totalYearOfExperience:
-          trainer.totalYearsExperience || trainer.totalYearOfExperience,
-        experience: trainer.experience || "N/A",
-        location: trainer.location || "N/A",
-        status: approval.status || "pending",
-        rating: trainer.rating || 0,
-        totalStudents: trainer.totalStudents || 0,
-        coursesCompleted: trainer.coursesCompleted || 0,
-        joinedDate: approval.createdAt
-          ? new Date(approval.createdAt).toISOString().split("T")[0]
-          : "N/A",
-        lastUpdated: approval.updatedAt
-          ? new Date(approval.updatedAt).toISOString().split("T")[0]
-          : "N/A",
-        _id: approval._id,
-        phone: trainer.phoneNumber,
-        createdAt: approval.createdAt,
-        updatedAt: approval.updatedAt,
-        approvalStatus: approval.status,
-        applicantId: approval.applicantId,
-        applicantType: approval.applicantType,
-        submittedAt: approval.submittedAt,
-        version: approval.version,
-        isActive: approval.isActive,
-        firstName: trainer.firstName,
-        lastName: trainer.lastName,
-        profileImage: trainer.profileImage,
-      };
-    });
-
-    return { trainers, pagination };
-  };
-
   // Get data based on context
-  const { trainers: approvalsTrainers, pagination: approvalsPagination } =
-    context === "approvals"
-      ? processApprovalsData(approvalsData)
-      : { trainers: [], pagination: {} };
+  const data = context === "approvals" ? approvalsData : databaseData;
 
-  const trainersData =
-    context === "database"
-      ? databaseData?.data?.trainers || []
-      : approvalsTrainers;
+  // Process the data based on context
+  const paginatedTrainers = useMemo(() => {
+    return context === "approvals"
+      ? data?.data?.approvals?.map((approval) => {
+          return {
+            id: approval?.data?._id,
+            approvalId: approval?._id,
+            name: approval?.data?.name || "-",
+            email: approval?.data?.email || "-",
+            contact: approval?.data?.phoneNumber || "-",
+            phone: approval?.data?.phoneNumber,
+            expertiseAreas:
+              approval?.data?.expertiseAreas
+                ?.map((item) => item?.skillName)
+                .join(", ") || "-",
+            totalYearOfExperience: approval?.data?.totalYearsExperience || "-",
+            status: approval.status || "-",
+            approvalStatus: approval.status || "-",
+            createdAt: approval.createdAt,
+            updatedAt: approval.updatedAt,
+            submittedAt: approval.submittedAt,
+            profileImage: approval?.data?.profileImage,
+          };
+        }) || []
+      : data?.data?.trainers?.map((trainer) => ({
+          id: trainer?._id,
+          name: trainer?.name || "-",
+          email: trainer.email || "-",
+          contact: trainer.phoneNumber || trainer.contact || "-",
+          phone: trainer?.phoneNumber || trainer?.phone,
+          expertiseAreas:
+            trainer?.expertiseAreas
+              ?.map((item) => item?.skillName)
+              .join(", ") || "-",
+          totalYearOfExperience:
+            trainer?.totalYearsExperience ||
+            trainer.totalYearOfExperience ||
+            "-",
+          updatedAt: trainer.updatedAt,
+          profileImage: trainer.profileImage,
+        })) || [];
+  }, [context, data]);
 
   const totalTrainers =
-    context === "database"
-      ? databaseData?.data?.pagination?.totalTrainers || 0
-      : approvalsPagination?.totalApprovals || 0;
+    context === "approvals"
+      ? data?.data?.pagination?.totalApprovals || paginatedTrainers.length
+      : data?.data?.pagination?.totalTrainers || 0;
 
   const isLoading = context === "database" ? databaseLoading : approvalsLoading;
-  const apiError = context === "database" ? databaseError : approvalsError;
+  const error = context === "database" ? databaseError : approvalsError;
 
   // Clear all filters
   const clearAllFilters = () => {
@@ -238,29 +219,11 @@ const TrainersTab = ({
   };
 
   // Calculate pagination
-  const totalPages = Math.ceil(totalTrainers / itemsPerPage);
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Trainers</h1>
-        <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Loading trainers...</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (apiError) {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Trainers</h1>
-        <ErrorDisplay error={apiError} title="Error loading trainers" />
-      </div>
-    );
-  }
+  const totalPages =
+    context === "approvals"
+      ? data?.data?.pagination?.totalPages ||
+        Math.ceil(totalTrainers / itemsPerPage)
+      : data?.data?.pagination?.totalPages || 0;
 
   return (
     <div className="h-full grid grid-rows-[auto,1fr] gap-6">
@@ -274,68 +237,78 @@ const TrainersTab = ({
           />
         )}
       </div>
+      {error && <ErrorDisplay error={error} title="Error loading trainers" />}
 
       {/* Content - filters + table using flex layout */}
-      <div className="flex gap-6 min-h-0 min-w-0">
-        {/* Filters - left sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <div className="bg-white rounded-lg border p-4">
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <div className="text-lg text-[#171923] font-semibold">
-                  Filters
+      {!error && (
+        <div className="flex gap-6 min-h-0 min-w-0">
+          {/* Filters - left sidebar */}
+          <div className="w-64 flex-shrink-0">
+            <div className="bg-white rounded-lg border p-4">
+              <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                  <div className="text-lg text-[#171923] font-semibold">
+                    Filters
+                  </div>
+                  <div
+                    onClick={clearAllFilters}
+                    className="text-[#3F93FF] text-sm font-medium cursor-pointer hover:underline"
+                  >
+                    Clear All
+                  </div>
                 </div>
-                <div
-                  onClick={clearAllFilters}
-                  className="text-[#3F93FF] text-sm font-medium cursor-pointer hover:underline"
-                >
-                  Clear All
-                </div>
+                <FilterComponent
+                  formControls={getFilterConfig()}
+                  formData={filters}
+                  setFormData={setFormData}
+                />
               </div>
-              <FilterComponent
-                formControls={getFilterConfig()}
-                formData={filters}
-                setFormData={setFormData}
+            </div>
+          </div>
+
+          {/* Main content - right area */}
+          <div className="flex-1 min-w-0 flex flex-col gap-6 min-h-0">
+            <div className="w-full">
+              <SearchComponent
+                placeholder={
+                  context === "database"
+                    ? "Search by name or email"
+                    : "Search by company, name, email, title"
+                }
+                value={searchText}
+                handleSearch={setSearchText}
               />
+            </div>
+            <div className="flex-1 min-w-0 overflow-x-auto">
+              {isLoading && (
+                <div className="flex justify-center items-center py-8">
+                  <div className="text-gray-500">Loading trainers...</div>
+                </div>
+              )}
+              {!isLoading && (
+                <TrainersTable
+                  onRevalidate={refetch}
+                  paginatedTrainers={paginatedTrainers}
+                  showStatusColumn={showStatusColumn || context === "approvals"}
+                  areApprovalBtnsVisible={
+                    areApprovalBtnsVisible || context === "approvals"
+                  }
+                  context={context}
+                />
+              )}
+            </div>
+            <div className="flex justify-center">
+              {!isLoading && totalPages > 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              )}
             </div>
           </div>
         </div>
-
-        {/* Main content - right area */}
-        <div className="flex-1 min-w-0 flex flex-col gap-6 min-h-0">
-          <div className="w-full">
-            <SearchComponent
-              placeholder={
-                context === "database"
-                  ? "Search by name or email"
-                  : "Search by company, name, email, title"
-              }
-              value={searchText}
-              handleSearch={setSearchText}
-            />
-          </div>
-          <div className="flex-1 min-w-0 overflow-x-auto">
-            <TrainersTable
-              onRevalidate={refetch}
-              paginatedTrainers={trainersData}
-              showStatusColumn={showStatusColumn || context === "approvals"}
-              areApprovalBtnsVisible={
-                areApprovalBtnsVisible || context === "approvals"
-              }
-              context={context}
-            />
-          </div>
-          <div className="flex justify-center">
-            {totalPages > 1 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={setCurrentPage}
-              />
-            )}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

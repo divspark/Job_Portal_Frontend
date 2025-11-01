@@ -3,6 +3,7 @@ class TokenService {
     this.TOKEN_KEY = "token";
     this.USER_ROLE_KEY = "userRole";
     this.PROFILE_KEY = "profile";
+    this.USER_ID_KEY = "userId";
   }
 
   getToken() {
@@ -42,10 +43,23 @@ class TokenService {
     sessionStorage.removeItem(this.PROFILE_KEY);
   }
 
+  getUserId() {
+    return sessionStorage.getItem(this.USER_ID_KEY);
+  }
+
+  setUserId(userId) {
+    sessionStorage.setItem(this.USER_ID_KEY, userId);
+  }
+
+  removeUserId() {
+    sessionStorage.removeItem(this.USER_ID_KEY);
+  }
+
   clearAll() {
     this.removeToken();
     this.removeUserRole();
     this.removeProfile();
+    this.removeUserId();
   }
 
   isAuthenticated() {

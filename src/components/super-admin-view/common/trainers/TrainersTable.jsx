@@ -46,43 +46,45 @@ const TrainersTable = ({
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[40px] font-semibold"></TableHead>
-                  <TableHead className="w-[160px] font-semibold">ID</TableHead>
-                  <TableHead className="w-[280px] font-semibold">
+                  <TableHead className="min-w-[160px] max-w-[160px] font-semibold">
+                    ID
+                  </TableHead>
+                  <TableHead className="min-w-[280px] max-w-[280px] font-semibold">
                     Name
                   </TableHead>
-                  <TableHead className="w-[200px] font-semibold">
+                  <TableHead className="min-w-[200px] max-w-[200px] font-semibold">
                     Email
                   </TableHead>
-                  <TableHead className="w-[180px] font-semibold">
+                  <TableHead className="min-w-[180px] max-w-[180px] font-semibold">
                     Contact Number
                   </TableHead>
-                  <TableHead className="w-[180px] font-semibold">
+                  <TableHead className="min-w-[180px] max-w-[180px] font-semibold">
                     Sector
                   </TableHead>
-                  <TableHead className="w-[120px] font-semibold">
+                  <TableHead className="min-w-[120px] max-w-[120px] font-semibold">
                     Experience
                   </TableHead>
                   {context === "approvals" ? (
-                    <TableHead className="w-[140px] font-semibold">
+                    <TableHead className="min-w-[140px] max-w-[140px] font-semibold">
                       Posted Date
                     </TableHead>
                   ) : (
-                    <TableHead className="w-[140px] font-semibold">
+                    <TableHead className="min-w-[140px] max-w-[140px] font-semibold">
                       Last updated
                     </TableHead>
                   )}
                   {showStatusColumn && (
-                    <TableHead className="w-[120px] font-semibold">
+                    <TableHead className="min-w-[120px] max-w-[120px] font-semibold">
                       Status
                     </TableHead>
                   )}
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedTrainers.length > 0 ? (
+                {paginatedTrainers && paginatedTrainers.length > 0 ? (
                   paginatedTrainers.map((trainer) => (
                     <TableRow
-                      key={trainer._id}
+                      key={trainer.id}
                       onClick={(e) => handleRowClick(trainer, e)}
                       className="cursor-pointer hover:bg-gray-50 transition-colors"
                     >
@@ -90,94 +92,65 @@ const TrainersTable = ({
                         <input
                           type="radio"
                           name="selectTrainer"
-                          checked={selectedTrainerId === trainer._id}
-                          onChange={() => handleSelectTrainer(trainer._id)}
-                          aria-label={`Select trainer ${trainer.name || "N/A"}`}
+                          checked={selectedTrainerId === trainer.id}
+                          onChange={() => handleSelectTrainer(trainer.id)}
+                          aria-label={`Select trainer ${trainer.name}`}
                           className="w-4 h-4 text-primary-purple border-2 border-gray-300 focus:ring-2 focus:ring-primary-purple/50 focus:ring-offset-0 cursor-pointer appearance-none rounded-full checked:bg-primary-purple checked:border-primary-purple relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:bg-white before:rounded-full before:opacity-0 checked:before:opacity-100"
                         />
                       </TableCell>
-                      <TableCell
-                        className="w-[160px] max-w-[160px] truncate"
-                        title={trainer._id}
-                      >
-                        {trainer._id}
+                      <TableCell className="max-w-[160px] truncate">
+                        {trainer.id}
                       </TableCell>
-                      <TableCell className="w-[280px] max-w-[280px]">
-                        <div className="flex items-center gap-3">
+                      <TableCell className="max-w-[280px]">
+                        <div className="flex items-center gap-3 min-w-0">
                           {trainer.profileImage ? (
                             <img
                               src={trainer.profileImage}
-                              alt={`${trainer.name || "Trainer"} avatar`}
-                              className="w-10 h-10 rounded-full object-cover"
+                              alt={`${trainer.name} avatar`}
+                              className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
                               <User className="h-5 w-5 text-gray-400" />
                             </div>
                           )}
                           <div className="flex flex-col min-w-0">
-                            <span
-                              className="font-medium text-gray-900 truncate"
-                              title={trainer.name || "N/A"}
-                            >
-                              {trainer.name || "N/A"}
+                            <span className="font-medium text-gray-900 truncate">
+                              {trainer.name}
                             </span>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell
-                        className="w-[200px] max-w-[200px] truncate"
-                        title={trainer.email || "N/A"}
-                      >
-                        {trainer.email || "N/A"}
+                      <TableCell className="text-gray-700 max-w-[200px] truncate">
+                        {trainer.email}
                       </TableCell>
-                      <TableCell
-                        className="w-[180px] max-w-[180px] truncate"
-                        title={trainer.contact || trainer.phone || "N/A"}
-                      >
-                        {trainer.contact || trainer.phone || "N/A"}
+                      <TableCell className="text-gray-700 max-w-[180px] truncate">
+                        {trainer.contact}
                       </TableCell>
-                      <TableCell
-                        className="w-[180px] max-w-[180px] truncate"
-                        title={
-                          context === "approvals"
-                            ? trainer?.data?.expertiseAreas
-                                ?.map((item) => item._id)
-                                .join(", ")
-                            : trainer?.expertiseAreas
-                                ?.map((item) => item._id)
-                                .join(", ")
-                        }
-                      >
-                        {context === "approvals"
-                          ? trainer?.data?.expertiseAreas
-                              ?.map((item) => item._id)
-                              .join(", ")
-                          : trainer?.expertiseAreas
-                              ?.map((item) => item._id)
-                              .join(", ")}
+                      <TableCell className="text-gray-700 max-w-[180px] truncate">
+                        {trainer.expertiseAreas}
                       </TableCell>
-                      <TableCell className="w-[120px]">
-                        {trainer.totalYearOfExperience || ""}
+                      <TableCell className="text-gray-700 max-w-[120px] truncate">
+                        {trainer.totalYearOfExperience}
                       </TableCell>
                       {context === "approvals" ? (
-                        <TableCell className="w-[140px]">
+                        <TableCell className="text-gray-700 max-w-[140px] truncate">
                           {trainer.submittedAt
                             ? getRelativeTime(trainer.submittedAt)
                             : trainer.createdAt
                             ? getRelativeTime(trainer.createdAt)
-                            : "N/A"}
+                            : "-"}
                         </TableCell>
                       ) : (
-                        <TableCell className="w-[140px]">
-                          {getRelativeTime(trainer.updatedAt)}
+                        <TableCell className="text-gray-700 max-w-[140px] truncate">
+                          {trainer.updatedAt
+                            ? getRelativeTime(trainer.updatedAt)
+                            : "-"}
                         </TableCell>
                       )}
                       {showStatusColumn && (
-                        <TableCell className="w-[120px]">
-                          <AdminStatusBadge
-                            status={trainer.approvalStatus || trainer.status}
-                          />
+                        <TableCell className="max-w-[120px]">
+                          <AdminStatusBadge status={trainer.status} />
                         </TableCell>
                       )}
                     </TableRow>
@@ -220,17 +193,15 @@ const TrainersTable = ({
           >
             <TrainerDetailsDrawer
               context={context}
-              approvalId={context === "approvals" ? selectedTrainer?.id : null}
-              approvalStatus={
+              approvalId={
                 context === "approvals"
-                  ? selectedTrainer?.approvalStatus || selectedTrainer?.status
+                  ? selectedTrainer?.approvalId
                   : undefined
               }
-              trainerId={
-                context === "approvals"
-                  ? selectedTrainer?.trainerId
-                  : selectedTrainer?._id
+              approvalStatus={
+                context === "approvals" ? selectedTrainer?.status : undefined
               }
+              trainerId={selectedTrainer?.id}
               onClose={() => setDrawerOpen(false)}
               onRevalidate={onRevalidate}
             />
