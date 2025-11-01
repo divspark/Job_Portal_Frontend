@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { DownloadIcon, YourImageIcon, YourPdfIcon } from "@/utils/icon";
 import { Link } from "react-router-dom";
 import {
@@ -6,7 +5,6 @@ import {
   useGetApprovalDetails,
 } from "@/hooks/super-admin/useApprovals";
 import { useRecruiterDetails } from "@/hooks/super-admin/useRecruiterDetails";
-import AdminStatusBadge from "@/components/super-admin-view/shared/AdminStatusBadge";
 import RejectionReasonModal from "@/components/common/RejectionReasonModal";
 import HoldReasonModal from "@/components/common/HoldReasonModal";
 import EditRecruiterDrawer from "../../../common/recruiters/EditRecruiterDrawer";
@@ -19,7 +17,6 @@ import {
   User,
   Phone,
   MapPin,
-  GraduationCap,
   Briefcase,
   Stethoscope,
   LinkIcon,
@@ -27,6 +24,7 @@ import {
   Info,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { createNotification } from "@/api/super-admin/notifications";
 
 const RecruiterDetailsDrawer = ({
   recruiterId,
@@ -71,6 +69,30 @@ const RecruiterDetailsDrawer = ({
   const handleApprove = async () => {
     try {
       await approveApplication(approvalId);
+      try {
+        const senderId = sessionStorage.getItem("userId");
+        const messageId =
+          typeof crypto !== "undefined" && crypto?.randomUUID
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+        if (senderId) {
+          await createNotification({
+            messageId,
+            messageContent:
+              "Congratulations !!! Your gHRig account is Live now",
+            senderId,
+            senderType: "system",
+            notificationType: "application",
+            category: "approval",
+            priority: "medium",
+            metadata: { applicationId: approvalId },
+          });
+        }
+      } catch (notifyErr) {
+        console.warn("Notification creation failed:", notifyErr);
+      }
+
       if (onRevalidate) {
         await onRevalidate();
       }

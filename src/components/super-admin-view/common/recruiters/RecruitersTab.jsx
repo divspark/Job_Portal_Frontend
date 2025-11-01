@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import RecruitersTable from "./RecruitersTable";
 import Pagination from "../../../common/pagination";
 import SearchComponent from "@/components/common/searchComponent";
@@ -9,6 +9,7 @@ import { useRecruiters } from "../../../../hooks/super-admin/useRecruiters";
 import StatusTabs from "../../approvals/common/StatusTabs";
 import ErrorDisplay from "@/components/common/ErrorDisplay";
 import { useDebounce } from "@/hooks/common/useDebounce";
+import dayjs from "dayjs";
 
 const RecruitersTab = ({ context = "database" }) => {
   const [activeStatus, setActiveStatus] = useState("pending");
@@ -98,56 +99,51 @@ const RecruitersTab = ({ context = "database" }) => {
     context === "approvals" ? approvalsQuery : databaseQuery;
 
   // Process the data based on context
-  const paginatedRecruiters =
-    context === "approvals"
-      ? data?.data?.approvals?.map((approval) => {
-          const recruiter = approval.data || {};
-          const applicantDetails = approval.applicantDetails || {};
-          return {
-            id: approval._id,
-            recruiterId: recruiter._id,
-            name: applicantDetails?.name || "N/A",
-            email: applicantDetails?.email || "N/A",
-            contact: recruiter.phone
-              ? `${recruiter.phone.countryCode} ${recruiter.phone.number}`
-              : "N/A",
-            company: recruiter.company || "N/A",
-            designation: recruiter.designation || "N/A",
-            industry: recruiter.industry || "N/A",
-            location: recruiter.currentAddress?.city || "N/A",
-            jobStatus: approval.status || "pending",
-            candidatesCount: recruiter.candidatesCount || 0,
-            postedDate: approval.createdAt
-              ? new Date(approval.createdAt).toISOString().split("T")[0]
-              : "N/A",
-            lastUpdated: approval.updatedAt
-              ? new Date(approval.updatedAt).toISOString().split("T")[0]
-              : "N/A",
-            _id: approval._id,
-            phone: recruiter.phone,
-            createdAt: approval.createdAt,
-            updatedAt: approval.updatedAt,
-            approvalStatus: approval.status,
-            applicantId: approval.applicantId,
-            applicantType: approval.applicantType,
-            submittedAt: approval.submittedAt,
-            version: approval.version,
-            isActive: approval.isActive,
-            currentAddress: recruiter.currentAddress,
-            resume: recruiter.resume,
-            sectorSpecialization: recruiter.sectorSpecialization,
-            experienceLevel: recruiter.experienceLevel,
-            isVerified: recruiter.isVerified,
-            signupProgress: recruiter.signupProgress,
-            completedStages: recruiter.completedStages,
-            currentStage: recruiter.currentStage,
-            status: recruiter.status,
-            references: recruiter.references,
-            kycDetails: recruiter.kycDetails,
-            profileImage: applicantDetails?.profileImage,
-          };
-        }) || []
-      : data?.data?.recruiters || [];
+  const paginatedRecruiters = useMemo(() => {
+    return context === "approvals"
+      ? data?.data?.approvals?.map((approval) => ({
+          id: approval?.applicantId,
+          name: approval?.applicantDetails?.name || "-",
+          email: approval?.applicantDetails?.email || "-",
+          contact:
+            approval?.applicantDetails?.phone?.countryCode &&
+            approval?.applicantDetails?.phone?.number,
+          company: approval?.applicantDetails?.company || "-",
+          sector:
+            approval?.data?.sectorSpecialization
+              ?.map((sector) => sector.name)
+              .join(", ") || "-",
+          expertise: approval?.data?.experienceLevel?.join(", ") || "-",
+          status: approval?.status || "-",
+          postedDate: approval?.createdAt
+            ? dayjs(approval?.createdAt).format("DD/MM/YYYY")
+            : "-",
+          lastUpdated: approval?.updatedAt
+            ? dayjs(approval?.updatedAt).format("DD/MM/YYYY")
+            : "-",
+          candidatesCount: approval?.data?.candidatesCount || 0,
+          profileImage: approval?.applicantDetails?.profileImage,
+        }))
+      : data?.data?.recruiters?.map((recruiter) => ({
+          id: recruiter._id,
+          name: recruiter.name || "-",
+          email: recruiter.email || "-",
+          profileImage: recruiter?.profileImage,
+          totalCandidates: recruiter?.totalCandidates ?? "-",
+          contact: recruiter?.phone
+            ? `${recruiter.phone?.countryCode} ${recruiter.phone?.number}`
+            : "-",
+          company: recruiter.company || "-",
+          sector:
+            recruiter?.sectorSpecialization
+              ?.map((sector) => sector.name)
+              .join(", ") || "-",
+          expertise: recruiter?.experienceLevel?.join(", ") || "-",
+          lastUpdated: recruiter?.updatedAt
+            ? dayjs(recruiter?.updatedAt).format("DD/MM/YYYY")
+            : "-",
+        }));
+  }, [context, data]);
 
   const totalCount =
     context === "approvals"
