@@ -134,14 +134,16 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-gray-900">Main Dashboard</h1>
           <div className="flex gap-6">
             <Link
-              to={"/corporate/job-posting"}
+              to={user?.status === "active" ? "/corporate/job-posting" : ""}
               className="cursor-pointer px-6 py-3 bg-gray-900 text-base text-white rounded-lg flex items-center gap-2 font-semibold hover:bg-gray-800"
             >
               <PostJobIcon />
               Post a New Job
             </Link>
             <Link
-              to={"/corporate/trainning-posting"}
+              to={
+                user?.status === "active" ? "/corporate/training-posting" : ""
+              }
               className="cursor-pointer px-6 py-3 bg-gray-900 text-base text-white rounded-lg flex items-center gap-2 font-semibold hover:bg-gray-800"
             >
               <PostTrainingIcon />

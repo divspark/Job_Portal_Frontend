@@ -8,13 +8,18 @@ import {
 import { timeAgo } from "@/utils/commonFunctions";
 import { CalenderIcon, ClockIcon, LocationIcon } from "@/utils/icon";
 import { BookmarkIcon, IndianRupeeIcon } from "lucide-react";
+import useAuthStore from "@/stores/useAuthStore";
+import { toast } from "sonner";
 
 const TrainerJobDescription = () => {
   const { id } = useParams();
+  const { user } = useAuthStore();
   const { data: jobData } = useGetTrainingById(id);
   const { mutate: applyForTraining } = useApplyForTraining();
 
   const handleApply = (e, trainingId) => {
+    if (user?.status !== "active")
+      return toast.error("Your account is not active.");
     e.preventDefault();
     e.stopPropagation();
     applyForTraining({

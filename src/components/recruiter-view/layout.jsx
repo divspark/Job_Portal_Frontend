@@ -69,9 +69,27 @@ const dashboardMenuCorporate = [
     icon: <Slate2 className="h-[20px] w-[20px]" />,
   },
 ];
+const dashboardMenuTrainer = [
+  {
+    name: "Recommended",
+    link: "/trainer/dashboard",
+    icon: <Cubed className="h-[20px] w-[20px]" />,
+  },
+  {
+    name: "Saved Trainings",
+    link: "/trainer/saved-trainings",
+    icon: <Bag className="h-[20px] w-[20px]" />,
+  },
+  {
+    name: "Applied Trainings",
+    link: "/trainer/applied-trainings",
+    icon: <Bag className="h-[20px] w-[20px]" />,
+  },
+];
 const dashboardMenus = {
   recruiter: dashboardMenuRecruiter,
   corporate: dashboardMenuCorporate,
+  trainer: dashboardMenuTrainer,
 };
 
 const Layout = () => {
@@ -92,14 +110,12 @@ const Layout = () => {
         <aside className="fixed top-[18px] left-[19px] hidden w-[290px] bg-[#060606] lg:flex flex-col overflow-hidden rounded-[16px]">
           <div className="relative h-[90vh] w-full">
             <div className="flex-1 px-[18px] py-[24px] h-full flex flex-col gap-[35px] overflow-y-auto scrollbar-hide scroll-smooth">
-              <div className="self-stretch pl-3 inline-flex justify-start items-center gap-7">
-                <div className="h-[46px] w-[100px] ">
-                  <img
-                    src="/ghrig_logo.png"
-                    alt="ghrig logo"
-                    className="object-cover w-full h-full"
-                  />
-                </div>
+              <div className="self-stretch inline-flex justify-start items-center gap-3">
+                <img
+                  src="/ghrig_logo.png"
+                  alt="GHRIG Logo"
+                  className="h-auto w-40 mx-auto bg-white rounded-md px-4 py-1"
+                />
               </div>
               {/* Profile Card */}
               <Link

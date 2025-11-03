@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import SearchComponent from "../../common/searchComponent";
 import FilterComponent from "../../common/filterComponent";
 import { CandidatesFilters } from "../../../config";
+import useAuthStore from "@/stores/useAuthStore";
 
 const Index = ({
   applicants,
@@ -15,6 +16,7 @@ const Index = ({
   handleSearch,
   ClearAll,
 }) => {
+  const { user } = useAuthStore();
   const buttonName = localStorage.getItem("seekerID")
     ? "Update Candidate"
     : "Create Candidate";
@@ -79,7 +81,11 @@ const Index = ({
         <div className="w-full p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-offset-[-1px] outline-zinc-300 inline-flex flex-col justify-start items-start gap-4 overflow-hidden">
           <div className="flex items-center justify-between w-full">
             <Link
-              to="/recruiter/candidates/candidate-create"
+              to={
+                user?.status !== "active"
+                  ? ""
+                  : "/recruiter/candidates/candidate-create"
+              }
               className="px-5 py-4 bg-gray-900 rounded-3xl inline-flex justify-center items-center gap-2.5"
             >
               <div className="justify-start text-white text-sm font-semibold leading-none">
