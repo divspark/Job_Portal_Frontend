@@ -135,6 +135,13 @@ const jobDetails = [
       },
     ],
   },
+  {
+    name: "numberOfOpenings",
+    label: "Number of Openings",
+    placeholder: "e.g. 5",
+    componentType: "input",
+    type: "number",
+  },
 ];
 
 const jobAdditionalInfo = [
@@ -240,6 +247,7 @@ const EditJobForm = ({ job, onClose, onSave }) => {
     state: "",
     minSalary: "",
     maxSalary: "",
+    numberOfOpenings: "",
     workingHours: "",
     genderPreference: "",
     regionalLanguageRequired: false,
@@ -334,6 +342,7 @@ const EditJobForm = ({ job, onClose, onSave }) => {
         state: job.state || "",
         minSalary: job.salaryRange?.min || "",
         maxSalary: job.salaryRange?.max || "",
+        numberOfOpenings: job.numberOfOpenings || "",
         workingHours: job.workingHours || "",
         genderPreference: job.genderPreference || "",
         regionalLanguageRequired: job.regionalLanguageRequired || false,
@@ -378,6 +387,10 @@ const EditJobForm = ({ job, onClose, onSave }) => {
 
       delete payload.minSalary;
       delete payload.maxSalary;
+
+      if (formData.numberOfOpenings !== "" && formData.numberOfOpenings !== undefined) {
+        payload.numberOfOpenings = parseInt(formData.numberOfOpenings, 10);
+      }
 
       // Remove empty/undefined values to keep payload clean
       Object.keys(payload).forEach((key) => {

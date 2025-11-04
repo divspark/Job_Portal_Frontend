@@ -120,117 +120,115 @@ const JobsTable = ({
 
   return (
     <>
-      <div className="bg-white rounded-lg border overflow-hidden h-full flex flex-col">
-        <div className="w-full overflow-x-auto flex-1">
-          <Table className="h-full min-w-[1240px] w-full">
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead className="text-center w-12">Select</TableHead>
-                <TableHead>ID</TableHead>
-                {isApprovalContext ? (
-                  <>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>No of positions</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Posted Date</TableHead>
-                    <TableHead>Status</TableHead>
-                  </>
-                ) : (
-                  <>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Company</TableHead>
-                    <TableHead>Sector</TableHead>
-                    <TableHead>Candidates</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Experience</TableHead>
-                    <TableHead>Posted Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-center">Actions</TableHead>
-                  </>
-                )}
-              </TableRow>
-            </TableHeader>
-            <TableBody className="h-full">
-              {paginatedJobs.length > 0 ? (
-                paginatedJobs.map((job) => (
-                  <TableRow
-                    key={job._id || job.id}
-                    onClick={(e) => handleRowClick(job, e)}
-                    className="cursor-pointer hover:bg-gray-50 transition-colors"
-                  >
-                    <TableCell className="text-center">
-                      <input
-                        type="radio"
-                        name="selectJob"
-                        checked={selectedJobId === (job._id || job.id)}
-                        onChange={() => handleSelectJob(job._id || job.id)}
-                        aria-label={`Select job ${getJobTitle(job)}`}
-                        className="w-4 h-4 text-primary-purple border-2 border-gray-300 focus:ring-2 focus:ring-primary-purple/50 focus:ring-offset-0 cursor-pointer appearance-none rounded-full checked:bg-primary-purple checked:border-primary-purple relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:bg-white before:rounded-full before:opacity-0 checked:before:opacity-100"
-                      />
-                    </TableCell>
-                    <TableCell>{getJobId(job)}</TableCell>
-                    {isApprovalContext ? (
-                      <>
-                        <TableCell className="font-medium">
-                          {getJobTitle(job)}
-                        </TableCell>
-                        <TableCell>{getCompany(job)}</TableCell>
-                        <TableCell>{getNoOfPositions(job)}</TableCell>
-                        <TableCell>{getLocation(job)}</TableCell>
-                        <TableCell>{formatDate(getPostedDate(job))}</TableCell>
-                        <TableCell>
-                          <AdminStatusBadge status={job.approvalStatus} />
-                        </TableCell>
-                      </>
-                    ) : (
-                      <>
-                        <TableCell className="font-medium">
-                          {getJobTitle(job)}
-                        </TableCell>
-                        <TableCell>{getCompany(job)}</TableCell>
-                        <TableCell>{getSector(job)}</TableCell>
-                        <TableCell>
-                          {job.candidatesCount || job.totalApplicants || "-"}
-                        </TableCell>
-                        <TableCell>{getLocation(job)}</TableCell>
-                        <TableCell>{getExperience(job)}</TableCell>
-                        <TableCell>{formatDate(getPostedDate(job))}</TableCell>
-                        <TableCell>{getStatusBadge(job.status)}</TableCell>
-                        <TableCell className="text-center">
-                          <button
-                            onClick={(e) => handleViewDetails(job, e)}
-                            className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
-                          >
-                            View Details
-                            <MoveUpRightIcon className="w-3 h-3" />
-                          </button>
-                        </TableCell>
-                      </>
-                    )}
-                  </TableRow>
-                ))
+      <div className="bg-white rounded-lg border overflow-x-auto">
+        <Table className="min-w-[1240px] w-full">
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead className="text-center w-12">Select</TableHead>
+              <TableHead>ID</TableHead>
+              {isApprovalContext ? (
+                <>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Company</TableHead>
+                  <TableHead>No of positions</TableHead>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Posted Date</TableHead>
+                  <TableHead>Status</TableHead>
+                </>
               ) : (
-                <TableRow className="h-full">
-                  <TableCell
-                    colSpan={isApprovalContext ? 8 : 11}
-                    className="h-full"
-                  >
-                    <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
-                      <Briefcase className="h-12 w-12 text-gray-400 mb-4" />
-                      <p className="text-gray-500 text-lg font-medium">
-                        No jobs found
-                      </p>
-                      <p className="text-gray-400 text-sm">
-                        Try adjusting your search or filter criteria
-                      </p>
-                    </div>
-                  </TableCell>
-                </TableRow>
+                <>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Company</TableHead>
+                  <TableHead>Sector</TableHead>
+                  <TableHead>Candidates</TableHead>
+                  <TableHead>Location</TableHead>
+                  <TableHead>Experience</TableHead>
+                  <TableHead>Posted Date</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-center">Actions</TableHead>
+                </>
               )}
-            </TableBody>
-          </Table>
-        </div>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedJobs.length > 0 ? (
+              paginatedJobs.map((job) => (
+                <TableRow
+                  key={job._id || job.id}
+                  onClick={(e) => handleRowClick(job, e)}
+                  className="cursor-pointer hover:bg-gray-50 transition-colors"
+                >
+                  <TableCell className="text-center">
+                    <input
+                      type="radio"
+                      name="selectJob"
+                      checked={selectedJobId === (job._id || job.id)}
+                      onChange={() => handleSelectJob(job._id || job.id)}
+                      aria-label={`Select job ${getJobTitle(job)}`}
+                      className="w-4 h-4 text-primary-purple border-2 border-gray-300 focus:ring-2 focus:ring-primary-purple/50 focus:ring-offset-0 cursor-pointer appearance-none rounded-full checked:bg-primary-purple checked:border-primary-purple relative before:content-[''] before:absolute before:top-1/2 before:left-1/2 before:transform before:-translate-x-1/2 before:-translate-y-1/2 before:w-2 before:h-2 before:bg-white before:rounded-full before:opacity-0 checked:before:opacity-100"
+                    />
+                  </TableCell>
+                  <TableCell>{getJobId(job)}</TableCell>
+                  {isApprovalContext ? (
+                    <>
+                      <TableCell className="font-medium">
+                        {getJobTitle(job)}
+                      </TableCell>
+                      <TableCell>{getCompany(job)}</TableCell>
+                      <TableCell>{getNoOfPositions(job)}</TableCell>
+                      <TableCell>{getLocation(job)}</TableCell>
+                      <TableCell>{formatDate(getPostedDate(job))}</TableCell>
+                      <TableCell>
+                        <AdminStatusBadge status={job.approvalStatus} />
+                      </TableCell>
+                    </>
+                  ) : (
+                    <>
+                      <TableCell className="font-medium">
+                        {getJobTitle(job)}
+                      </TableCell>
+                      <TableCell>{getCompany(job)}</TableCell>
+                      <TableCell>{getSector(job)}</TableCell>
+                      <TableCell>
+                        {job.candidatesCount || job.totalApplicants || "-"}
+                      </TableCell>
+                      <TableCell>{getLocation(job)}</TableCell>
+                      <TableCell>{getExperience(job)}</TableCell>
+                      <TableCell>{formatDate(getPostedDate(job))}</TableCell>
+                      <TableCell>{getStatusBadge(job.status)}</TableCell>
+                      <TableCell className="text-center">
+                        <button
+                          onClick={(e) => handleViewDetails(job, e)}
+                          className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
+                        >
+                          View Details
+                          <MoveUpRightIcon className="w-3 h-3" />
+                        </button>
+                      </TableCell>
+                    </>
+                  )}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="h-full">
+                <TableCell
+                  colSpan={isApprovalContext ? 8 : 11}
+                  className="h-full"
+                >
+                  <div className="flex flex-col items-center justify-center h-full min-h-[400px]">
+                    <Briefcase className="h-12 w-12 text-gray-400 mb-4" />
+                    <p className="text-gray-500 text-lg font-medium">
+                      No jobs found
+                    </p>
+                    <p className="text-gray-400 text-sm">
+                      Try adjusting your search or filter criteria
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
       </div>
 
       <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>

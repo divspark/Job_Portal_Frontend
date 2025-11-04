@@ -98,7 +98,7 @@ const SuperAdminAdminManagement = () => {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-lg border shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border shadow-sm overflow-x-auto">
         {!error && (
           <Table>
             <TableHeader>

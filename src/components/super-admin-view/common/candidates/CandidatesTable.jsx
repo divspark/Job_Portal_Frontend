@@ -50,7 +50,7 @@ const CandidatesTable = ({
 
   return (
     <>
-      <div className="bg-white rounded-lg border overflow-hidden h-full">
+      <div className="bg-white rounded-lg border overflow-x-auto">
         <Table className="table-fixed min-w-[1240px]">
           <TableHeader className="sticky top-0 bg-white z-10 border-b">
             <TableRow>
