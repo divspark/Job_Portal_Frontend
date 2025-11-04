@@ -85,134 +85,132 @@ const TrainingsTable = ({
 
   return (
     <>
-      <div className="bg-white rounded-lg border overflow-hidden">
-        <div className="w-full overflow-x-auto">
-          <table className="w-full caption-bottom text-sm min-w-[800px]">
-            <thead className="[&_tr]:border-b">
-              <tr className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors">
-                <th className={thClass}></th>
-                <th className={thClass}>ID</th>
-                <th className={thClass}>Name</th>
-                {isApprovalContext && (
-                  <>
-                    <th className={thClass}>Company</th>
-                    <th className={thClass}>Location</th>
-                    <th className={thClass}>Posted Date</th>
-                    <th className={thClass}>Status</th>
-                  </>
-                )}
-                {!isApprovalContext && (
-                  <>
-                    <th className={thClass}>Posted Date</th>
-                    <th className={thClass}>Company</th>
-                    <th className={thClass}>Candidates</th>
-                    <th className={thClass}>Location</th>
-                    <th className={thClass}>Experience</th>
-                    <th className={thClass}>Status</th>
-                    <th className={thClass}>Actions</th>
-                  </>
-                )}
-              </tr>
-            </thead>
-            <tbody className="[&_tr:last-child]:border-0">
-              {paginatedTrainings.length > 0 ? (
-                paginatedTrainings.map((training) => {
-                  const trainingId = getTrainingId(training);
-                  const displayId = isApprovalContext
-                    ? training.trainingId
-                    : training._id;
-                  const status = isApprovalContext
-                    ? training.approvalStatus
-                    : training.status;
-                  const createdAt = training.createdAt || training.postedDate;
-
-                  return (
-                    <tr
-                      key={trainingId}
-                      onClick={(e) => handleRowClick(training, e)}
-                      className="cursor-pointer hover:bg-muted/50 transition-colors data-[state=selected]:bg-muted border-b"
-                    >
-                      <td className="p-2 align-middle whitespace-nowrap text-center">
-                        <input
-                          type="radio"
-                          name="selectTraining"
-                          checked={selectedTrainingId === trainingId}
-                          onChange={() => handleSelectTraining(training)}
-                          aria-label={`Select training ${
-                            training.title || "N/A"
-                          }`}
-                          className={RADIO_CLASS}
-                        />
-                      </td>
-                      <td className="p-2 align-middle whitespace-nowrap">
-                        {displayId}
-                      </td>
-                      <td className="p-2 align-middle whitespace-nowrap font-medium">
-                        {training.title || "N/A"}
-                      </td>
-                      {isApprovalContext ? (
-                        <>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {training.company || "N/A"}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {training.trainingMode || "N/A"}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {formatDate(createdAt)}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {getStatusBadge(status)}
-                          </td>
-                        </>
-                      ) : (
-                        <>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {formatDate(createdAt)}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap"></td>
-                          <td className="p-2 align-middle whitespace-nowrap"></td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {training.trainingMode || "N/A"}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {training.minimumExperience || "N/A"}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            {getStatusBadge(status)}
-                          </td>
-                          <td className="p-2 align-middle whitespace-nowrap">
-                            <button
-                              className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
-                              onClick={(e) => handleViewDetails(training, e)}
-                            >
-                              View Details
-                              <MoveUpRightIcon className="w-3 h-3" />
-                            </button>
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td
-                    colSpan={isApprovalContext ? 7 : 10}
-                    className="p-2 align-middle whitespace-nowrap text-center py-8"
-                  >
-                    <div className="flex flex-col items-center justify-center space-y-2">
-                      <GraduationCap className="h-8 w-8 text-gray-400" />
-                      <span className="text-gray-500">
-                        No trainings found matching your criteria
-                      </span>
-                    </div>
-                  </td>
-                </tr>
+      <div className="bg-white rounded-lg border overflow-x-auto">
+        <table className="w-full caption-bottom text-sm min-w-[800px]">
+          <thead className="[&_tr]:border-b">
+            <tr className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors">
+              <th className={thClass}></th>
+              <th className={thClass}>ID</th>
+              <th className={thClass}>Name</th>
+              {isApprovalContext && (
+                <>
+                  <th className={thClass}>Company</th>
+                  <th className={thClass}>Location</th>
+                  <th className={thClass}>Posted Date</th>
+                  <th className={thClass}>Status</th>
+                </>
               )}
-            </tbody>
-          </table>
-        </div>
+              {!isApprovalContext && (
+                <>
+                  <th className={thClass}>Posted Date</th>
+                  <th className={thClass}>Company</th>
+                  <th className={thClass}>Candidates</th>
+                  <th className={thClass}>Location</th>
+                  <th className={thClass}>Experience</th>
+                  <th className={thClass}>Status</th>
+                  <th className={thClass}>Actions</th>
+                </>
+              )}
+            </tr>
+          </thead>
+          <tbody className="[&_tr:last-child]:border-0">
+            {paginatedTrainings.length > 0 ? (
+              paginatedTrainings.map((training) => {
+                const trainingId = getTrainingId(training);
+                const displayId = isApprovalContext
+                  ? training.trainingId
+                  : training._id;
+                const status = isApprovalContext
+                  ? training.approvalStatus
+                  : training.status;
+                const createdAt = training.createdAt || training.postedDate;
+
+                return (
+                  <tr
+                    key={trainingId}
+                    onClick={(e) => handleRowClick(training, e)}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors data-[state=selected]:bg-muted border-b"
+                  >
+                    <td className="p-2 align-middle whitespace-nowrap text-center">
+                      <input
+                        type="radio"
+                        name="selectTraining"
+                        checked={selectedTrainingId === trainingId}
+                        onChange={() => handleSelectTraining(training)}
+                        aria-label={`Select training ${
+                          training.title || "N/A"
+                        }`}
+                        className={RADIO_CLASS}
+                      />
+                    </td>
+                    <td className="p-2 align-middle whitespace-nowrap">
+                      {displayId}
+                    </td>
+                    <td className="p-2 align-middle whitespace-nowrap font-medium">
+                      {training.title || "N/A"}
+                    </td>
+                    {isApprovalContext ? (
+                      <>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {training.company || "N/A"}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {training.trainingMode || "N/A"}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {formatDate(createdAt)}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {getStatusBadge(status)}
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {formatDate(createdAt)}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap"></td>
+                        <td className="p-2 align-middle whitespace-nowrap"></td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {training.trainingMode || "N/A"}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {training.minimumExperience || "N/A"}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {getStatusBadge(status)}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          <button
+                            className="view-details-btn inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-purple bg-light-purple rounded-md hover:bg-light-purple/80 transition-colors gap-2"
+                            onClick={(e) => handleViewDetails(training, e)}
+                          >
+                            View Details
+                            <MoveUpRightIcon className="w-3 h-3" />
+                          </button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td
+                  colSpan={isApprovalContext ? 7 : 10}
+                  className="p-2 align-middle whitespace-nowrap text-center py-8"
+                >
+                  <div className="flex flex-col items-center justify-center space-y-2">
+                    <GraduationCap className="h-8 w-8 text-gray-400" />
+                    <span className="text-gray-500">
+                      No trainings found matching your criteria
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
 
       <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
