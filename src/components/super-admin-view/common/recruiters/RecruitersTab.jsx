@@ -103,11 +103,12 @@ const RecruitersTab = ({ context = "database" }) => {
     return context === "approvals"
       ? data?.data?.approvals?.map((approval) => ({
           id: approval?.applicantId,
+          approvalId: approval?._id,
           name: approval?.applicantDetails?.name || "-",
           email: approval?.applicantDetails?.email || "-",
-          contact:
-            approval?.applicantDetails?.phone?.countryCode &&
-            approval?.applicantDetails?.phone?.number,
+          contact: approval?.data?.phone
+            ? `${approval.data.phone?.countryCode || ""} ${approval.data.phone?.number || ""}`.trim()
+            : "-",
           company: approval?.applicantDetails?.company || "-",
           sector:
             approval?.data?.sectorSpecialization

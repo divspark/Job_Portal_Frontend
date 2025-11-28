@@ -30,7 +30,7 @@ const RecruitersTable = ({
     setDrawerOpen(true);
   };
 
-  const colSpan = showStatusColumn ? 9 : 7;
+  const colSpan = showStatusColumn ? 8 : 7;
 
   return (
     <>
@@ -57,9 +57,6 @@ const RecruitersTable = ({
                 </TableHead>
                 {showStatusColumn ? (
                   <>
-                    <TableHead className="min-w-[150px] max-w-[150px] font-semibold">
-                      Sector
-                    </TableHead>
                     <TableHead className="min-w-[200px] max-w-[200px] font-semibold">
                       Expertise
                     </TableHead>
@@ -137,9 +134,6 @@ const RecruitersTable = ({
                     </TableCell>
                     {showStatusColumn ? (
                       <>
-                        <TableCell className="text-gray-700 max-w-[150px] truncate">
-                          {recruiter.sector}
-                        </TableCell>
                         <TableCell className="text-gray-700 max-w-[200px] truncate">
                           {recruiter.expertise}
                         </TableCell>

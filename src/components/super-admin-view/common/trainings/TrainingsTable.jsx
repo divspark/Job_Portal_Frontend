@@ -152,7 +152,7 @@ const TrainingsTable = ({
                     {isApprovalContext ? (
                       <>
                         <td className="p-2 align-middle whitespace-nowrap">
-                          {training.company || "N/A"}
+                          {training.postedBy?.companyName || "N/A"}
                         </td>
                         <td className="p-2 align-middle whitespace-nowrap">
                           {training.trainingMode || "N/A"}
@@ -169,8 +169,12 @@ const TrainingsTable = ({
                         <td className="p-2 align-middle whitespace-nowrap">
                           {formatDate(createdAt)}
                         </td>
-                        <td className="p-2 align-middle whitespace-nowrap"></td>
-                        <td className="p-2 align-middle whitespace-nowrap"></td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {training.postedBy?.companyName || "N/A"}
+                        </td>
+                        <td className="p-2 align-middle whitespace-nowrap">
+                          {training.applicationStats?.total || 0}
+                        </td>
                         <td className="p-2 align-middle whitespace-nowrap">
                           {training.trainingMode || "N/A"}
                         </td>

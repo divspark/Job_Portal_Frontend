@@ -91,7 +91,9 @@ const JobsTable = ({
   };
 
   const getCompany = (job) => {
-    return isApprovalContext ? job.company : job.postedBy?.companyName || "";
+    return isApprovalContext 
+      ? job.company 
+      : job.postedBy?.companyName || "N/A";
   };
 
   const getLocation = (job) => {
@@ -107,15 +109,16 @@ const JobsTable = ({
   };
 
   const getNoOfPositions = (job) => {
-    return isApprovalContext
-      ? job.noOfPositions || "-"
-      : job.noOfPositions || "-";
+    const positions = isApprovalContext
+      ? job.noOfPositions
+      : job.numberOfOpenings;
+    return positions || positions === 0 ? positions : "-";
   };
 
   const getSector = (job) => {
     return isApprovalContext
       ? job.sector || "-"
-      : job.sector || job.industry || "-";
+      : job.postedBy?.industryType || job.industryType || "-";
   };
 
   return (
@@ -139,6 +142,7 @@ const JobsTable = ({
                 <>
                   <TableHead>Name</TableHead>
                   <TableHead>Company</TableHead>
+                  <TableHead>No of positions</TableHead>
                   <TableHead>Sector</TableHead>
                   <TableHead>Candidates</TableHead>
                   <TableHead>Location</TableHead>
@@ -188,9 +192,10 @@ const JobsTable = ({
                         {getJobTitle(job)}
                       </TableCell>
                       <TableCell>{getCompany(job)}</TableCell>
+                      <TableCell>{getNoOfPositions(job)}</TableCell>
                       <TableCell>{getSector(job)}</TableCell>
                       <TableCell>
-                        {job.candidatesCount || job.totalApplicants || "-"}
+                        {job.applicationStats?.total || job.totalApplicants || "0"}
                       </TableCell>
                       <TableCell>{getLocation(job)}</TableCell>
                       <TableCell>{getExperience(job)}</TableCell>
@@ -212,7 +217,7 @@ const JobsTable = ({
             ) : (
               <TableRow className="h-full">
                 <TableCell
-                  colSpan={isApprovalContext ? 8 : 11}
+                  colSpan={isApprovalContext ? 8 : 12}
                   className="h-full"
                 >
                   <div className="flex flex-col items-center justify-center h-full min-h-[400px]">

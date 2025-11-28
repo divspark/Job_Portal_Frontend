@@ -30,6 +30,7 @@ export const useGetApprovalsTrainers = (params = {}) => {
 };
 
 export const useGetApprovalsRecruiters = (params = {}) => {
+  console.log("useGetApprovalsRecruiters called", { params });
   return createApprovalsListQuery("recruiter", params);
 };
 
@@ -148,8 +149,10 @@ const createNotificationForApproval = async (approvalData, user) => {
 export const useApprovals = () => {
   const user = useAuthStore((state) => state.user);
   const reviewApprovalMutation = useBaseMutation(
-    ({ approvalId, status, reviewerNotes }) =>
-      reviewApproval(approvalId, { status, reviewerNotes }),
+    ({ approvalId, status, reviewerNotes }) => {
+      console.log("reviewApproval called", { approvalId });
+      return reviewApproval(approvalId, { status, reviewerNotes });
+    },
     {
       invalidateKeys: [{ prefix: "approvals-" }, ["approval-details"]],
     }
@@ -161,7 +164,7 @@ export const useApprovals = () => {
     let approvalDetailsBeforeReview = null;
     try {
       console.log("Fetching approval details before review for:", approvalId);
-      approvalDetailsBeforeReview = await getApprovalDetails(approvalId);
+      approvalDetailsBeforeReview = await getApprovalDetails({ id: approvalId });
       console.log(
         "Approval details before review:",
         approvalDetailsBeforeReview
