@@ -6,6 +6,7 @@ import {
   workingExperience,
 } from "../../config";
 import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import { useUpdateApplicant } from "../../hooks/recruiter/useApplicant";
 import { z } from "zod";
 import { validateFormData } from "../../utils/commonFunctions";
@@ -15,6 +16,7 @@ import { Checkbox } from "../../components/ui/checkbox";
 import Navbar from "../../components/recruiter-view/navbar";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 // import { Button } from "@/components/ui/button";
 
 export const experienceDetailSchema = z
@@ -102,11 +104,30 @@ export const formDataSchema = z
   })
 
   // 🔥 Add THIS validation here
+  .refine((data) => Number(data.expectedSalary) > Number(data.currentSalary), {
+    path: ["expectedSalary"],
+    message: "Expected salary must be greater than current salary",
+  })
+  // Validation: If total experience is 0, last/current experience should also be 0
   .refine(
-    (data) => Number(data.expectedSalary) > Number(data.currentSalary),
+    (data) => {
+      const totalExpYears = Number(data.totalExperience) || 0;
+      const totalExpMonths = Number(data.totalExperienceInMonth) || 0;
+      const totalExpInMonths = totalExpYears * 12 + totalExpMonths;
+
+      if (totalExpInMonths === 0) {
+        // If total experience is 0, check if any experience detail has dates
+        const hasExperienceDates = data.experienceDetails.some(
+          (exp) => exp.startDate || exp.endDate
+        );
+        return !hasExperienceDates;
+      }
+      return true;
+    },
     {
-      path: ["expectedSalary"],
-      message: "Expected salary must be greater than current salary",
+      path: ["totalExperience"],
+      message:
+        "If total experience is 0, you cannot have work experience entries",
     }
   );
 
@@ -134,11 +155,19 @@ const CandidateReleventDetails = () => {
     ],
     variableTick: false,
     acceptTerms: false,
+    ctcType: "annual", // "annual" or "monthly"
   });
   const { mutate, isPending } = useUpdateApplicant();
   const onSubmit = (e) => {
     const id = localStorage.getItem("seekerID");
     e.preventDefault();
+
+    // Validate acceptTerms checkbox
+    if (!formData.acceptTerms) {
+      toast.error("Please accept the Terms & Conditions to continue.");
+      return;
+    }
+
     const payload = {
       ...formData,
       totalExperience: Number(formData.totalExperience),
@@ -279,17 +308,48 @@ const CandidateReleventDetails = () => {
                   </div>
                 </div>
                 <div className="w-full">
-                  {formData.experienceDetails.map((item, index) => (
-                    <CommonForm
-                      formControls={workingExperience}
-                      formData={formData}
-                      setFormData={setFormData}
-                      key={index}
-                      i={index}
-                      formType={"experienceDetails"}
-                      disabled={formData.currentWorkingStatus === "working"}
-                    />
-                  ))}
+                  {formData.experienceDetails.map((item, index) => {
+                    // Dynamic labels based on working status
+                    const isCurrentOrg =
+                      formData.currentWorkingStatus === "working" ||
+                      formData.currentWorkingStatus === "serving-notice-period";
+                    const dynamicWorkingExperience = workingExperience.map(
+                      (field) => {
+                        if (field.name === "companyName") {
+                          return {
+                            ...field,
+                            label: isCurrentOrg
+                              ? "Current Organisation"
+                              : "Last Organisation",
+                          };
+                        }
+                        if (field.name === "designation") {
+                          return {
+                            ...field,
+                            label: isCurrentOrg
+                              ? "Designation in Current Organisation"
+                              : "Designation in Last Organisation",
+                          };
+                        }
+                        return field;
+                      }
+                    );
+                    return (
+                      <div key={index} className="mb-4">
+                        <div className="text-sm font-semibold text-gray-700 mb-2">
+                          Experience {index + 1}
+                        </div>
+                        <CommonForm
+                          formControls={dynamicWorkingExperience}
+                          formData={formData}
+                          setFormData={setFormData}
+                          i={index}
+                          formType={"experienceDetails"}
+                          disabled={formData.currentWorkingStatus === "working"}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -435,12 +495,89 @@ const CandidateReleventDetails = () => {
                   </div>
                 </div>
               </div>
+              {/* CTC Type Selector */}
+              <div className="w-full flex flex-col gap-2">
+                <Label className="text-sm font-semibold text-gray-900">
+                  CTC Type
+                </Label>
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, ctcType: "annual" }))
+                    }
+                    className={`px-4 py-2 rounded-md border-2 ${
+                      formData.ctcType === "annual"
+                        ? "border-[#6945ED] bg-[#6945ED]/10"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    Annual (LPA)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData((prev) => ({ ...prev, ctcType: "monthly" }))
+                    }
+                    className={`px-4 py-2 rounded-md border-2 ${
+                      formData.ctcType === "monthly"
+                        ? "border-[#6945ED] bg-[#6945ED]/10"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    Monthly (Rupees)
+                  </button>
+                </div>
+              </div>
               <div className="w-full self-stretch inline-flex justify-between items-center gap-4">
-                <CommonForm
-                  formControls={releventCandidateSalary}
-                  formData={formData}
-                  setFormData={setFormData}
-                />
+                <div className="w-full grid grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-sm font-semibold text-gray-900">
+                      {formData.ctcType === "annual"
+                        ? "Annual Current Salary / CTC (In LPA)"
+                        : "Monthly Current Salary / CTC (In Rupees)"}
+                    </Label>
+                    <Input
+                      type="number"
+                      placeholder={
+                        formData.ctcType === "annual"
+                          ? "e.g., 7.5 Lakhs"
+                          : "e.g., 50000"
+                      }
+                      value={formData.currentSalary || ""}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          currentSalary: Number(e.target.value) || 0,
+                        }))
+                      }
+                      className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <Label className="text-sm font-semibold text-gray-900">
+                      {formData.ctcType === "annual"
+                        ? "Expected Salary / CTC (In LPA)"
+                        : "Expected Salary / CTC (In Rupees)"}
+                    </Label>
+                    <Input
+                      type="number"
+                      placeholder={
+                        formData.ctcType === "annual"
+                          ? "e.g., 9 Lakhs"
+                          : "e.g., 60000"
+                      }
+                      value={formData.expectedSalary || ""}
+                      onChange={(e) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          expectedSalary: Number(e.target.value) || 0,
+                        }))
+                      }
+                      className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
+                    />
+                  </div>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Checkbox

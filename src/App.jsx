@@ -220,13 +220,13 @@ function App() {
         <Route
           path="/recruiter"
           element={
-            <CheckAuth
+           /* <CheckAuth
               fetchProfileHook={useGetRecruiterUserProfile}
               allowedRoles={["recruiter"]}
               userRole={"recruiter"}
-            >
+            >*/
               <ProfileSetupLayout />
-            </CheckAuth>
+            //</CheckAuth>
           }
         >
           <Route path="log-in" element={<RecruiterLogin />} />
@@ -234,13 +234,13 @@ function App() {
         <Route
           path="/recruiter/profile-setup"
           element={
-            <CheckAuth
+            /**<CheckAuth
               fetchProfileHook={useGetRecruiterUserProfile}
               allowedRoles={["recruiter"]}
               userRole={"recruiter"}
-            >
+            >*/
               <ProfileSetupLayout />
-            </CheckAuth>
+            //</CheckAuth>
           }
         >
           <Route path="basic-details" element={<BasicDetails />} />
@@ -283,7 +283,9 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="faq" element={<Faq />} />
         </Route>
-
+         {/**Corporate Login */} 
+        
+         <Route path="/corporate/log-in" element={<CorporateLogIn />} />
         {/* Corporate Auth and Setup */}
         <Route
           path="/corporate"
@@ -297,7 +299,7 @@ function App() {
             </CheckAuth>
           }
         >
-          <Route path="log-in" element={<CorporateLogIn />} />
+       
           <Route path="trainning-posting" element={<TrainningPosting />} />
           <Route path="job-posting" element={<JobPosting />} />
         </Route>

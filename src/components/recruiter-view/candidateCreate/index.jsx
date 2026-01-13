@@ -13,10 +13,13 @@ import {
 import ButtonComponent from "../../common/button";
 import { useUpload } from "../../../hooks/common/useUpload";
 import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import { ResumeSlateIcon } from "../../../utils/icon";
 import Address from "@/components/common/address";
 import { useDropDown } from "@/hooks/common/useDropDown";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from "../../../stores/useAuthStore";
+import { toast } from "react-toastify";
 
 // ======================================================================
 // ✅ UPDATED ZOD VALIDATION WITH STRICT RULES
@@ -32,29 +35,37 @@ const candidateProfileSchema = z.object({
   phone: z.object({
     number: z
       .string()
-      .regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),   // 🔥 FIXED
+      .regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"), // 🔥 FIXED
 
-    countryCode: z
-      .string()
-      .regex(/^\+?[0-9]+$/, "Invalid country code"),
+    countryCode: z.string().regex(/^\+?[0-9]+$/, "Invalid country code"),
   }),
 
   email: z.string().email("Invalid email format"),
 
+  dob: z
+    .string()
+    .min(1, "Date of birth is required")
+    .refine((date) => {
+      const birthDate = new Date(date);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+      const actualAge =
+        monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+      return actualAge >= 18;
+    }, "You must be at least 18 years old to register"),
+
   currentAddress: z.object({
     address: z.string().min(1, "Current address is required"),
 
-    city: z
-      .string()
-      .regex(/^[A-Za-z ]+$/, "City must contain only alphabets"),     // ✔ FIXED
+    city: z.string().regex(/^[A-Za-z ]+$/, "City must contain only alphabets"), // ✔ FIXED
 
-    pincode: z
-      .string()
-      .regex(/^[0-9]{6}$/, "Pincode must be exactly 6 digits"),        // 🔥 FIXED
+    pincode: z.string().regex(/^[0-9]{6}$/, "Pincode must be exactly 6 digits"), // 🔥 FIXED
 
     state: z
       .string()
-      .regex(/^[A-Za-z ]+$/, "State must contain only alphabets"),    // ✔ FIXED
+      .regex(/^[A-Za-z ]+$/, "State must contain only alphabets"), // ✔ FIXED
   }),
 
   summary: z.string().min(1, "Summary is required"),
@@ -62,42 +73,39 @@ const candidateProfileSchema = z.object({
   permanentAddress: z.object({
     address: z.string().min(1, "Permanent address is required"),
 
-    city: z
-      .string()
-      .regex(/^[A-Za-z ]+$/, "City must contain only alphabets"),     // ✔ FIXED
+    city: z.string().regex(/^[A-Za-z ]+$/, "City must contain only alphabets"), // ✔ FIXED
 
     state: z
       .string()
       .regex(/^[A-Za-z ]+$/, "State must contain only alphabets"),
 
-    pincode: z
-      .string()
-      .regex(/^[0-9]{6}$/, "Pincode must be exactly 6 digits"),       // 🔥 FIXED
+    pincode: z.string().regex(/^[0-9]{6}$/, "Pincode must be exactly 6 digits"), // 🔥 FIXED
   }),
 
   gender: z.string().min(1, "Gender is required"),
   sameAs: z.boolean(),
 
   education: z.array(
-    z.object({
-      degree: z
-        .string()
-        .regex(/^[A-Za-z ]+$/, "Degree must contain only alphabets"), // 🔥 FIXED
+    z
+      .object({
+        degree: z
+          .string()
+          .regex(/^[A-Za-z ]+$/, "Degree must contain only alphabets"), // 🔥 FIXED
 
-      startDate: z.string().optional(),
-      endDate: z.string().optional(),
-    })
-    .refine(
-      (data) => {
-        if (!data.startDate || !data.endDate) return true;
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+      })
+      .refine(
+        (data) => {
+          if (!data.startDate || !data.endDate) return true;
 
-        const [sMonth, sYear] = data.startDate.split("/").map(Number);
-        const [eMonth, eYear] = data.endDate.split("/").map(Number);
+          const [sMonth, sYear] = data.startDate.split("/").map(Number);
+          const [eMonth, eYear] = data.endDate.split("/").map(Number);
 
-        return sYear < eYear || (sYear === eYear && sMonth <= eMonth);
-      },
-      { message: "Start date cannot be greater than end date" }
-    )
+          return sYear < eYear || (sYear === eYear && sMonth <= eMonth);
+        },
+        { message: "Start date cannot be greater than end date" }
+      )
   ),
 
   skills: z.array(z.any()).min(1, "At least one skill is required"),
@@ -105,12 +113,22 @@ const candidateProfileSchema = z.object({
   resume: z.string().min(1, "Resume is required"),
 });
 
-
 // ======================================================================
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user } = useAuthStore();
   const [formErrors, setFormErrors] = useState({});
+
+  // Check if recruiter is approved before allowing candidate creation
+  useEffect(() => {
+    if (user?.status !== "active") {
+      toast.error(
+        "Your account must be approved by admin before creating candidates."
+      );
+      navigate("/recruiter/dashboard");
+    }
+  }, [user, navigate]);
   const [formData, setFormData] = useState({
     name: "",
     profilePicture: "",
@@ -119,6 +137,7 @@ const Index = () => {
       countryCode: "",
     },
     email: "",
+    dob: "",
     currentAddress: {
       address: "",
       city: "",
@@ -142,6 +161,7 @@ const Index = () => {
       },
     ],
     skills: [],
+    otherSkills: "",
     resume: "",
   });
 
@@ -257,23 +277,50 @@ const Index = () => {
                 setFormData={setFormData}
                 handleUpload={handleUpload}
                 errors={formErrors}
+                showSerialNumber={true}
               />
+              {/* other Skills Input */}
+            <div className="w-full flex flex-col gap-2 pt-2">
+              <Label className="text-sm font-semibold text-gray-900">
+                Other Skills (Optional)
+              </Label>
+              <Input
+                type="text"
+                placeholder="Enter skills separated by commas (e.g., React, Node.js, Python)"
+                value={formData.otherSkills || ""}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    otherSkills: e.target.value,
+                  }))
+                }
+                className="flex placeholder:translate-y-[1px] items-center justify-center text-black text-base focus:outline-none focus-visible:ring-0 focus:border-1 focus:border-black rounded-[4px] border-s-1 border-[#E2E2E2] py-[10px] px-[16px] placeholder:text-[#9B959F]"
+              />
+              <p className="text-xs text-gray-500">
+                Add skills that are not available in the dropdown above
+              </p>
+            </div>
             </div>
 
             <Address formData={formData} setFormData={setFormData} />
 
+            
+
             <div className="w-full">
               {formData.education.map((item, index) => (
-                <CommonForm
-                  key={index}
-                  formControls={highestQualification}
-                  formData={formData}
-                  setFormData={setFormData}
-                  i={index}
-                  disabled={false}
-                  formType={"education"}
-                  errors={formErrors}
-                />
+                <div key={index} className="mb-4">
+                 
+                  <CommonForm
+                    formControls={highestQualification}
+                    formData={formData}
+                    setFormData={setFormData}
+                    i={index}
+                    disabled={false}
+                    formType={"education"}
+                    errors={formErrors}
+                 
+                  />
+                </div>
               ))}
             </div>
 
@@ -357,7 +404,6 @@ const Index = () => {
                 </div>
               </div>
             </div>
-
           </div>
 
           <div className="self-stretch flex flex-col justify-start items-end gap-10">

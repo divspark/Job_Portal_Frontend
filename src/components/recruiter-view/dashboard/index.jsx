@@ -14,7 +14,8 @@ import {
 import { useGetUserProgress } from "../../../hooks/recruiter/useProfile";
 import PendingApprove from "@/components/common/pending-approve";
 import ApprovedUi from "@/components/common/approved-ui";
-
+import { useState } from "react"; // Added useState
+import { X } from "lucide-react"; // Added X icon
 const data = [
   { company: "ABC Tech", submitted: 32, shortlisted: 18, hired: 18 },
   { company: "XYZ Corp", submitted: 21, shortlisted: 20, hired: 20 },
@@ -27,6 +28,7 @@ const data = [
 const Index = () => {
   const { user } = useAuthStore();
   const { data: progress } = useGetUserProgress();
+  const [showBanner, setShowBanner] = useState(true);
   const nextStagePath =
     progress?.data?.currentStage === 2
       ? "/recruiter/profile-setup/kyc-verification"
@@ -89,9 +91,12 @@ const Index = () => {
             </div>
           </div>
         ) : user?.status === "pending" ? (
-          <PendingApprove />
-        ) : user?.status === "active" ? (
-          <ApprovedUi />
+          //<PendingApprove />
+          <ApprovedUi onClose={() => setShowBanner(false)} />
+        ) : user?.status === "active" && showBanner ? (
+        
+            <ApprovedUi onClose={() => setShowBanner(false)} />
+            
         ) : null}
         <div className="w-full self-stretch p-6 bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(0,0,0,0.03)] outline outline-offset-[-1px] outline-zinc-300 flex flex-col justify-start items-start gap-6 overflow-hidden">
           <div className="self-stretch inline-flex justify-start items-start gap-[662px]">

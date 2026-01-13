@@ -76,7 +76,9 @@ const JobCard = ({ setOpen, item, setOpen1, setCandidateFilters }) => {
                 <div className="flex items-center justify-center">
                   <LocationIcon className="h-[16px] w-[16px]" />
                 </div>
-                <div className="text-[#141414] text-sm">{item?.city}</div>
+                <div className="text-[#141414] text-sm">
+                  {item?.city || item?.location?.split(",")[0]?.trim() || "N/A"}
+                </div>
               </div>
             )}
             <div className="flex gap-[6px] items-center">
@@ -222,7 +224,7 @@ const JobCard = ({ setOpen, item, setOpen1, setCandidateFilters }) => {
               <div className="flex justify-center items-center gap-1.5">
                 <LocationIcon className="h-[14px] w-[14px]" />
                 <div className="justify-start text-neutral-900/70 text-sm font-normal leading-none">
-                  {/* {item?.location} */}
+                  {item?.city || item?.location?.split(",")[0]?.trim() || "N/A"}
                 </div>
               </div>
               <div className="flex justify-start items-center gap-1.5">

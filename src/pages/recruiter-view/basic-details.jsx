@@ -73,7 +73,7 @@ const BasicDetails = () => {
     password: "",
     profileImage: "",
     phone: {
-      number: 0,
+      number: "",
       countryCode: "",
     },
     currentAddress: {

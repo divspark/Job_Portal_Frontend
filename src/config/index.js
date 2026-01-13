@@ -466,6 +466,13 @@ export const candiadateCreationformControls = [
     placeholder: "Enter email",
     required: true,
   },
+  {
+    name: "dob",
+    label: "Date of Birth",
+    componentType: "calendar",
+    placeholder: "Select date of birth (DD/Month/YYYY)",
+    required: true,
+  },
 
   {
     name: "currentAddress.address",

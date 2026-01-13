@@ -33,152 +33,160 @@ export default function CommonForm({
   disabled = false,
   formType = null,
   errors = {},
+  showSerialNumber = false,
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [otherSelections, setOtherSelections] = useState({});
 
+  let fieldIndex = 0;
+
   // -----------------------------------------
   // VALIDATION: allow only alphabets, digits etc.
   // -----------------------------------------
-const applyRestrictions = (fieldName, value) => {
-  let v = value;
-  const lower = fieldName.toLowerCase();
+  const applyRestrictions = (fieldName, value) => {
+    let v = value;
+    const lower = fieldName.toLowerCase();
 
-  // -----------------------------------------
-  // FIX: Ignore email fields completely
-  // -----------------------------------------
-  if (lower.includes("email")) {
-    return value; // allow @ . _ -
-  }
-
-  // -----------------------------------------
-  // 1️⃣ Organization / Company — allow letters + numbers
-  // (EXCLUDING any email field)
-  // -----------------------------------------
-  if (
-    (
-      lower.includes("organization") ||
-      lower.includes("organisation") ||
-      lower.includes("company") ||
-      lower.includes("companyname") ||
-      lower.includes("lastorganization") ||
-      lower.includes("org")
-    ) &&
-    !lower.includes("email") // IMPORTANT FIX
-  ) {
-    let cleaned = v.replace(/[^A-Za-z0-9 ]/g, "");
-
-    if (/^[0-9]+$/.test(cleaned)) {
-      return "";
+    // -----------------------------------------
+    // FIX: Ignore email fields completely
+    // -----------------------------------------
+    if (lower.includes("email")) {
+      return value; // allow @ . _ -
     }
 
-    return cleaned;
-  }
-
-  // -----------------------------------------
-  // 2️⃣ Designation — allow letters + numbers
-  // -----------------------------------------
-  if (lower.includes("designation")) {
-    let cleaned = v.replace(/[^A-Za-z0-9 ]/g, "");
-
-    if (/^[0-9]+$/.test(cleaned)) {
-      return "";
-    }
-
-    return cleaned;
-  }
-
-  // -----------------------------------------
-  // 3️⃣ Contact Number → ONLY digits
-  // -----------------------------------------
-  if (lower.includes("contactno") || lower === "contact") {
-    return v.replace(/[^0-9]/g, "").slice(0, 10);
-  }
-
-  // -----------------------------------------
-  // 4️⃣ Names (first/last/full)
-  // -----------------------------------------
+    // -----------------------------------------
+    // 1️⃣ Organization / Company — allow letters + numbers
+    // (EXCLUDING any email field)
+    // -----------------------------------------
     if (
-  fieldName.toLowerCase().includes("name") &&
-  !fieldName.toLowerCase().includes("username")
-) {
-  v = v.replace(/[^A-Za-z]/g, "");
-}
+      (lower.includes("organization") ||
+        lower.includes("organisation") ||
+        lower.includes("company") ||
+        lower.includes("companyname") ||
+        lower.includes("lastorganization") ||
+        lower.includes("org")) &&
+      !lower.includes("email") // IMPORTANT FIX
+    ) {
+      let cleaned = v.replace(/[^A-Za-z0-9 ]/g, "");
 
+      if (/^[0-9]+$/.test(cleaned)) {
+        return "";
+      }
 
-  // -----------------------------------------
-  // 5️⃣ City / State — letters only
-  // -----------------------------------------
-  if (lower.includes("city") || lower.includes("state")) {
-    return v.replace(/[^A-Za-z ]/g, "");
-  }
+      return cleaned;
+    }
 
-  // -----------------------------------------
-  // 6️⃣ Pincode — digits only
-  // -----------------------------------------
-  if (lower.includes("pincode")) {
-    return v.replace(/[^0-9]/g, "").slice(0, 6);
-  }
+    // -----------------------------------------
+    // 2️⃣ Designation — allow letters + numbers
+    // -----------------------------------------
+    if (lower.includes("designation")) {
+      let cleaned = v.replace(/[^A-Za-z0-9 ]/g, "");
 
-  // -----------------------------------------
-  // 7️⃣ Account Number — 18 digits max
-  // -----------------------------------------
-  if (lower.includes("accountnumber")) {
-    return v.replace(/[^0-9]/g, "").slice(0, 18);
-  }
+      if (/^[0-9]+$/.test(cleaned)) {
+        return "";
+      }
 
-  // -----------------------------------------
-  // 8️⃣ IFSC Code — A-Z + numbers (max 11)
-  // -----------------------------------------
-  if (lower.includes("ifsc")) {
-    return v.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 11);
-  }
+      return cleaned;
+    }
 
-  // -----------------------------------------
-  // 9️⃣ PAN Number — 5 letters + 4 digits + 1 letter
-  // -----------------------------------------
-  if (lower.includes("pan")) {
-    return v.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10);
-  }
+    // -----------------------------------------
+    // 3️⃣ Contact Number → ONLY digits
+    // -----------------------------------------
+    if (lower.includes("contactno") || lower === "contact") {
+      return v.replace(/[^0-9]/g, "").slice(0, 10);
+    }
 
-  // -----------------------------------------
-  // 🔟 Aadhaar Number — 12 digits
-  // -----------------------------------------
-  if (lower.includes("aadhaar") || lower.includes("aadhar")) {
-    return v.replace(/[^0-9]/g, "").slice(0, 12);
-  }
+    // -----------------------------------------
+    // 4️⃣ Names (first/last/full)
+    // -----------------------------------------
+    if (
+      fieldName.toLowerCase().includes("name") &&
+      !fieldName.toLowerCase().includes("username")
+    ) {
+      v = v.replace(/[^A-Za-z]/g, "");
+    }
 
-   // GSTIN — Only Caps + Numbers, Max 15
-  // -----------------------------------------
-  if (lower.includes("gstin")) {
-    return v.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 15);
-  }
+    // -----------------------------------------
+    // 5️⃣ City / State — letters only
+    // -----------------------------------------
+    if (lower.includes("city") || lower.includes("state")) {
+      return v.replace(/[^A-Za-z ]/g, "");
+    }
 
-  // No of positions → only digits
-// -----------------------------------------
-if (lower.includes("noofpositions") || lower.includes("positions")) {
-  return v.replace(/[^0-9]/g, "");
-}
+    // -----------------------------------------
+    // 6️⃣ Pincode — digits only
+    // -----------------------------------------
+    if (lower.includes("pincode")) {
+      return v.replace(/[^0-9]/g, "").slice(0, 6);
+    }
 
-// -----------------------------------------
-// Preferred age range (example: "18-50")
-// Allow only digits and a single hyphen
-// -----------------------------------------
-if (lower.includes("agerange") || lower.includes("age")) {
-  // Allow digits and - (only one)
-  let cleaned = v.replace(/[^0-9-]/g, "");
+    // -----------------------------------------
+    // 7️⃣ Account Number — 18 digits max
+    // -----------------------------------------
+    if (lower.includes("accountnumber")) {
+      return v.replace(/[^0-9]/g, "").slice(0, 18);
+    }
 
-  // Prevent multiple hyphens
-  const hyphens = cleaned.split("-").length - 1;
-  if (hyphens > 1) {
-    cleaned = cleaned.replace(/-+$/, "");
-  }
+    // -----------------------------------------
+    // 8️⃣ IFSC Code — A-Z + numbers (max 11)
+    // -----------------------------------------
+    if (lower.includes("ifsc")) {
+      return v
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .slice(0, 11);
+    }
 
-  return cleaned;
-}
-  return v;
-};
+    // -----------------------------------------
+    // 9️⃣ PAN Number — 5 letters + 4 digits + 1 letter
+    // -----------------------------------------
+    if (lower.includes("pan")) {
+      return v
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .slice(0, 10);
+    }
 
+    // -----------------------------------------
+    // 🔟 Aadhaar Number — 12 digits
+    // -----------------------------------------
+    if (lower.includes("aadhaar") || lower.includes("aadhar")) {
+      return v.replace(/[^0-9]/g, "").slice(0, 12);
+    }
+
+    // GSTIN — Only Caps + Numbers, Max 15
+    // -----------------------------------------
+    if (lower.includes("gstin")) {
+      return v
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .slice(0, 15);
+    }
+
+    // No of positions → only digits
+    // -----------------------------------------
+    if (lower.includes("noofpositions") || lower.includes("positions")) {
+      return v.replace(/[^0-9]/g, "");
+    }
+
+    // -----------------------------------------
+    // Preferred age range (example: "18-50")
+    // Allow only digits and a single hyphen
+    // -----------------------------------------
+    if (lower.includes("agerange") || lower.includes("age")) {
+      // Allow digits and - (only one)
+      let cleaned = v.replace(/[^0-9-]/g, "");
+
+      // Prevent multiple hyphens
+      const hyphens = cleaned.split("-").length - 1;
+      if (hyphens > 1) {
+        cleaned = cleaned.replace(/-+$/, "");
+      }
+
+      return cleaned;
+    }
+    return v;
+  };
 
   function renderInputsByComponentType(getControlItem, index) {
     let nameWithIndex = getControlItem.name;
@@ -255,9 +263,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
                   : "!border-[#E2E2E2]"
               }`}
             buttonClass={`!border-r ${
-              numberError || codeError
-                ? "!border-red-500"
-                : "!border-[#E2E2E2]"
+              numberError || codeError ? "!border-red-500" : "!border-[#E2E2E2]"
             } !bg-white`}
             containerClass="!w-full"
             dropdownClass="!bg-white !text-sm !rounded-md !shadow-lg z-50"
@@ -319,7 +325,10 @@ if (lower.includes("agerange") || lower.includes("age")) {
         if (getControlItem.type === "password") {
           return (
             <div className="relative w-full">
-              <Input {...commonInputProps} type={showPassword ? "text" : "password"} />
+              <Input
+                {...commonInputProps}
+                type={showPassword ? "text" : "password"}
+              />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -357,9 +366,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
           <div className="flex flex-col gap-2">
             <Select
               onValueChange={(val) => {
-                setFormData((prev) =>
-                  setNestedValue(prev, nameWithIndex, val)
-                );
+                setFormData((prev) => setNestedValue(prev, nameWithIndex, val));
 
                 setOtherSelections((prev) => ({
                   ...prev,
@@ -418,7 +425,11 @@ if (lower.includes("agerange") || lower.includes("age")) {
                 value={getNestedValue(formData, "medicalProblemDetails") || ""}
                 onChange={(e) =>
                   setFormData((prev) =>
-                    setNestedValue(prev, "medicalProblemDetails", e.target.value)
+                    setNestedValue(
+                      prev,
+                      "medicalProblemDetails",
+                      e.target.value
+                    )
                   )
                 }
                 className="border border-[#E2E2E2] rounded-[4px] py-[10px] px-[16px]"
@@ -441,9 +452,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
               onChange={(e) => {
                 const newVal = e.target.value;
                 const count =
-                  newVal.trim() === ""
-                    ? 0
-                    : newVal.trim().split(/\s+/).length;
+                  newVal.trim() === "" ? 0 : newVal.trim().split(/\s+/).length;
                 if (maxWords && count > maxWords) return;
 
                 setFormData((prev) =>
@@ -471,7 +480,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
             disabled={getControlItem.disabled}
           />
         );
-              case "time":
+      case "time":
         return (
           <Input
             type="time"
@@ -485,11 +494,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
             }
             className={`bg-background appearance-none flex placeholder:translate-y-[1px] 
               text-black text-base rounded-[4px] border py-[10px] px-[16px]
-              ${
-                errorMessage
-                  ? "border-red-500"
-                  : "border-[#E2E2E2]"
-              }`}
+              ${errorMessage ? "border-red-500" : "border-[#E2E2E2]"}`}
           />
         );
 
@@ -572,7 +577,8 @@ if (lower.includes("agerange") || lower.includes("age")) {
                     const isValidSize = file.size <= 5 * 1024 * 1024;
 
                     let isValidType = false;
-                    if (getControlItem.accept === "image") isValidType = isImage;
+                    if (getControlItem.accept === "image")
+                      isValidType = isImage;
                     if (getControlItem.accept === "pdf") isValidType = isPdf;
 
                     if (!isValidType) {
@@ -624,14 +630,31 @@ if (lower.includes("agerange") || lower.includes("age")) {
             </div>
 
             <div className="text-xs text-[#655F5F] absolute bottom-[-18px]">
-              Supported: {getControlItem.accept === "image" ? "Images" : "PDF"}, Max 5MB
+              Supported: {getControlItem.accept === "image" ? "Images" : "PDF"},
+              Max 5MB
             </div>
           </div>
         );
-
       case "calendar":
         const isValidDate = value && !isNaN(new Date(value).getTime());
         const [isOpen, setIsOpen] = useState(false);
+
+        // For DOB fields, restrict to 18+ years
+        const isDOBField =
+          getControlItem.name?.toLowerCase().includes("dob") ||
+          getControlItem.name?.toLowerCase().includes("birth");
+
+        const maxDate = isDOBField
+          ? (() => {
+              const date = new Date();
+              date.setFullYear(date.getFullYear() - 18);
+              return date;
+            })()
+          : undefined;
+
+        // ✅ FIX: Define specific year range for dropdowns (1900 to Current)
+        const currentYear = new Date().getFullYear();
+        const fromYear = 1900;
 
         return (
           <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -644,7 +667,13 @@ if (lower.includes("agerange") || lower.includes("age")) {
               >
                 <span className="text-neutral-400 text-sm">
                   {isValidDate
-                    ? new Date(value).toLocaleDateString("en-US")
+                    ? new Date(value)
+                        .toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short", // ✅ Shows "Jan", "Feb" etc.
+                          year: "numeric",
+                        })
+                        .replace(/ /g, "/") // ✅ Formats as "12/Jan/2000"
                     : getControlItem.placeholder || "Select Date"}
                 </span>
 
@@ -652,9 +681,14 @@ if (lower.includes("agerange") || lower.includes("age")) {
               </div>
             </PopoverTrigger>
 
-            <PopoverContent className="bg-white p-0">
+            <PopoverContent className="bg-white p-0 w-auto" align="start">
               <Calendar
                 mode="single"
+                // ✅ THIS enables real month + year dropdowns
+                captionLayout="dropdown"
+                // ✅ These are REQUIRED for year dropdown to appear
+                fromDate={new Date(1900, 0, 1)}
+                toDate={new Date(new Date().getFullYear(), 11, 31)}
                 selected={isValidDate ? new Date(value) : undefined}
                 onSelect={(date) => {
                   setFormData((prev) =>
@@ -664,9 +698,9 @@ if (lower.includes("agerange") || lower.includes("age")) {
                       date ? date.toISOString() : ""
                     )
                   );
-                  setIsOpen(false);
+                  setIsOpen(false); // ✅ fix
                 }}
-                className="rounded-md border shadow bg-white"
+                className="rounded-md border shadow bg-white pointer-events-auto"
               />
             </PopoverContent>
           </Popover>
@@ -687,35 +721,47 @@ if (lower.includes("agerange") || lower.includes("age")) {
             errorMessage={errorMessage}
           />
         );
+     
+  case "checkbox":
+  return (
+    <div className="flex items-center gap-3">
+      <Checkbox
+  checked={value}
+  onCheckedChange={(checked) => {
+    console.log("CHECKBOX CLICKED:", checked);
 
-      case "checkbox":
-        return (
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id={getControlItem.name}
-              checked={value || false}
-              onCheckedChange={(checked) =>
-                setFormData((prev) =>
-                  setNestedValue(prev, nameWithIndex, checked)
-                )
-              }
-            />
-            <Label htmlFor={getControlItem.name}>{getControlItem.label}</Label>
-          </div>
-        );
+    setFormData((prev) => {
+      const updated = setNestedValue(prev, nameWithIndex, checked);
+      console.log("UPDATED FORMDATA:", updated);
+      return updated;
+    });
+  }}
+/>
+
+
+      <Label
+        htmlFor={nameWithIndex}
+        className="text-sm font-medium cursor-pointer select-none"
+      >
+        {getControlItem.label}
+      </Label>
+    </div>
+  );
+
 
       default:
         return <Input {...commonInputProps} />;
     }
   }
- return (
+  return (
     <div key={i} className="w-full">
       <div className="flex flex-col gap-[18px] max-sm:gap-[10px]">
-
         {formControls.map((controlItem, index) => {
-          
           // ---------------------------------------------------
           // ROW FIELDS (like city, state, pincode)
+          // ---------------------------------------------------
+          // ---------------------------------------------------
+          // 1. ROW FIELDS (Nested)
           // ---------------------------------------------------
           if (controlItem.row) {
             return (
@@ -724,10 +770,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
                 className="flex gap-[8px] w-full flex-wrap justify-end items-end"
               >
                 {controlItem.row.map((item, subIndex) => (
-                  <div
-                    key={item.name}
-                    className="gap-[8px] flex-2/3 lg:flex-1"
-                  >
+                  <div key={item.name} className="gap-[8px] flex-2/3 lg:flex-1">
                     <div
                       className={`flex flex-col gap-[8px] ${
                         item.componentType === "file" ? "max-sm:mb-2" : ""
@@ -735,6 +778,8 @@ if (lower.includes("agerange") || lower.includes("age")) {
                     >
                       {item.label && (
                         <Label className="text-base text-[#20102B] font-semibold">
+                          {/* ✅ CHANGE: Increment Serial Number Here */}
+                          {showSerialNumber ? `${++fieldIndex}. ` : ""}
                           {item.label}
                           {item.required && (
                             <span className="text-red-500 text-[14px]">*</span>
@@ -742,7 +787,6 @@ if (lower.includes("agerange") || lower.includes("age")) {
                         </Label>
                       )}
 
-                      {/* Render actual field */}
                       {renderInputsByComponentType(item, subIndex)}
                     </div>
                   </div>
@@ -752,7 +796,7 @@ if (lower.includes("agerange") || lower.includes("age")) {
           }
 
           // ---------------------------------------------------
-          // SINGLE FIELDS
+          // 2. SINGLE FIELDS
           // ---------------------------------------------------
           return (
             <div
@@ -763,6 +807,8 @@ if (lower.includes("agerange") || lower.includes("age")) {
             >
               {controlItem.label && (
                 <Label className="text-base text-[#20102B] font-semibold">
+                  {/* ✅ CHANGE: Increment Serial Number Here */}
+                  {showSerialNumber ? `${++fieldIndex}. ` : ""}
                   {controlItem.label}
                   {controlItem.required && (
                     <span className="text-red-500 text-[14px]">*</span>
@@ -774,7 +820,6 @@ if (lower.includes("agerange") || lower.includes("age")) {
             </div>
           );
         })}
-
       </div>
     </div>
   );
