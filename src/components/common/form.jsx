@@ -726,18 +726,22 @@ export default function CommonForm({
   return (
     <div className="flex items-center gap-3">
       <Checkbox
-  checked={value}
-  onCheckedChange={(checked) => {
-    console.log("CHECKBOX CLICKED:", checked);
-
-    setFormData((prev) => {
-      const updated = setNestedValue(prev, nameWithIndex, checked);
-      console.log("UPDATED FORMDATA:", updated);
-      return updated;
-    });
-  }}
-/>
-
+        id={nameWithIndex}
+        checked={Boolean(value)}
+        onCheckedChange={(checked) => {
+          setFormData((prev) =>
+            setNestedValue(prev, nameWithIndex, Boolean(checked))
+          );
+        }}
+        className="
+          h-5 w-5 
+          rounded border border-gray-300
+          data-[state=checked]:bg-[#6945ED]
+          data-[state=checked]:border-[#6945ED]
+          data-[state=checked]:text-white
+          focus-visible:ring-0
+        "
+      />
 
       <Label
         htmlFor={nameWithIndex}

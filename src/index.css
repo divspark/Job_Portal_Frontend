@@ -245,7 +245,12 @@ body {
   );
   border-image-slice: 1;
 }
-[data-state="checked"] > span,
-[data-state="unchecked"] > span {
-  background-color: white !important;
+[data-state="checked"] {
+  background-color: #6945ed !important;
+  border-color: #6945ed !important;
 }
+
+[data-state="checked"] > span {
+  color: white !important;
+}
+
